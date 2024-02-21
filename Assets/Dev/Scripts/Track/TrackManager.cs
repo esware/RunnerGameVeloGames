@@ -39,11 +39,8 @@ namespace Dev.Scripts.Track
         [Header("Objects")]
         public ConsumableDatabase consumableDatabase;
         public GameObject parentObject;
-        public GameObject drone;
         public Transform characterPosition;
-
-        [Header("Tutorial")]
-        public ThemeData tutorialThemeData;
+        
         
 
         public System.Action<TrackSegment> NewSegmentCreated;
@@ -118,7 +115,6 @@ namespace Dev.Scripts.Track
 
         public void StartMove(bool isRestart = true)
         {
-            drone.SetActive(true);
             _isMoving = true;
             if (isRestart)
                 _speed = minSpeed;
@@ -188,11 +184,8 @@ namespace Dev.Scripts.Track
                 
                 player.transform.SetParent(characterPosition.transform, false);
 
-
-                if (_mIsTutorial)
-                    _mCurrentThemeData = tutorialThemeData;
-                else
-                    _mCurrentThemeData = ThemeDatabase.GetThemeData(PlayerData.instance.themes[PlayerData.instance.usedTheme]);
+                
+                _mCurrentThemeData = ThemeDatabase.GetThemeData(PlayerData.instance.themes[PlayerData.instance.usedTheme]);
 
                 _mCurrentZone = 0;
                 _mCurrentZoneDistance = 2;
@@ -229,7 +222,6 @@ namespace Dev.Scripts.Track
         public void End()
         {
             ClearSegments();
-            drone.SetActive(false);
             characterController.characterMovement.DesiredLane = 1;
             characterController.End();
             gameObject.SetActive(false);
