@@ -68,7 +68,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51e27f0d53ac40f1a7d12501d232eb59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterName: Avatar
+  characterName: Male
   cost: 0
   animator: {fileID: 7958664727054231222}
   icon: {fileID: 0}

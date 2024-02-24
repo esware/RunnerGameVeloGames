@@ -47,7 +47,55 @@ namespace Dev.Scripts.GameManager
                 _stateStack[_stateStack.Count-1].Tick();
             }
         }
+
+        public void SwitchState(string newState)
+        {
+            AState state = FindState(newState);
+            if (state==null)
+            {
+                Debug.LogError("Cant find the state named"+newState);
+                return;
+            }
+            
+            _stateStack[_stateStack.Count-1].Exit(state);
+            state.Enter(_stateStack[_stateStack.Count-1]);
+            _stateStack.RemoveAt(_stateStack.Count-1);
+            _stateStack.Add(state);
+        }
+
+        private AState FindState(string stateName)
+        {
+            AState state;
+            if (!_stateDict.TryGetValue(stateName,out state))
+            {
+                return null;
+            }
+
+            return state;
+        }
+
+        private void PushState(string stateName)
+        {
+            AState state;
+            if (!_stateDict.TryGetValue(stateName,out state))
+            {
+                Debug.LogError("cant find the state named"+stateName);
+                return;
+            }
+
+            if (_stateStack.Count>0)
+            {
+                _stateStack[_stateStack.Count-1].Exit(state);
+                state.Enter(_stateStack[_stateStack.Count-1]);
+            }
+            else
+            {
+                state.Enter(null);
+            }
+            _stateStack.Add(state);
+        }
     }
+    
     
 
     public abstract class AState : MonoBehaviour

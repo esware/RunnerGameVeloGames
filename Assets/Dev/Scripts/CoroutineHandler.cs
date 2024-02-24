@@ -5,31 +5,31 @@ namespace Dev
 {
     public class CoroutineHandler : MonoBehaviour
     {
-        static protected CoroutineHandler m_Instance;
-        static public CoroutineHandler instance
+        private static CoroutineHandler _instance;
+        public static CoroutineHandler Instance
         {
             get
             {
-                if(m_Instance == null)
+                if(_instance == null)
                 {
                     GameObject o = new GameObject("CoroutineHandler");
                     DontDestroyOnLoad(o);
-                    m_Instance = o.AddComponent<CoroutineHandler>();
+                    _instance = o.AddComponent<CoroutineHandler>();
                 }
 
-                return m_Instance;
+                return _instance;
             }
         }
 
         public void OnDisable()
         {
-            if(m_Instance)
-                Destroy(m_Instance.gameObject);
+            if(_instance)
+                Destroy(_instance.gameObject);
         }
 
-        static public Coroutine StartStaticCoroutine(IEnumerator coroutine)
+        public static Coroutine StartStaticCoroutine(IEnumerator coroutine)
         {
-            return instance.StartCoroutine(coroutine);
+            return Instance.StartCoroutine(coroutine);
         }
     }
 }
