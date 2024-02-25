@@ -160,15 +160,6 @@ public class CharacterControl : MonoBehaviour
         StartCoroutine(c.Started(this));
     }
     
-    public void UseInventory(ConsumableIcon c)
-    {
-        if(inventory != null && c._consumable.CanBeUsed(this))
-        {
-            PlayerData.instance.Consume(c._consumable.GetConsumableType());
-            UseConsumable(c._consumable);
-        }
-        
-    }
     private void Update()
     {
         if(!trackManager.isMoving)
@@ -246,7 +237,6 @@ public class CharacterControl : MonoBehaviour
 			if (c.GetComponent<Coin>().isPremium)
             {
 				Addressables.ReleaseInstance(c.gameObject);
-                PlayerData.instance.premium += 1;
                 premium += 1;
 				_audio.PlayOneShot(premiumSound);
 			}

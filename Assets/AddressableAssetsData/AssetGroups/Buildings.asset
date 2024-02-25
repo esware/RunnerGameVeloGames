@@ -37,6 +37,12 @@ MonoBehaviour:
     m_Address: Buildings_5
     m_ReadOnly: 0
     m_SerializedLabels: []
+  - m_GUID: f65b1810c0d35c84bb4cc8c878385fad
+    m_Address: mainTheme
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - themeData
+    - ThemeData
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 808f79af1f77c0848bd1fe6c9a2b9a44, type: 2}
   m_SchemaSet:

@@ -27,6 +27,10 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels:
     - characters
+  - m_GUID: 65f7c0fb7b34c684b9fbdfb5a80c72b6
+    m_Address: Assets/Bundles/Collectable/Coin.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 808f79af1f77c0848bd1fe6c9a2b9a44, type: 2}
   m_SchemaSet:

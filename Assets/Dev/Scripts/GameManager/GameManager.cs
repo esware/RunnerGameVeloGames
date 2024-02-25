@@ -12,9 +12,6 @@ namespace Dev.Scripts.GameManager
         public static GameManager Instance => _instance;
 
         public AState[] states;
-        public AState  TopState { get { if (_stateStack.Count == 0) return null; return _stateStack[_stateStack.Count - 1]; }}
-
-        public ConsumableDatabase consumableDatabase;
         private List<AState> _stateStack = new List<AState>();
         private Dictionary<string, AState> _stateDict = new Dictionary<string, AState>();
 
@@ -23,7 +20,6 @@ namespace Dev.Scripts.GameManager
             PlayerData.Create();
 
             _instance = this;
-            consumableDatabase.Load();
             _stateDict.Clear();
 
             if (states.Length==0)
@@ -32,7 +28,7 @@ namespace Dev.Scripts.GameManager
             for (int i = 0; i < states.Length; i++)
             {
                 states[i].manager = this;
-                _stateDict.Add(states[i].name,states[i]);
+                _stateDict.Add(states[i].GetName(),states[i]);
             }
             
             _stateStack.Clear();

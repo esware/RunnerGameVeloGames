@@ -7,38 +7,38 @@ namespace Dev.Scripts.Characters
 {
     public class CharacterDatabase
     {
-        static protected Dictionary<string, Character> m_CharactersDict;
+        private static Dictionary<string, Character> _charactersDict;
 
-        static public Dictionary<string, Character> dictionary {  get { return m_CharactersDict; } }
+        public static Dictionary<string, Character> dictionary => _charactersDict;
 
-        static protected bool m_Loaded = false;
-        static public bool loaded { get { return m_Loaded; } }
+        private static bool _loaded = false;
+        public static bool loaded => _loaded;
 
-        static public Character GetCharacter(string type)
+        public static Character GetCharacter(string type)
         {
             Character c;
-            if (m_CharactersDict == null || !m_CharactersDict.TryGetValue(type, out c))
+            if (_charactersDict == null || !_charactersDict.TryGetValue(type, out c))
                 return null;
 
             return c;
         }
 
-        static public IEnumerator LoadDatabase()
+        public static IEnumerator LoadDatabase()
         {
-            if (m_CharactersDict == null)
+            if (_charactersDict == null)
             {
-                m_CharactersDict = new Dictionary<string, Character>();
+                _charactersDict = new Dictionary<string, Character>();
 
                 yield return Addressables.LoadAssetsAsync<GameObject>("characters", op =>
                 {
                     Character c = op.GetComponent<Character>();
                     if (c != null)
                     {
-                        m_CharactersDict.Add(c.characterName, c);
+                        _charactersDict.Add(c.characterName, c);
                     }
                 });
 
-                m_Loaded = true;
+                _loaded = true;
             }
         }
     }

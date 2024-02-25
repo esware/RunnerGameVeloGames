@@ -6,6 +6,7 @@ using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using Dev.Scripts.Consumables;
 using Dev.Scripts.Obstacles;
+using Dev.Scripts.Sounds;
 using Dev.Scripts.Themes;
 
 using Random = UnityEngine.Random;
@@ -18,8 +19,8 @@ namespace Dev.Scripts.Track
     
     public class TrackManager : MonoBehaviour
     {
-        static public TrackManager Instance => _instance;
-        static private TrackManager _instance;
+        public static TrackManager Instance => _instance;
+        private static TrackManager _instance;
 
         static readonly int StartHash = Animator.StringToHash("Start");
 
@@ -163,8 +164,7 @@ namespace Dev.Scripts.Track
                 _totalWorldDistance = 0f;
 
                 characterController.gameObject.SetActive(true);
-            
-                // Spawn the player
+                
                 var op = Addressables.InstantiateAsync(PlayerData.instance.characters[PlayerData.instance.usedCharacter],
                     Vector3.zero, 
                     Quaternion.identity);
@@ -175,9 +175,7 @@ namespace Dev.Scripts.Track
                     yield break;
                 }
                 Characters.Character player = op.Result.GetComponent<Characters.Character>();
-
-                //player.SetupAccesory(PlayerData.instance.usedAccessory);
-
+                
                 characterController.character = player;
                 characterController.trackManager = this;
                 characterController.CheatInvincible(invincible);
@@ -275,8 +273,6 @@ namespace Dev.Scripts.Track
                 if (_currentSegmentDistance > m_Segments[0].WorldLength)
                 {
                     _currentSegmentDistance = 0;
-                    // m_PastSegments are segment we already passed, we keep them to move them and destroy them later 
-                    // but they aren't part of the game anymore 
                     m_PastSegments.Add(m_Segments[0]);
                     m_Segments.RemoveAt(0);
                     _spawnedSegments--;
@@ -306,7 +302,6 @@ namespace Dev.Scripts.Track
 
             if (!_mIsTutorial)
             {
-                //check for next rank achieved
                 int currentTarget = (PlayerData.instance.rank + 1) * 300;
                 if (_totalWorldDistance > currentTarget)
                 {
@@ -319,7 +314,7 @@ namespace Dev.Scripts.Track
                 }
             }
 
-            //MusicPlayer.instance.UpdateVolumes(speedRatio);
+            MusicPlayer.instance.UpdateVolumes(speedRatio);
         }
 
         private void PowerupSpawnUpdate()

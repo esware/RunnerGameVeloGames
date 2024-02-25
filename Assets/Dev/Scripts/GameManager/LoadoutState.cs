@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using Dev.Scripts.Characters;
+using Dev.Scripts.Sounds;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
@@ -10,28 +11,42 @@ namespace Dev.Scripts.GameManager
 {
     public class LoadoutState:AState
     {
-        [SerializeField] private Canvas mainMenu;
-        [SerializeField] private Canvas characterMenu;
+        [SerializeField] private GameObject mainMenu;
+        [SerializeField] private GameObject characterMenu;
         [SerializeField] private GameObject player;
         
         [Header("Character UI")] 
         [SerializeField] private Text charNameDisplay;
         [SerializeField] private RectTransform charSelect;
         [SerializeField] private Transform charPosition;
-        [SerializeField] private Image characterBg;
         [SerializeField] private Button runButton;
+        [SerializeField] private AudioClip menuTheme;
         
         private GameObject _character;
         private bool _isLoadingCharacter;
         private const float CharacterRotationSpeed = 45f;
         public override void Enter(AState from)
         {
-            mainMenu.gameObject.SetActive(PlayerData.instance.tutorialDone);
-            characterMenu.gameObject.SetActive(!PlayerData.instance.tutorialDone);
+            if (!gameObject.activeSelf)
+            {
+                gameObject.SetActive(true);
+            }
+            mainMenu.gameObject.SetActive(false);
+            characterMenu.gameObject.SetActive(true);
             player.transform.position = Vector3.zero;
+            
+
+            charNameDisplay.text = "";
+
+            if (MusicPlayer.instance.GetStem(0) != menuTheme)
+            {
+                MusicPlayer.instance.SetStem(0, menuTheme);
+                StartCoroutine(MusicPlayer.instance.RestartAllStems());
+            }
+
             runButton.interactable = false;
             runButton.GetComponentInChildren<Text>().text = "Loading...";
-            
+            StartCoroutine(PopulateCharacters());
         }
         public override void Exit(AState to)
         {
@@ -46,6 +61,7 @@ namespace Dev.Scripts.GameManager
                 if(interactable)
                 {
                     runButton.interactable = true;
+                    runButton.GetComponentInChildren<Text>().text = "Play";
                 }
             }
             
@@ -98,7 +114,7 @@ namespace Dev.Scripts.GameManager
                     newChar.transform.rotation = Quaternion.Euler(0,180,0);
                     //newChar.gameObject.SetActive(false);
                     //videoPlayer.clip = newChar.GetComponent<Character>().characterVideo;
-                    characterBg.sprite = newChar.GetComponent<Characters.Character>().CharacterBg;
+                    //characterBg.sprite = newChar.GetComponent<Characters.Character>().CharacterBg;
                     //videoPlayer.Play();
 
                     if (_character != null)
@@ -120,13 +136,10 @@ namespace Dev.Scripts.GameManager
         
         public void StartGame()
         {
-            if (PlayerData.instance.tutorialDone)
+            if (PlayerData.instance.ftueLevel == 1)
             {
-                if (PlayerData.instance.ftueLevel == 1)
-                {
-                    PlayerData.instance.ftueLevel = 2;
-                    PlayerData.instance.Save();
-                }
+                PlayerData.instance.ftueLevel = 2;
+                PlayerData.instance.Save();
             }
             manager.SwitchState("Game");
             GameEvents.GameStartEvent?.Invoke();

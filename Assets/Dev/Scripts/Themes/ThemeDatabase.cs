@@ -1,18 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.AddressableAssets;
 
 namespace Dev.Scripts.Themes
 {
-    public class ThemeDatabase
+    public static class ThemeDatabase
     {
-        static protected Dictionary<string, ThemeData> themeDataList;
-        static public Dictionary<string, ThemeData> dictionnary { get { return themeDataList; } }
+        private static Dictionary<string, ThemeData> themeDataList;
+        public static Dictionary<string, ThemeData> dictionnary => themeDataList;
 
-        static protected bool m_Loaded = false;
-        static public bool loaded { get { return m_Loaded; } }
+        private static bool _loaded = false;
+        public static bool loaded => _loaded;
 
-        static public ThemeData GetThemeData(string type)
+        public static ThemeData GetThemeData(string type)
         {
             ThemeData list;
             if (themeDataList == null || !themeDataList.TryGetValue(type, out list))
@@ -21,15 +22,14 @@ namespace Dev.Scripts.Themes
             return list;
         }
 
-        static public IEnumerator LoadDatabase()
+        public static IEnumerator LoadDatabase()
         {
-            // If not null the dictionary was already loaded.
             if (themeDataList == null)
             {
                 themeDataList = new Dictionary<string, ThemeData>();
 
 
-                yield return Addressables.LoadAssetsAsync<ThemeData>("themeData", op =>
+                yield return Addressables.LoadAssetsAsync<ThemeData>("ThemeData", op =>
                 {
                     if (op != null)
                     {
@@ -37,8 +37,9 @@ namespace Dev.Scripts.Themes
                             themeDataList.Add(op.themeName, op);
                     }
                 });
+                
 
-                m_Loaded = true;
+                _loaded = true;
             }
 
         }

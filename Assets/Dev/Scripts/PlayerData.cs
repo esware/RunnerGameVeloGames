@@ -1,10 +1,9 @@
-﻿using Dev.Scripts.Character;
-using Dev.Scripts.Consumables;
-using Dev.Scripts.Themes;
-using UnityEngine;
+﻿using UnityEngine;
 using System.IO;
 using System.Collections.Generic;
+using Dev;
 using Dev.Scripts.Characters;
+using Dev.Scripts.Themes;
 #if UNITY_ANALYTICS
 using UnityEngine.Analytics;
 #endif
@@ -12,9 +11,6 @@ using UnityEngine.Analytics;
 using UnityEditor;
 #endif
 
-namespace Dev.Scripts
-{
-	
 public struct HighscoreEntry : System.IComparable<HighscoreEntry>
 {
 	public string name;
@@ -22,32 +18,28 @@ public struct HighscoreEntry : System.IComparable<HighscoreEntry>
 
 	public int CompareTo(HighscoreEntry other)
 	{
-		
+		// We want to sort from highest to lowest, so inverse the comparison.
 		return other.score.CompareTo(score);
 	}
 }
 
 public class PlayerData
 {
-	private static PlayerData m_Instance;
-    public static PlayerData instance { get { return m_Instance; } }
+    static protected PlayerData m_Instance;
+    static public PlayerData instance { get { return m_Instance; } }
 
-    private string saveFile = "";
+    protected string saveFile = "";
 
 
     public int coins;
-    public int premium;
-    public Dictionary<Consumable.ConsumableType, int> consumables = new Dictionary<Consumable.ConsumableType, int>();   // Inventory of owned consumables and quantity.
 
-    public List<string> characters = new List<string>();    // Inventory of characters owned.
-    public int usedCharacter;                               // Currently equipped character.
-    public int usedAccessory = -1;
-    public List<string> characterAccessories = new List<string>();  // List of owned accessories, in the form "charName:accessoryName".
-    public List<string> themes = new List<string>();                // Owned themes.
-    public int usedTheme;                                           // Currently used theme.
+    public List<string> characters = new List<string>();    
+    public int usedCharacter;
+    public List<string> themes = new List<string>();                
+    public int usedTheme;                                          
     public List<HighscoreEntry> highscores = new List<HighscoreEntry>();
 
-    public string previousName = "Keyrox";
+    public string previousName = "Male";
 
     public bool licenceAccepted;
     public bool tutorialDone;
@@ -55,35 +47,11 @@ public class PlayerData
 	public float masterVolume = float.MinValue, musicVolume = float.MinValue, masterSFXVolume = float.MinValue;
 	
     public int ftueLevel = 0;
+ 
     public int rank = 0;
     
     static int s_Version = 12; 
-
-    public void Consume(Consumable.ConsumableType type)
-    {
-        if (!consumables.ContainsKey(type))
-            return;
-
-        consumables[type] -= 1;
-        if(consumables[type] == 0)
-        {
-            consumables.Remove(type);
-        }
-
-        Save();
-    }
-
-    public void Add(Consumable.ConsumableType type)
-    {
-        if (!consumables.ContainsKey(type))
-        {
-            consumables[type] = 0;
-        }
-
-        consumables[type] += 1;
-
-        Save();
-    }
+    
 
     public void AddCharacter(string name)
     {
@@ -93,11 +61,6 @@ public class PlayerData
     public void AddTheme(string theme)
     {
         themes.Add(theme);
-    }
-
-    public void AddAccessory(string name)
-    {
-        characterAccessories.Add(name);
     }
     
     public int GetScorePlace(int score)
@@ -118,8 +81,7 @@ public class PlayerData
 		entry.name = name;
 
 		highscores.Insert(GetScorePlace(score), entry);
-
-        // Keep only the 10 best scores.
+		
         while (highscores.Count > 10)
             highscores.RemoveAt(highscores.Count - 1);
 	}
@@ -146,25 +108,20 @@ public class PlayerData
         {
 	        NewSave();
         }
-        
     }
 
 	static public void NewSave()
 	{
 		m_Instance.characters.Clear();
 		m_Instance.themes.Clear();
-		m_Instance.characterAccessories.Clear();
-		m_Instance.consumables.Clear();
-
+		
 		m_Instance.usedCharacter = 0;
 		m_Instance.usedTheme = 0;
-		m_Instance.usedAccessory = -1;
 
-        m_Instance.coins = 0;
-        m_Instance.premium = 0;
+		m_Instance.coins = 0;
 
-		m_Instance.characters.Add("Keyrox");
-		m_Instance.themes.Add("Day");
+		m_Instance.characters.Add("Male");
+		m_Instance.themes.Add("MainTheme");
 
         m_Instance.ftueLevel = 0;
         m_Instance.rank = 0;
@@ -189,6 +146,7 @@ public class PlayerData
 
         coins = r.ReadInt32();
         
+
         // Read character.
         characters.Clear();
         int charCount = r.ReadInt32();
@@ -201,14 +159,6 @@ public class PlayerData
 
         usedCharacter = r.ReadInt32();
 
-        // Read character accesories.
-        characterAccessories.Clear();
-        int accCount = r.ReadInt32();
-        for (int i = 0; i < accCount; ++i)
-        {
-            characterAccessories.Add(r.ReadString());
-        }
-
         // Read Themes.
         themes.Clear();
         int themeCount = r.ReadInt32();
@@ -218,12 +168,7 @@ public class PlayerData
         }
 
         usedTheme = r.ReadInt32();
-
-        // Save contains the version they were written with. If data are added bump the version & test for that version before loading that data.
-        if(ver >= 2)
-        {
-            premium = r.ReadInt32();
-        }
+        
 
         // Added highscores.
 		if(ver >= 3)
@@ -239,8 +184,8 @@ public class PlayerData
 				highscores.Add(entry);
 			}
 		}
-
-		// Added highscore previous name used.
+		
+        // Added highscore previous name used.
 		if(ver >= 7)
 		{
 			previousName = r.ReadString();
@@ -278,14 +223,9 @@ public class PlayerData
 
         w.Write(s_Version);
         w.Write(coins);
-
-        w.Write(consumables.Count);
-        foreach(KeyValuePair<Consumable.ConsumableType, int> p in consumables)
-        {
-            w.Write((int)p.Key);
-            w.Write(p.Value);
-        }
         
+
+        // Write characters.
         w.Write(characters.Count);
         foreach (string c in characters)
         {
@@ -293,12 +233,9 @@ public class PlayerData
         }
 
         w.Write(usedCharacter);
+        
 
-        w.Write(characterAccessories.Count);
-        foreach (string a in characterAccessories)
-        {
-            w.Write(a);
-        }
+        // Write themes.
         w.Write(themes.Count);
         foreach (string t in themes)
         {
@@ -306,8 +243,8 @@ public class PlayerData
         }
 
         w.Write(usedTheme);
-        w.Write(premium);
-        
+
+        // Write highscores.
 		w.Write(highscores.Count);
 		for(int i = 0; i < highscores.Count; ++i)
 		{
@@ -315,6 +252,8 @@ public class PlayerData
 			w.Write(highscores[i].score);
 		}
 		
+
+		// Write name.
 		w.Write(previousName);
 
         w.Write(licenceAccepted);
@@ -334,6 +273,7 @@ public class PlayerData
 
 }
 
+// Helper class to cheat in the editor for test purpose
 #if UNITY_EDITOR
 public class PlayerDataEditor : Editor
 {
@@ -342,22 +282,13 @@ public class PlayerDataEditor : Editor
     {
         File.Delete(Application.persistentDataPath + "/save.bin");
     } 
-    
-    /*[MenuItem("EWGames Debug/Give 10 Consumables of each types")]
-    static public void AddConsumables()
-    {
-       
-        for(int i = 0; i < ShopItemList.s_ConsumablesTypes.Length; ++i)
-        {
-            Consumable c = ConsumableDatabase.GetConsumbale(ShopItemList.s_ConsumablesTypes[i]);
-            if(c != null)
-            {
-                PlayerData.instance.consumables[c.GetConsumableType()] = 10;
-            }
-        }
 
+    [MenuItem("EWGames Debug/Give 1000000 coins and 1000 premium")]
+    static public void GiveCoins()
+    {
+        PlayerData.instance.coins += 1000000;
         PlayerData.instance.Save();
-    }*/
+    }
+    
 }
 #endif
-}

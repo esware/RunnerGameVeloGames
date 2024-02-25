@@ -86,6 +86,7 @@ MonoBehaviour:
     m_LabelNames:
     - default
     - characters
+    - ThemeData
   m_SchemaTemplates: []
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: 09863dbb6ce060a44af9bc5fd5ecd00a, type: 2}

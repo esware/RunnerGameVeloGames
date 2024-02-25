@@ -19,7 +19,7 @@ namespace Dev.Scripts.Consumables
 
         private void TaskOnClick()
         {
-            _characterControl.UseInventory(this);
+            //_characterControl.UseInventory(this);
         }
     }
 }
