@@ -38,7 +38,7 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
   - m_GUID: f65b1810c0d35c84bb4cc8c878385fad
-    m_Address: mainTheme
+    m_Address: Day
     m_ReadOnly: 0
     m_SerializedLabels:
     - themeData

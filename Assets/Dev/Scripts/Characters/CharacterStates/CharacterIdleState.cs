@@ -16,13 +16,9 @@ namespace Dev.Scripts.Character.CharacterStates
             {
                 _characterControl.cameraController.ChangeState(CameraStates.RerunCam.ToString());
             }
-            else if (TrackManager.Instance.isTutorial)
-            {
-                _characterControl.cameraController.ChangeState(CameraStates.RerunCam.ToString());
-            }
             else
             {
-                _characterControl.cameraController.ChangeState(CameraStates.IdleCam.ToString());
+                _characterControl.cameraController.ChangeState(CameraStates.PlayerCam.ToString());
             }
             _characterControl.trackManager.characterInputController.GetInputs = true;
         }

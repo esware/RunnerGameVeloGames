@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d873d7b997c41f49efee33dd53a6649, type: 3}
   m_Name: ThemeData
   m_EditorClassIdentifier: 
-  themeName: mainTheme
+  themeName: Day
   cost: 0
   themeIcon: {fileID: 0}
   zones:

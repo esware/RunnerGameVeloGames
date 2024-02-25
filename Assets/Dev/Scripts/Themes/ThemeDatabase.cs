@@ -8,7 +8,7 @@ namespace Dev.Scripts.Themes
     public static class ThemeDatabase
     {
         private static Dictionary<string, ThemeData> themeDataList;
-        public static Dictionary<string, ThemeData> dictionnary => themeDataList;
+        public static Dictionary<string, ThemeData> Dictionary => themeDataList;
 
         private static bool _loaded = false;
         public static bool loaded => _loaded;
@@ -37,7 +37,6 @@ namespace Dev.Scripts.Themes
                             themeDataList.Add(op.themeName, op);
                     }
                 });
-                
 
                 _loaded = true;
             }

@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 109ad54ddfbd4d56889b4798a672af95, type: 3}
   m_Name: LandingState
   m_EditorClassIdentifier: 
-  transitionTiming: 0
+  transitionTiming: 0.625

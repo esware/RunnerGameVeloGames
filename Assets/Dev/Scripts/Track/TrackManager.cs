@@ -8,7 +8,7 @@ using Dev.Scripts.Consumables;
 using Dev.Scripts.Obstacles;
 using Dev.Scripts.Sounds;
 using Dev.Scripts.Themes;
-
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 #if UNITY_ANALYTICS
 using UnityEngine.Analytics;
@@ -46,22 +46,21 @@ namespace Dev.Scripts.Track
 
         public System.Action<TrackSegment> NewSegmentCreated;
         public System.Action<TrackSegment> CurrentSegementChanged;
-        public int trackSeed { get { return _mTrackSeed; } set { _mTrackSeed = value; } }
+        public int trackSeed { get { return _trackSeed; } set { _trackSeed = value; } }
 
-        public float timeToStart { get { return m_TimeToStart; } }  // Will return -1 if already started (allow to update UI)
+        public float timeToStart => _timeToStart;
 
-        public int score { get { return _mScore; } }
-        public int multiplier { get { return _mMultiplier; } }
-        
+        public int score => _score;
+
         public float CurrentSegmentDistance => _currentSegmentDistance;
-        public float worldDistance { get { return _totalWorldDistance; } }
-        public float speed { get { return _speed; } }
-        public float speedRatio { get { return (_speed - minSpeed) / (maxSpeed - minSpeed); } }
-        public int currentZone { get { return _mCurrentZone; } }
+        public float worldDistance => _totalWorldDistance;
+        public float speed => _speed;
+        public float speedRatio =>(_speed - minSpeed) / (maxSpeed - minSpeed);
+        public int currentZone => _currentZone;
 
-        public TrackSegment currentSegment { get { return m_Segments[0]; } }
-        public List<TrackSegment> segments { get { return m_Segments; } }
-        public ThemeData currentTheme { get { return _mCurrentThemeData; } }
+        public TrackSegment currentSegment => _segments[0];
+        public List<TrackSegment> segments => _segments;
+        public ThemeData currentTheme => _currentThemeData;
 
         public bool isMoving { get { return _isMoving; } }
         public bool isRerun { get { return _mRerun; } set { _mRerun = value; } }
@@ -71,9 +70,9 @@ namespace Dev.Scripts.Track
         
         public bool firstObstacle { get; set; }
 
-        private float m_TimeToStart = -1.0f;
+        private float _timeToStart = -1.0f;
         
-        private int _mTrackSeed = -1;
+        private int _trackSeed = -1;
 
         private float _currentSegmentDistance;
         private float _totalWorldDistance;
@@ -85,16 +84,16 @@ namespace Dev.Scripts.Track
 
         private int _mMultiplier;
 
-        public List<TrackSegment> m_Segments = new List<TrackSegment>();
+        [FormerlySerializedAs("m_Segments")] public List<TrackSegment> _segments = new List<TrackSegment>();
         public List<TrackSegment> m_PastSegments = new List<TrackSegment>();
-        private int _mSafeSegementLeft;
+        private int _safeSegementLeft;
 
-        private ThemeData _mCurrentThemeData;
-        private int _mCurrentZone;
+        private ThemeData _currentThemeData;
+        private int _currentZone;
         private float _mCurrentZoneDistance;
         private readonly int _PreviousSegment = -1;
 
-        private int _mScore;
+        private int _score;
         private float _mScoreAccum;
         private bool _mRerun;     
 
@@ -128,15 +127,15 @@ namespace Dev.Scripts.Track
         IEnumerator WaitToStart()
         {
             float length = KCountdownToStartLength;
-            m_TimeToStart = length;
+            _timeToStart = length;
 
-            while (m_TimeToStart >= 0)
+            while (_timeToStart >= 0)
             {
                 yield return null;
-                m_TimeToStart -= Time.deltaTime * KCountdownSpeed;
+                _timeToStart -= Time.deltaTime * KCountdownSpeed;
             }
 
-            m_TimeToStart = -1;
+            _timeToStart = -1;
 
             if (_mRerun)
             {
@@ -157,21 +156,21 @@ namespace Dev.Scripts.Track
             {
                 firstObstacle = true;
 
-                if (_mTrackSeed != -1)
-                    Random.InitState(_mTrackSeed);
+                if (_trackSeed != -1)
+                    Random.InitState(_trackSeed);
                 else
                     Random.InitState((int)System.DateTime.Now.Ticks);
                 _totalWorldDistance = 0f;
 
                 characterController.gameObject.SetActive(true);
                 
-                var op = Addressables.InstantiateAsync(PlayerData.instance.characters[PlayerData.instance.usedCharacter],
+                var op = Addressables.InstantiateAsync(PlayerData.Instance.characters[PlayerData.Instance.usedCharacter],
                     Vector3.zero, 
                     Quaternion.identity);
                 yield return op;
                 if (op.Result == null || !(op.Result is GameObject))
                 {
-                    Debug.LogWarning(string.Format("Unable to load character {0}.", PlayerData.instance.characters[PlayerData.instance.usedCharacter]));
+                    Debug.LogWarning(string.Format("Unable to load character {0}.", PlayerData.Instance.characters[PlayerData.Instance.usedCharacter]));
                     yield break;
                 }
                 Characters.Character player = op.Result.GetComponent<Characters.Character>();
@@ -183,9 +182,9 @@ namespace Dev.Scripts.Track
                 player.transform.SetParent(characterPosition.transform, false);
 
                 
-                _mCurrentThemeData = ThemeDatabase.GetThemeData(PlayerData.instance.themes[PlayerData.instance.usedTheme]);
+                _currentThemeData = ThemeDatabase.GetThemeData(PlayerData.Instance.themes[PlayerData.Instance.usedTheme]);
 
-                _mCurrentZone = 0;
+                _currentZone = 0;
                 _mCurrentZoneDistance = 2;
 
                 gameObject.SetActive(true);
@@ -193,12 +192,13 @@ namespace Dev.Scripts.Track
                 characterController.coins = 0;
                 characterController.premium = 0;
 
-                _mScore = 0;
+                _score = 0;
                 _mScoreAccum = 0;
 
-                _mSafeSegementLeft = _mIsTutorial ? 0 : KStartingSafeSegments;
-
-                Coin.coinPool = new Pooler(currentTheme.collectiblePrefab, 0);
+                _safeSegementLeft = _mIsTutorial ? 0 : KStartingSafeSegments;
+                Debug.Log("Collectable Prefab : "+_currentThemeData.collectiblePrefab);
+                Debug.Log("Current ThemeData : " +_currentThemeData);
+                Coin.coinPool = new Pooler(currentTheme.collectiblePrefab, 50);
                 
 
 #if UNITY_ANALYTICS
@@ -231,9 +231,9 @@ namespace Dev.Scripts.Track
 
         public void ClearSegments()
         {
-            _mSafeSegementLeft = 1;
+            _safeSegementLeft = 1;
 
-            foreach (var seg in m_Segments)
+            foreach (var seg in _segments)
             {
                 Addressables.ReleaseInstance(seg.gameObject);
                 _spawnedSegments--;
@@ -243,7 +243,7 @@ namespace Dev.Scripts.Track
             {
                 Addressables.ReleaseInstance(m_PastSegments[i].gameObject);
             }
-            m_Segments.Clear();
+            _segments.Clear();
             m_PastSegments.Clear();
         }
         private int _spawnedSegments = 0;
@@ -268,15 +268,15 @@ namespace Dev.Scripts.Track
             _totalWorldDistance += scaledSpeed;
             _currentSegmentDistance += scaledSpeed;
             
-            if (m_Segments.Count > 0)
+            if (_segments.Count > 0)
             {
-                if (_currentSegmentDistance > m_Segments[0].WorldLength)
+                if (_currentSegmentDistance > _segments[0].WorldLength)
                 {
                     _currentSegmentDistance = 0;
-                    m_PastSegments.Add(m_Segments[0]);
-                    m_Segments.RemoveAt(0);
+                    m_PastSegments.Add(_segments[0]);
+                    _segments.RemoveAt(0);
                     _spawnedSegments--;
-                    if (CurrentSegementChanged != null) CurrentSegementChanged.Invoke(m_Segments[0]);
+                    if (CurrentSegementChanged != null) CurrentSegementChanged.Invoke(_segments[0]);
                 }
             }
 
@@ -302,11 +302,11 @@ namespace Dev.Scripts.Track
 
             if (!_mIsTutorial)
             {
-                int currentTarget = (PlayerData.instance.rank + 1) * 300;
+                int currentTarget = (PlayerData.Instance.rank + 1) * 300;
                 if (_totalWorldDistance > currentTarget)
                 {
-                    PlayerData.instance.rank += 1;
-                    PlayerData.instance.Save();
+                    PlayerData.Instance.rank += 1;
+                    PlayerData.Instance.Save();
 #if UNITY_ANALYTICS
 //"level" in our game are milestone the player have to reach : one every 300m
             AnalyticsEvent.LevelUp(PlayerData.instance.rank);
@@ -325,9 +325,9 @@ namespace Dev.Scripts.Track
 
         public void ChangeZone()
         {
-            _mCurrentZone += 1;
-            if (_mCurrentZone >= _mCurrentThemeData.zones.Length)
-                _mCurrentZone = 0;
+            _currentZone += 1;
+            if (_currentZone >= _currentThemeData.zones.Length)
+                _currentZone = 0;
 
             _mCurrentZoneDistance = -35;
         }
@@ -338,18 +338,18 @@ namespace Dev.Scripts.Track
             AsyncOperationHandle segmentToUseOp;
             if (!_mIsTutorial)
             {
-                if (_mCurrentThemeData.zones[_mCurrentZone].length < _mCurrentZoneDistance)
+                if (_currentThemeData.zones[_currentZone].length < _mCurrentZoneDistance)
                     ChangeZone();
             }
             
-            segmentUse = Random.Range(0, _mCurrentThemeData.zones[_mCurrentZone].prefabList.Length);
-            if (segmentUse == _PreviousSegment) segmentUse = (segmentUse + 1) % _mCurrentThemeData.zones[_mCurrentZone].prefabList.Length;
+            segmentUse = Random.Range(0, _currentThemeData.zones[_currentZone].prefabList.Length);
+            if (segmentUse == _PreviousSegment) segmentUse = (segmentUse + 1) % _currentThemeData.zones[_currentZone].prefabList.Length;
 
-            segmentToUseOp = _mCurrentThemeData.zones[_mCurrentZone].prefabList[segmentUse].InstantiateAsync(_offScreenSpawnPos, Quaternion.identity);
+            segmentToUseOp = _currentThemeData.zones[_currentZone].prefabList[segmentUse].InstantiateAsync(_offScreenSpawnPos, Quaternion.identity);
             yield return segmentToUseOp;
             if (segmentToUseOp.Result == null || !(segmentToUseOp.Result is GameObject))
             {
-                Debug.LogWarning(string.Format("Unable to load segment {0}.", _mCurrentThemeData.zones[_mCurrentZone].prefabList[segmentUse].Asset.name));
+                Debug.LogWarning(string.Format("Unable to load segment {0}.", _currentThemeData.zones[_currentZone].prefabList[segmentUse].Asset.name));
                 yield break;
             }
             
@@ -359,9 +359,9 @@ namespace Dev.Scripts.Track
             Vector3 currentExitPoint;
             Quaternion currentExitRotation;
             
-            if (m_Segments.Count > 0)
+            if (_segments.Count > 0)
             {
-                m_Segments[m_Segments.Count - 1].GetPointAt(1.0f, out currentExitPoint, out currentExitRotation);
+                _segments[_segments.Count - 1].GetPointAt(1.0f, out currentExitPoint, out currentExitRotation);
             }
             else
             {
@@ -381,14 +381,14 @@ namespace Dev.Scripts.Track
             newSegment.manager = this;
             newSegment.transform.SetParent(parentObject.transform);
             
-            if (_mSafeSegementLeft <= 0)
+            if (_safeSegementLeft <= 0)
             {
                 SpawnObstacle(newSegment);
             }
             else
-                _mSafeSegementLeft -= 1;
+                _safeSegementLeft -= 1;
 
-            m_Segments.Add(newSegment);
+            _segments.Add(newSegment);
 
             if (NewSegmentCreated != null) NewSegmentCreated.Invoke(newSegment);
         }
@@ -444,7 +444,6 @@ namespace Dev.Scripts.Track
                         testedLane = (testedLane + 1) % 3;
                         if (currentLane == testedLane)
                         {
-                            // Couldn't find a valid lane.
                             laneValid = false;
                             break;
                         }
@@ -460,11 +459,9 @@ namespace Dev.Scripts.Track
                         if (Random.value < powerupChance)
                         {
                             int picked = Random.Range(0, consumableDatabase.consumbales.Length);
-
-                            //if the powerup can't be spawned, we don't reset the time since powerup to continue to have a high chance of picking one next track segment
+                            
                             if (consumableDatabase.consumbales[picked].canBeSpawned)
                             {
-                                // Spawn a powerup instead.
                                 _mTimeSincePowerup = 0.0f;
                                 powerupChance = 0.0f;
 
@@ -486,7 +483,6 @@ namespace Dev.Scripts.Track
                         }
                         if (toUse != null)
                         {
-                            //TODO : remove that hack related to #issue7
                             Vector3 oldPos = toUse.transform.position;
                             toUse.transform.position += Vector3.back;
                             toUse.transform.position = oldPos;
@@ -501,7 +497,7 @@ namespace Dev.Scripts.Track
         public void AddScore(int amount)
         {
             int finalAmount = amount;
-            _mScore += finalAmount * _mMultiplier;
+            _score += finalAmount * _mMultiplier;
         }
     }
 }

@@ -20,7 +20,7 @@ namespace Dev.Scripts.Character.CharacterStates
             _characterMovement.Move();
             if (stateInfo.normalizedTime >= transitionTiming)
             {
-                _characterMovement.PlayAnim(TransitionParameter.Running.ToString(),0.1f,1f);
+                _characterMovement.PlayAnim(TransitionParameter.Running.ToString(),.1f,1f);
             }
         }
 

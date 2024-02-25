@@ -10,26 +10,28 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
-  m_Name: Characters
+  m_Name: Collectables
   m_EditorClassIdentifier: 
-  m_GroupName: Characters
+  m_GroupName: Collectables
   m_Data:
     m_SerializedData: []
-  m_GUID: 8a039140cf947324fa2661859dba2ff5
+  m_GUID: d916ca60e27ba40448b9b50079766594
   m_SerializeEntries:
-  - m_GUID: cf0dd276b26298c4ab21021a52164675
-    m_Address: Male
+  - m_GUID: 65f7c0fb7b34c684b9fbdfb5a80c72b6
+    m_Address: Coin
     m_ReadOnly: 0
-    m_SerializedLabels:
-    - characters
-  - m_GUID: 229fe71cca97ecd4f9bcce9ce57b1eb1
-    m_Address: Female
+    m_SerializedLabels: []
+  - m_GUID: a4c50680a9927ec4f9af0a0c4616ead0
+    m_Address: Magnet
     m_ReadOnly: 0
-    m_SerializedLabels:
-    - characters
+    m_SerializedLabels: []
+  - m_GUID: f93ec21027d434a408006d550f99314a
+    m_Address: ExtraLife
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 808f79af1f77c0848bd1fe6c9a2b9a44, type: 2}
   m_SchemaSet:
     m_Schemas:
-    - {fileID: 11400000, guid: 1fb5c32c4a1b34d4a8970fd3b1b4f309, type: 2}
-    - {fileID: 11400000, guid: 46a165238c68dae42a32e682e29b45e9, type: 2}
+    - {fileID: 11400000, guid: 7c1596a5fbe3ea64cbe32d46aa64174d, type: 2}
+    - {fileID: 11400000, guid: 63756f4ce3fcfb2419e81da587ad5399, type: 2}

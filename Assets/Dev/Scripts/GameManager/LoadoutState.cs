@@ -11,6 +11,7 @@ namespace Dev.Scripts.GameManager
 {
     public class LoadoutState:AState
     {
+       
         [SerializeField] private GameObject mainMenu;
         [SerializeField] private GameObject characterMenu;
         [SerializeField] private GameObject player;
@@ -25,8 +26,10 @@ namespace Dev.Scripts.GameManager
         private GameObject _character;
         private bool _isLoadingCharacter;
         private const float CharacterRotationSpeed = 45f;
+        private GameObject _canvas;
         public override void Enter(AState from)
         {
+            _canvas = gameObject;
             if (!gameObject.activeSelf)
             {
                 gameObject.SetActive(true);
@@ -50,6 +53,7 @@ namespace Dev.Scripts.GameManager
         }
         public override void Exit(AState to)
         {
+            _canvas.gameObject.SetActive(false);
             if (_character != null) Addressables.ReleaseInstance(_character);
         }
 
@@ -70,7 +74,7 @@ namespace Dev.Scripts.GameManager
                 _character.transform.Rotate(0, CharacterRotationSpeed * Time.deltaTime, 0, Space.Self);
             }
 
-            charSelect.gameObject.SetActive(PlayerData.instance.characters.Count > 1);
+            charSelect.gameObject.SetActive(PlayerData.Instance.characters.Count > 1);
         }
 
         public override string GetName()
@@ -80,11 +84,11 @@ namespace Dev.Scripts.GameManager
         
         public void ChangeCharacter(int dir)
         {
-            PlayerData.instance.usedCharacter += dir;
-            if (PlayerData.instance.usedCharacter >= PlayerData.instance.characters.Count)
-                PlayerData.instance.usedCharacter = 0;
-            else if(PlayerData.instance.usedCharacter < 0)
-                PlayerData.instance.usedCharacter = PlayerData.instance.characters.Count-1;
+            PlayerData.Instance.usedCharacter += dir;
+            if (PlayerData.Instance.usedCharacter >= PlayerData.Instance.characters.Count)
+                PlayerData.Instance.usedCharacter = 0;
+            else if(PlayerData.Instance.usedCharacter < 0)
+                PlayerData.Instance.usedCharacter = PlayerData.Instance.characters.Count-1;
 
             StartCoroutine(PopulateCharacters());
         }
@@ -98,7 +102,7 @@ namespace Dev.Scripts.GameManager
             GameObject newChar = null;
             while (newChar == null)
             {
-                Characters.Character c = CharacterDatabase.GetCharacter(PlayerData.instance.characters[PlayerData.instance.usedCharacter]);
+                Characters.Character c = CharacterDatabase.GetCharacter(PlayerData.Instance.characters[PlayerData.Instance.usedCharacter]);
 
                 if (c != null)
                 {
@@ -136,10 +140,10 @@ namespace Dev.Scripts.GameManager
         
         public void StartGame()
         {
-            if (PlayerData.instance.ftueLevel == 1)
+            if (PlayerData.Instance.ftueLevel == 1)
             {
-                PlayerData.instance.ftueLevel = 2;
-                PlayerData.instance.Save();
+                PlayerData.Instance.ftueLevel = 2;
+                PlayerData.Instance.Save();
             }
             manager.SwitchState("Game");
             GameEvents.GameStartEvent?.Invoke();

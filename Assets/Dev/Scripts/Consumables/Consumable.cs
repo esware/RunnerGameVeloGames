@@ -88,7 +88,6 @@ namespace Dev.Scripts.Consumables
 
         public virtual void Tick(CharacterControl c)
         {
-            // By default do nothing, override to do per frame manipulation
             m_SinceStart += Time.deltaTime;
             if (m_SinceStart >= duration)
             {

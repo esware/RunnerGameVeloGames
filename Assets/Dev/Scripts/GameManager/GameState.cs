@@ -47,7 +47,7 @@ namespace Dev.Scripts.GameManager
 
         private void StartGame()
         {
-            canvas.gameObject.SetActive(false);
+            canvas.gameObject.SetActive(true);
             pauseMenu.gameObject.SetActive(false);
             wholeUI.gameObject.SetActive(true);
             pauseButton.gameObject.SetActive(!trackManager.isTutorial);
@@ -162,7 +162,7 @@ namespace Dev.Scripts.GameManager
             AudioListener.pause = false;
             trackManager.End();
             trackManager.isRerun = false;
-            PlayerData.instance.Save();
+            PlayerData.Instance.Save();
             manager.SwitchState ("Loadout");
         }
     }

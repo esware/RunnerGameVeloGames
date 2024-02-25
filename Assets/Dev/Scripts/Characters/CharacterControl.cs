@@ -234,26 +234,10 @@ public class CharacterControl : MonoBehaviour
             if (magnetCoins.Contains(c.gameObject))
 				magnetCoins.Remove(c.gameObject);
 
-			if (c.GetComponent<Coin>().isPremium)
-            {
-				Addressables.ReleaseInstance(c.gameObject);
-                premium += 1;
-				_audio.PlayOneShot(premiumSound);
-			}
-            else if (c.GetComponent<Coin>().isNegative)
-            {
-                Coin.coinPool.Free(c.gameObject);
-                PlayerData.instance.coins += 1;
-                coins+= 1;
-                _audio.PlayOneShot(coinSound);
-            }
-            else
-            {
-				Coin.coinPool.Free(c.gameObject);
-                PlayerData.instance.coins += 1;
-				coins += 1;
-                _audio.PlayOneShot(coinSound);
-            }
+            Coin.coinPool.Free(c.gameObject);
+            PlayerData.Instance.coins += 1;
+            coins += 1;
+            _audio.PlayOneShot(coinSound);
         }
         else if(c.gameObject.layer == ObstacleLayerIndex)
         {

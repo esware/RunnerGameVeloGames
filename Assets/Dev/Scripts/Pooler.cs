@@ -5,19 +5,19 @@ namespace Dev.Scripts
 {
     public class Pooler
     {
-        private Stack<GameObject> m_FreeInstances = new Stack<GameObject>();
-        private GameObject m_Original;
+        private Stack<GameObject> _freeInstances = new Stack<GameObject>();
+        private GameObject _original;
 
         public Pooler(GameObject original, int initialSize)
         {
-            m_Original = original;
-            m_FreeInstances = new Stack<GameObject>(initialSize);
+            _original = original;
+            _freeInstances = new Stack<GameObject>(initialSize);
 
             for (int i = 0; i < initialSize; ++i)
             {
                 GameObject obj = Object.Instantiate(original);
                 obj.SetActive(false);
-                m_FreeInstances.Push(obj);
+                _freeInstances.Push(obj);
             }
         }
 
@@ -28,9 +28,8 @@ namespace Dev.Scripts
 
         public GameObject Get(Vector3 pos, Quaternion quat,bool value)
         {
-            GameObject ret = m_FreeInstances.Count > 0 ? m_FreeInstances.Pop() : Object.Instantiate(m_Original);
-
-            ret.GetComponent<Coin>().isNegative = value;
+            GameObject ret = _freeInstances.Count > 0 ? _freeInstances.Pop() : Object.Instantiate(_original);
+            
             ret.SetActive(true);
             ret.transform.position = pos;
             ret.transform.rotation = quat;
@@ -42,7 +41,7 @@ namespace Dev.Scripts
         {
             obj.transform.SetParent(null);
             obj.SetActive(false);
-            m_FreeInstances.Push(obj);
+            _freeInstances.Push(obj);
         }
     }
 }

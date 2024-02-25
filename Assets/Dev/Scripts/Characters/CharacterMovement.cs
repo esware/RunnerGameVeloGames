@@ -28,6 +28,7 @@ namespace Characters
 
         public bool isSliding;
         public bool isJumping;
+        
         public int DesiredLane
         {
             get => _desiredLane;

@@ -12,4 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 872dea89951f4bd38ddad3d64e24dda0, type: 3}
   m_Name: Consumables
   m_EditorClassIdentifier: 
-  consumbales: []
+  consumbales:
+  - {fileID: 5525958800851991203, guid: f93ec21027d434a408006d550f99314a, type: 3}
+  - {fileID: -4617664889215226663, guid: a4c50680a9927ec4f9af0a0c4616ead0, type: 3}

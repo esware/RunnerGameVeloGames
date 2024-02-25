@@ -14,7 +14,6 @@ namespace Dev.Scripts.Character.CharacterStates
             _characterMovement = characterState.GetCharacterMovement(animator);
             _characterMovement.controller.height =2f;
             _characterMovement.controller.center = new Vector3(0,1,0);
-            _characterMovement.cameraController.ChangeState(CameraStates.PlayerCam.ToString());
         }
 
         public override void UpdateAbility(BaseState characterState, Animator animator,AnimatorStateInfo stateInfo)

@@ -12,9 +12,10 @@ GameObject:
   - component: {fileID: 5797398786471290802}
   - component: {fileID: 5789385161610561140}
   - component: {fileID: 7872880553956362668}
-  - component: {fileID: -4569935164563287454}
-  m_Layer: 8
-  m_Name: Coin
+  - component: {fileID: -4617664889215226663}
+  - component: {fileID: -453513060179086876}
+  m_Layer: 7
+  m_Name: Magnet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -97,7 +98,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49e0fd73d4c6432589fbe4fb39d83c13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!65 &-4569935164563287454
+--- !u!114 &-4617664889215226663
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5767374591911820930}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 859395a1048842cfba45bba461248ef4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  duration: 5
+  powerupIcon: {fileID: 0}
+  icon: {fileID: 0}
+  activatedSound: {fileID: 0}
+  ActivatedParticleReference:
+    m_AssetGUID: 
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0
+  canBeSpawned: 1
+--- !u!65 &-453513060179086876
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

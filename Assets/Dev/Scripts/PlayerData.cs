@@ -25,8 +25,8 @@ public struct HighscoreEntry : System.IComparable<HighscoreEntry>
 
 public class PlayerData
 {
-    static protected PlayerData m_Instance;
-    static public PlayerData instance { get { return m_Instance; } }
+    static protected PlayerData _instance;
+    static public PlayerData Instance => _instance;
 
     protected string saveFile = "";
 
@@ -90,19 +90,19 @@ public class PlayerData
 
     public static void Create()
     {
-		if (m_Instance == null)
+		if (_instance == null)
 		{
-			m_Instance = new PlayerData();
+			_instance = new PlayerData();
 			
 		    CoroutineHandler.StartStaticCoroutine(CharacterDatabase.LoadDatabase());
 		    CoroutineHandler.StartStaticCoroutine(ThemeDatabase.LoadDatabase());
         }
 
-        m_Instance.saveFile = Application.persistentDataPath + "/save.bin";
+        _instance.saveFile = Application.persistentDataPath + "/save.bin";
 
-        if (File.Exists(m_Instance.saveFile))
+        if (File.Exists(_instance.saveFile))
         {
-	        m_Instance.Read();
+	        _instance.Read();
         }
         else
         {
@@ -110,23 +110,24 @@ public class PlayerData
         }
     }
 
-	static public void NewSave()
+	public static void NewSave()
 	{
-		m_Instance.characters.Clear();
-		m_Instance.themes.Clear();
+		_instance.characters.Clear();
+		_instance.themes.Clear();
 		
-		m_Instance.usedCharacter = 0;
-		m_Instance.usedTheme = 0;
+		_instance.usedCharacter = 0;
+		_instance.usedTheme = 0;
 
-		m_Instance.coins = 0;
+		_instance.coins = 0;
 
-		m_Instance.characters.Add("Male");
-		m_Instance.themes.Add("MainTheme");
+		_instance.characters.Add("Male");
+		_instance.characters.Add("Female");
+		_instance.themes.Add("Day");
 
-        m_Instance.ftueLevel = 0;
-        m_Instance.rank = 0;
+		_instance.ftueLevel = 0;
+        _instance.rank = 0;
 
-        m_Instance.Save();
+        _instance.Save();
 	}
 
     public void Read()
@@ -286,8 +287,8 @@ public class PlayerDataEditor : Editor
     [MenuItem("EWGames Debug/Give 1000000 coins and 1000 premium")]
     static public void GiveCoins()
     {
-        PlayerData.instance.coins += 1000000;
-        PlayerData.instance.Save();
+        PlayerData.Instance.coins += 1000000;
+        PlayerData.Instance.Save();
     }
     
 }

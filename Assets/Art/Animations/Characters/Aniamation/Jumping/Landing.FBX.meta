@@ -476,10 +476,10 @@ ModelImporter:
     rigImportErrors: 
     rigImportWarnings: "Copied Avatar Rig Configuration mis-match. Bone length in
       copied configuration does not match position in animation file:\n\t'thigh_l'
-      : position error = 8.883068 mm\n\t'calf_l' : position error = 7.297542 mm\n\t'foot_l'
-      : position error = 7.546765 mm\n\t'ball_l' : position error = 7.086854 mm\n\t'thigh_r'
-      : position error = 8.847022 mm\n\t'calf_r' : position error = 8.999373 mm\n\t'foot_r'
-      : position error = 8.421767 mm\n\t'ball_r' : position error = 7.427105 mm\n"
+      : position error = 6.231062 mm\n\t'calf_l' : position error = 18.043980 mm\n\t'foot_l'
+      : position error = 3.087094 mm\n\t'ball_l' : position error = 5.294025 mm\n\t'thigh_r'
+      : position error = 6.121177 mm\n\t'calf_r' : position error = 9.955730 mm\n\t'foot_r'
+      : position error = 3.941049 mm\n\t'ball_r' : position error = 4.819520 mm\n"
     animationImportErrors: 
     animationImportWarnings: "\nClip 'Take 001' has import animation warnings that
       might lower retargeting quality:\nNote: Activate translation DOF on avatar
@@ -540,11 +540,11 @@ ModelImporter:
       name: Jmp_FrontAir_B_Keep
       takeName: Take 001
       internalID: 0
-      firstFrame: 20
-      lastFrame: 50
+      firstFrame: 30
+      lastFrame: 45
       wrapMode: 0
       orientationOffsetY: 0
-      level: 0
+      level: 1
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
@@ -552,7 +552,7 @@ ModelImporter:
       loopBlend: 0
       loopBlendOrientation: 1
       loopBlendPositionY: 1
-      loopBlendPositionXZ: 1
+      loopBlendPositionXZ: 0
       keepOriginalOrientation: 1
       keepOriginalPositionY: 1
       keepOriginalPositionXZ: 1

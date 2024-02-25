@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5495bc90e464251a99ba58e2610d0be, type: 3}
   m_Name: Sliding
   m_EditorClassIdentifier: 
-  transitionTiming: 0
+  transitionTiming: 0.9

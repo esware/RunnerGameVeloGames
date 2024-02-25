@@ -37,7 +37,6 @@ namespace Dev.Scripts.Characters
                         _charactersDict.Add(c.characterName, c);
                     }
                 });
-
                 _loaded = true;
             }
         }

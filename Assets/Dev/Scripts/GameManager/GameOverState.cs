@@ -65,7 +65,7 @@ namespace Dev.Scripts.GameManager
         });
 #endif
 
-            PlayerData.instance.Save();
+            PlayerData.Instance.Save();
 
             trackManager.End();
         }
