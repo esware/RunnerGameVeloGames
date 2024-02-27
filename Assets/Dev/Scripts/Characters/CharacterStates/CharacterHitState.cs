@@ -13,6 +13,8 @@ namespace Dev.Scripts.Character.CharacterStates
             _characterMovement = characterState.GetCharacterMovement(animator);
             _characterMovement.cameraShake.Shake(0.5f);
             _characterMovement.cameraController.ChangeState(CameraStates.DeathCam.ToString());
+            
+            Debug.LogError(" Hit State");
         }
 
         public override void UpdateAbility(BaseState characterState, Animator animator, AnimatorStateInfo stateInfo)

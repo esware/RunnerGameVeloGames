@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Obstacles
+  m_EditorClassIdentifier: 
+  m_GroupName: Obstacles
+  m_Data:
+    m_SerializedData: []
+  m_GUID: ad2dc03a5593a2145858776dcc0049aa
+  m_SerializeEntries:
+  - m_GUID: d6e2601c4f144db459adb4f5e7affc65
+    m_Address: Car_Obstacle
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 68f0f5568d9917b46a7aebddf8143f70
+    m_Address: Barricade_Ramp
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 96c5923b5b0045147bfa7d77743edeee
+    m_Address: Barricade
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 808f79af1f77c0848bd1fe6c9a2b9a44, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: a0c68fbe2438c414e9e693330903aba6, type: 2}
+    - {fileID: 11400000, guid: 9aba7125522ff8246bfef2f53c26b1cc, type: 2}

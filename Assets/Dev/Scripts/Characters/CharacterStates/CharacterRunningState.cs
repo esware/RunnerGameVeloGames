@@ -19,31 +19,11 @@ namespace Dev.Scripts.Character.CharacterStates
         public override void UpdateAbility(BaseState characterState, Animator animator,AnimatorStateInfo stateInfo)
         {
             _characterMovement.Move();
-            SetTransition();
         }
 
         public override void OnExit(BaseState characterState, Animator animator, AnimatorStateInfo stateInfo)
         {
-           
-        }
-        
-        private void SetTransition()
-        {
-            if (!_characterMovement.isGrounded)
-            {
-                _characterMovement.PlayAnim(TransitionParameter.Landing.ToString(),0.01f,1f);
-            }
-            
-            if (CharacterInputController.SwipeUp)
-            {
-                _characterMovement.PlayAnim(TransitionParameter.Jumping.ToString(),0.01f,1f);
-            }
-            
-            if (CharacterInputController.SwipeDown)
-            {
-                _characterMovement.PlayAnim(TransitionParameter.Sliding.ToString(),0.01f,1f);
-            }
-            
+            animator.SetBool(TransitionParameter.ForceTransition.ToString(),false);
         }
     }
 }

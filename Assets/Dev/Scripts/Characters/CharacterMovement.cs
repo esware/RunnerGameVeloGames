@@ -22,12 +22,10 @@ namespace Characters
         public float gravity = -9.81f;
         public float jumpHeight = 3.0f;
         public bool isGrounded;
+        public Transform groundCheck;
         
         public CameraController cameraController;
         public CameraShake cameraShake;
-
-        public bool isSliding;
-        public bool isJumping;
         
         public int DesiredLane
         {
@@ -119,7 +117,7 @@ namespace Characters
         }
         public void GroundCheck()
         {
-            bool grounded = Physics.CheckSphere(transform.position, .5f, LayerMask.GetMask("Ground"));
+            bool grounded = Physics.CheckSphere(groundCheck.position, .5f, LayerMask.GetMask("Ground"));
 
             isGrounded = grounded;
             
@@ -131,17 +129,34 @@ namespace Characters
 
             controller.Move(velocity * Time.deltaTime);
         }
+
+        public bool IsCloseToGround(float distance)
+        {
+            Ray ray = new Ray(groundCheck.position, Vector3.down);
+            RaycastHit hit;
+            
+            if (Physics.Raycast(ray, out hit, distance, LayerMask.GetMask("Ground")))
+            {
+                Debug.DrawRay(groundCheck.position, Vector3.down * hit.distance, Color.red);
+                return true;
+            }
+            else
+            {
+                Debug.DrawRay(groundCheck.position, Vector3.down * distance, Color.blue);
+                return false;
+            }
+        }
         public void Jump()
         {
-            isJumping = true;
             controller.height =1f;
             controller.center = new Vector3(0,1.5f,0);
             velocity.y = Mathf.Sqrt(jumpHeight * -1.5f * gravity);
         }
-        public void PlayAnim(string animation,float animTransSpeed,float animationSpeed)
+        public void PlayAnim(string animationName,float animTransSpeed,float animationSpeed)
         {
-            if(characterControl.character.animator.IsInTransition(0)) {return;}
-            characterControl.character.animator.CrossFade(animation, animTransSpeed);
+            if(characterControl.character.animator.IsInTransition(0)) 
+                return;
+            characterControl.character.animator.CrossFade(animationName, animTransSpeed);
             characterControl.character.animator.speed = animationSpeed;
         }
 

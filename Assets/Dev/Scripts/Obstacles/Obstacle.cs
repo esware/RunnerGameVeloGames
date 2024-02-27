@@ -12,7 +12,6 @@ namespace Dev.Scripts.Obstacles
         public virtual void Setup() {}
 
         public abstract IEnumerator Spawn(TrackSegment segment, float t);
-        public abstract IEnumerator SpawnCoin();
 
         public virtual void Impacted()
         {

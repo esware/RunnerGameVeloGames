@@ -12,14 +12,7 @@ namespace Dev.Scripts.Character.CharacterStates
         public override void OnEnter(BaseState characterState, Animator animator, AnimatorStateInfo stateInfo)
         {
             _characterControl = characterState.GetCharacterMovement(animator);
-            if (TrackManager.Instance.isRerun)
-            {
-                _characterControl.cameraController.ChangeState(CameraStates.RerunCam.ToString());
-            }
-            else
-            {
-                _characterControl.cameraController.ChangeState(CameraStates.PlayerCam.ToString());
-            }
+            _characterControl.cameraController.ChangeState(CameraStates.PlayerCam.ToString());
             _characterControl.trackManager.characterInputController.GetInputs = true;
         }
 

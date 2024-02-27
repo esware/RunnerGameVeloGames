@@ -19,9 +19,11 @@ public enum TransitionParameter
     Running,
     Jumping,
     Sliding,
+    SlideEnd,
     Landing,
     Hit,
-    ForceTransition
+    ForceTransition,
+    JumpEnd
 }
 public static class GameEvents
 {
@@ -201,7 +203,7 @@ public class CharacterControl : MonoBehaviour
         StartCoroutine(InvincibleTimer(timer));
     }
     
-    protected IEnumerator InvincibleTimer(float timer)
+    private IEnumerator InvincibleTimer(float timer)
     {
         _invincible = true;
 
@@ -225,8 +227,6 @@ public class CharacterControl : MonoBehaviour
         }
         _invincible = false;
     }
-
-    private int _blueCoins=0;
     private void OnTriggerEnter(Collider c)
     {
         if (c.gameObject.layer == CoinsLayerIndex)
@@ -278,7 +278,7 @@ public class CharacterControl : MonoBehaviour
             // The collision killed the player, record all data to analytics.
 			else
 			{
-                GameEvents.PlayerDeathEvent?.Invoke();
+                 GameEvents.PlayerDeathEvent?.Invoke();
                 _deathData.Character = character.characterName;
                 _deathData.ThemeUsed = trackManager.currentTheme.themeName;
                 //_deathData.ObstacleType = ob.GetType().ToString();

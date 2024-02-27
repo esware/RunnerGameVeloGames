@@ -8,7 +8,6 @@ namespace Dev.Scripts.Camera
         IdleCam,
         PlayerCam,
         DeathCam,
-        RerunCam
     }
     public class CameraController:MonoBehaviour
     {

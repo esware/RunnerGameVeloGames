@@ -16,7 +16,6 @@ namespace Dev.Scripts.Character.CharacterStates
             _characterMovement.gravity *= 2;
             _characterMovement.controller.center =new Vector3(0,0.5f,0);
             _characterMovement.controller.height =1f;
-            animator.SetBool(TransitionParameter.ForceTransition.ToString(),false);
         }
 
         public override void UpdateAbility(BaseState characterState, Animator animator, AnimatorStateInfo stateInfo)
@@ -25,6 +24,7 @@ namespace Dev.Scripts.Character.CharacterStates
             if (stateInfo.normalizedTime >= transitionTiming)
             {
                 animator.SetBool(TransitionParameter.ForceTransition.ToString(),true);
+                animator.SetBool(TransitionParameter.SlideEnd.ToString(),true);
             }
         }
 
@@ -33,6 +33,8 @@ namespace Dev.Scripts.Character.CharacterStates
             _characterMovement.gravity = -20;
             _characterMovement.controller.center =new Vector3(0,1,0);
             _characterMovement.controller.height =2f;
+            animator.SetBool(TransitionParameter.ForceTransition.ToString(),false);
+            animator.SetBool(TransitionParameter.SlideEnd.ToString(),false);
         }
     }
 }
