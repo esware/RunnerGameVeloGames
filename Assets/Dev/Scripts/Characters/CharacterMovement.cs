@@ -27,6 +27,8 @@ namespace Characters
         public CameraController cameraController;
         public CameraShake cameraShake;
         
+        private int _layerMask = (1 << 6) | (1 << 9);
+
         public int DesiredLane
         {
             get => _desiredLane;
@@ -117,7 +119,7 @@ namespace Characters
         }
         public void GroundCheck()
         {
-            bool grounded = Physics.CheckSphere(groundCheck.position, .5f, LayerMask.GetMask("Ground"));
+            bool grounded = Physics.CheckSphere(groundCheck.position, .5f, _layerMask);
 
             isGrounded = grounded;
             
@@ -135,7 +137,7 @@ namespace Characters
             Ray ray = new Ray(groundCheck.position, Vector3.down);
             RaycastHit hit;
             
-            if (Physics.Raycast(ray, out hit, distance, LayerMask.GetMask("Ground")))
+            if (Physics.Raycast(ray, out hit, distance, _layerMask))
             {
                 Debug.DrawRay(groundCheck.position, Vector3.down * hit.distance, Color.red);
                 return true;

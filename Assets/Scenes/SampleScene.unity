@@ -787,8 +787,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterController: {fileID: 938761121}
   characterInputController: {fileID: 938761120}
-  minSpeed: 5
-  maxSpeed: 10
+  minSpeed: 10
+  maxSpeed: 20
   speedStep: 4
   laneOffset: 3
   invincible: 0
@@ -2366,8 +2366,9 @@ MonoBehaviour:
   velocity: {x: 0, y: 0, z: 0}
   laneChangeSpeed: 2
   gravity: -20
-  jumpHeight: 5
+  jumpHeight: 4
   isGrounded: 0
+  groundCheck: {fileID: 790274200}
   cameraController: {fileID: 140304480}
   cameraShake: {fileID: 1665063499}
   movementDirection: {x: 0, y: 0, z: 0}
