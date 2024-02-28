@@ -26,6 +26,6 @@ namespace Dev.Scripts.Characters
           public AudioClip jumpSound;
           public AudioClip hitSound;
           public AudioClip deathSound;
-      
+          
     }
 }

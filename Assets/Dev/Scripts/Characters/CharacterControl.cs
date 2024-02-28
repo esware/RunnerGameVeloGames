@@ -15,6 +15,7 @@ using Character = Dev.Scripts.Characters.Character;
 
 public enum TransitionParameter
 {
+    Start,
     Dead,
     Running,
     Jumping,
@@ -55,7 +56,6 @@ public class CharacterControl : MonoBehaviour
     
     [Header("Sound")]
     public AudioClip coinSound;
-    public AudioClip premiumSound;
     public AudioClip powerUpUseSound;
     public AudioSource powerupSource;
     
@@ -64,7 +64,6 @@ public class CharacterControl : MonoBehaviour
     public DeathEvent deathData { get { return _deathData; } }
     public new AudioSource audio { get { return _audio; } }
     public int coins { get { return _mCoins; } set { _mCoins = value; } }
-    public int premium { get { return _mPremium; } set { _mPremium = value; } }
     public int currentLife { get { return _mCurrentLife; } set { _mCurrentLife = value; } }
     public List<Consumable> consumables => m_ActiveConsumables;
     public List<Consumable> inventory = new List<Consumable>();
@@ -80,15 +79,12 @@ public class CharacterControl : MonoBehaviour
     private const int CoinsLayerIndex = 8;
     private const int ObstacleLayerIndex = 9;
     private const int PowerupLayerIndex = 10;
-    private const float DefaultInvinsibleTime = 2f;
+    private const float DefaultInvinsibleTime = 3f;
     
     private int _mCoins;
-    private int _redCoins;
-    private int _mPremium;
     private int _mCurrentLife;
 
     private List<Consumable> m_ActiveConsumables = new List<Consumable>();
-    private bool _mIsInvincible;
 
     #region Inital Methods
     
@@ -99,16 +95,12 @@ public class CharacterControl : MonoBehaviour
     protected void Awake ()
     {
         Init();
-        _mPremium = 0;
-        _mCurrentLife = 1;
-        Application.targetFrameRate = 60;
-        QualitySettings.vSyncCount = 0;
     }
     private void Init()
     {
         controller = GetComponent<CharacterController>();
         _invincible = false;
-        currentLife = 1;
+        currentLife = maxLife;
 
     }
     public void Begin()
@@ -123,13 +115,13 @@ public class CharacterControl : MonoBehaviour
 
     public void CheatInvincible(bool invincible)
     {
-        _mIsInvincible = invincible;
+        _invincible = invincible;
     }
-    public bool IsCheatInvincible()
+    private bool IsCheatInvincible()
     {
-        return _mIsInvincible;
+        return _invincible;
     }
-    public void CleanConsumable()
+    private void CleanConsumable()
     {
         for (int i = 0; i < m_ActiveConsumables.Count; ++i)
         {
@@ -179,25 +171,23 @@ public class CharacterControl : MonoBehaviour
     
     public void StartRunning()
     {
+        trackManager.StartMove();
         if (character.animator)
         {
+            characterMovement.PlayAnim(TransitionParameter.Running.ToString(),0.1f,1f);
             GameEvents.RunStartEvent?.Invoke();
         }
     }
-    public void StopMoving()
+    private void StopMoving()
     {
         trackManager.StopMove();
         if (character.animator)
         {
-            
+            characterMovement.PlayAnim(TransitionParameter.Hit.ToString(),0.1f,1f);
         }
     }
     
     #endregion
-    public void SetInvincibleExplicit(bool invincible)
-    {
-        _invincible = invincible;
-    }
     public void SetInvincible(float timer = DefaultInvinsibleTime)
     {
         StartCoroutine(InvincibleTimer(timer));
@@ -205,16 +195,23 @@ public class CharacterControl : MonoBehaviour
     
     private IEnumerator InvincibleTimer(float timer)
     {
-        _invincible = true;
+        var c = GetComponentInChildren<Character>();
+        var r = c.GetComponentInChildren<SkinnedMeshRenderer>();
+        var originalMaterial = r.materials[0];
+        var originalColor = originalMaterial.color;
+        
+        Material invincibleMaterial = new Material(originalMaterial);
+        invincibleMaterial.color = Color.white;
 
+        _invincible = true;
+        
         float time = 0;
         float currentBlink = 1.0f;
-        float lastBlink = 0.0f; 
+        float lastBlink = 0.0f;
         const float blinkPeriod = 0.1f;
 
-        while(time < timer && _invincible)
+        while (time < timer && _invincible)
         {
-            
             yield return null;
             time += Time.deltaTime;
             lastBlink += Time.deltaTime;
@@ -223,10 +220,16 @@ public class CharacterControl : MonoBehaviour
             {
                 lastBlink = 0;
                 currentBlink = 1.0f - currentBlink;
+                
+                r.materials[0].color = (currentBlink > 0.5f) ? originalColor : invincibleMaterial.color;
             }
         }
+        r.materials[0].color = originalColor;
+
         _invincible = false;
     }
+
+    
     private void OnTriggerEnter(Collider c)
     {
         if (c.gameObject.layer == CoinsLayerIndex)
@@ -244,11 +247,8 @@ public class CharacterControl : MonoBehaviour
             if (_invincible || IsCheatInvincible())
                 return;
             StopMoving();
-
-            if(trackManager.isTutorial)
-                return;
-            characterMovement.PlayAnim(TransitionParameter.Hit.ToString(), 0.1f, 1f);
-            c.enabled = false;
+            
+            c.gameObject.SetActive(false);
 
             Obstacle ob = c.gameObject.GetComponent<Obstacle>();
 
@@ -261,14 +261,7 @@ public class CharacterControl : MonoBehaviour
 			    Addressables.ReleaseInstance(c.gameObject);
 			}
 
-            if (TrackManager.Instance.isTutorial)
-            {
-                inputController.tutorialHitObstacle = true;
-            }
-            else
-            {
-                currentLife -= 1;
-            }
+            currentLife -= 1;
             
             if (currentLife > 0)
 			{
@@ -283,7 +276,6 @@ public class CharacterControl : MonoBehaviour
                 _deathData.ThemeUsed = trackManager.currentTheme.themeName;
                 //_deathData.ObstacleType = ob.GetType().ToString();
                 _deathData.Coins = coins;
-                _deathData.Premium = premium;
                 _deathData.Score = trackManager.score;
                 _deathData.WorldDistance = trackManager.worldDistance;
 

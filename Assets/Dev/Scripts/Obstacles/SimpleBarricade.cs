@@ -15,14 +15,9 @@ namespace Dev.Scripts.Obstacles
         
         public override IEnumerator Spawn(TrackSegment segment, float t)
         {
-            //the tutorial very firts barricade need to be center and alone, so player can swipe safely in bother direction to avoid it
-            bool isTutorialFirst = TrackManager.Instance.isTutorial && TrackManager.Instance.firstObstacle && segment == segment.manager.currentSegment;
-
-            if (isTutorialFirst)
-                TrackManager.Instance.firstObstacle = false;
-        
-            int count = isTutorialFirst ? 1 : Random.Range(MinObstacleCount, MaxObstacleCount + 1);
-            int startLane = isTutorialFirst ? 0 : Random.Range(LeftMostLaneIndex, RightMostLaneIndex + 1);
+            
+            int count =  Random.Range(MinObstacleCount, MaxObstacleCount + 1);
+            int startLane =  Random.Range(LeftMostLaneIndex, RightMostLaneIndex + 1);
 
             Vector3 position;
             Quaternion rotation;
@@ -46,7 +41,7 @@ namespace Dev.Scripts.Obstacles
                     Debug.Log(gameObject.name);
                 else
                 {
-                    obj.transform.position += obj.transform.right * lane * segment.manager.laneOffset;
+                    obj.transform.position += obj.transform.right * (lane * segment.manager.laneOffset);
 
                     obj.transform.SetParent(segment.objectRoot, true);
 

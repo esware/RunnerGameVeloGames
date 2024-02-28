@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections;
+using Characters;
+using Dev.Scripts.Camera;
 using Dev.Scripts.Characters;
 using Dev.Scripts.Sounds;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace Dev.Scripts.GameManager
@@ -16,7 +19,10 @@ namespace Dev.Scripts.GameManager
         [SerializeField] private GameObject characterMenu;
         [SerializeField] private GameObject player;
         
+        
         [Header("Character UI")] 
+        [SerializeField] private SpriteRenderer characterBackground;
+        [SerializeField] private Image characterIcon;
         [SerializeField] private Text charNameDisplay;
         [SerializeField] private RectTransform charSelect;
         [SerializeField] private Transform charPosition;
@@ -34,13 +40,17 @@ namespace Dev.Scripts.GameManager
             {
                 gameObject.SetActive(true);
             }
+            
+            characterBackground.gameObject.SetActive(true);
+            
             mainMenu.gameObject.SetActive(false);
             characterMenu.gameObject.SetActive(true);
+            player.SetActive(true);
             player.transform.position = Vector3.zero;
+            player.GetComponent<CharacterMovement>().cameraController.ChangeState(CameraStates.IdleCam.ToString());
             
-
             charNameDisplay.text = "";
-
+            
             if (MusicPlayer.instance.GetStem(0) != menuTheme)
             {
                 MusicPlayer.instance.SetStem(0, menuTheme);
@@ -53,6 +63,7 @@ namespace Dev.Scripts.GameManager
         }
         public override void Exit(AState to)
         {
+            characterBackground.gameObject.SetActive(false);
             _canvas.gameObject.SetActive(false);
             if (_character != null) Addressables.ReleaseInstance(_character);
         }
@@ -116,10 +127,11 @@ namespace Dev.Scripts.GameManager
                     newChar = op.Result as GameObject;
                     newChar.transform.SetParent(charPosition, false);
                     newChar.transform.rotation = Quaternion.Euler(0,180,0);
-                    //newChar.gameObject.SetActive(false);
+                    
                     //videoPlayer.clip = newChar.GetComponent<Character>().characterVideo;
-                    //characterBg.sprite = newChar.GetComponent<Characters.Character>().CharacterBg;
                     //videoPlayer.Play();
+                    characterIcon.sprite = newChar.GetComponent<Characters.Character>().icon;
+                    characterBackground.GetComponent<SpriteRenderer>().sprite = newChar.GetComponent<Characters.Character>().CharacterBg;
 
                     if (_character != null)
                         Addressables.ReleaseInstance(_character);

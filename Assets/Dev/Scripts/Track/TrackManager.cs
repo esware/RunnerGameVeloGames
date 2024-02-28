@@ -21,9 +21,6 @@ namespace Dev.Scripts.Track
     {
         public static TrackManager Instance => _instance;
         private static TrackManager _instance;
-
-        static readonly int StartHash = Animator.StringToHash("Start");
-
         public delegate int MultiplierModifier(int current);
         public MultiplierModifier modifyMultiply;
 
@@ -64,12 +61,9 @@ namespace Dev.Scripts.Track
 
         public bool isMoving { get { return _isMoving; } }
         public bool isRerun { get { return _mRerun; } set { _mRerun = value; } }
-
-        public bool isTutorial { get { return _mIsTutorial; } set { _mIsTutorial = value; } }
+        
         public bool isLoaded { get; set; }
         
-        public bool firstObstacle { get; set; }
-
         private float _timeToStart = -1.0f;
         
         private int _trackSeed = -1;
@@ -96,15 +90,14 @@ namespace Dev.Scripts.Track
         private int _score;
         private float _mScoreAccum;
         private bool _mRerun;     
-
-        private bool _mIsTutorial;
+        
         private readonly Vector3 _offScreenSpawnPos = new Vector3(-100f, -100f, -100f);
         private const float KCountdownToStartLength = 5f;
         private const float KCountdownSpeed = 1.5f;
         private const int KStartingSafeSegments = 1;
-        private const int KDesiredSegmentCount =5;
+        private const int KDesiredSegmentCount = 10;
         private const float KAcceleration = 0.1f;
-
+        private int _spawnedSegments = 0;
 
         protected void Awake()
         {
@@ -124,7 +117,7 @@ namespace Dev.Scripts.Track
             _isMoving = false;
         }
 
-        IEnumerator WaitToStart()
+        private IEnumerator WaitToStart()
         {
             float length = KCountdownToStartLength;
             _timeToStart = length;
@@ -154,8 +147,6 @@ namespace Dev.Scripts.Track
             
             if (!_mRerun)
             {
-                firstObstacle = true;
-
                 if (_trackSeed != -1)
                     Random.InitState(_trackSeed);
                 else
@@ -190,14 +181,11 @@ namespace Dev.Scripts.Track
                 gameObject.SetActive(true);
                 characterController.gameObject.SetActive(true);
                 characterController.coins = 0;
-                characterController.premium = 0;
 
                 _score = 0;
                 _mScoreAccum = 0;
 
-                _safeSegementLeft = _mIsTutorial ? 0 : KStartingSafeSegments;
-                Debug.Log("Collectable Prefab : "+_currentThemeData.collectiblePrefab);
-                Debug.Log("Current ThemeData : " +_currentThemeData);
+                _safeSegementLeft = KStartingSafeSegments;
                 Coin.coinPool = new Pooler(currentTheme.collectiblePrefab, 50);
                 
 
@@ -206,12 +194,11 @@ namespace Dev.Scripts.Track
             {
                 { "theme", m_CurrentThemeData.themeName},
                 { "character", player.characterName },
-                { "accessory",  PlayerData.instance.usedAccessory >= 0 ? player.accessories[PlayerData.instance.usedAccessory].accessoryName : "none"}
             });
 #endif
             }
             characterController.Begin();
-            characterController.character.animator.Play(StartHash);
+            characterController.character.animator.Play(TransitionParameter.Start.ToString());
             yield return new WaitForSeconds(0.5f);
             StartCoroutine(WaitToStart());
             isLoaded = true;
@@ -246,10 +233,10 @@ namespace Dev.Scripts.Track
             _segments.Clear();
             m_PastSegments.Clear();
         }
-        private int _spawnedSegments = 0;
-        void Update()
+        
+        private void Update()
         {
-            while (_spawnedSegments < (_mIsTutorial ? 3 : KDesiredSegmentCount))
+            while (_spawnedSegments < KDesiredSegmentCount)
             {
                 StartCoroutine(SpawnNewSegment());
                 _spawnedSegments++;
@@ -282,13 +269,10 @@ namespace Dev.Scripts.Track
 
             PowerupSpawnUpdate();
 
-            if (!_mIsTutorial)
-            {
-                if (_speed < maxSpeed)
-                    _speed += KAcceleration * Time.deltaTime;
-                else
-                    _speed = maxSpeed;
-            }
+            if (_speed < maxSpeed)
+                _speed += KAcceleration * Time.deltaTime;
+            else
+                _speed = maxSpeed;
 
             _mMultiplier = 1 + Mathf.FloorToInt((_speed - minSpeed) / (maxSpeed - minSpeed) * speedStep);
 
@@ -300,20 +284,16 @@ namespace Dev.Scripts.Track
                 }
             }
 
-            if (!_mIsTutorial)
+            int currentTarget = (PlayerData.Instance.rank + 1) * 300;
+            if (_totalWorldDistance > currentTarget)
             {
-                int currentTarget = (PlayerData.Instance.rank + 1) * 300;
-                if (_totalWorldDistance > currentTarget)
-                {
-                    PlayerData.Instance.rank += 1;
-                    PlayerData.Instance.Save();
+                PlayerData.Instance.rank += 1;
+                PlayerData.Instance.Save();
 #if UNITY_ANALYTICS
 //"level" in our game are milestone the player have to reach : one every 300m
             AnalyticsEvent.LevelUp(PlayerData.instance.rank);
 #endif
-                }
             }
-
             MusicPlayer.instance.UpdateVolumes(speedRatio);
         }
 
@@ -323,7 +303,7 @@ namespace Dev.Scripts.Track
             _mTimeSinceLastPremium += Time.deltaTime;
         }
 
-        public void ChangeZone()
+        private void ChangeZone()
         {
             _currentZone += 1;
             if (_currentZone >= _currentThemeData.zones.Length)
@@ -336,11 +316,9 @@ namespace Dev.Scripts.Track
         {
             int segmentUse;
             AsyncOperationHandle segmentToUseOp;
-            if (!_mIsTutorial)
-            {
-                if (_currentThemeData.zones[_currentZone].length < _mCurrentZoneDistance)
-                    ChangeZone();
-            }
+            
+            if (_currentThemeData.zones[_currentZone].length < _mCurrentZoneDistance)
+                ChangeZone();
             
             segmentUse = Random.Range(0, _currentThemeData.zones[_currentZone].prefabList.Length);
             if (segmentUse == _PreviousSegment) segmentUse = (segmentUse + 1) % _currentThemeData.zones[_currentZone].prefabList.Length;
@@ -420,11 +398,9 @@ namespace Dev.Scripts.Track
         }
         }
 
-        public IEnumerator SpawnCoinAndPowerup(TrackSegment segment)
+        private IEnumerator SpawnCoinAndPowerup(TrackSegment segment)
         {
-            if (!_mIsTutorial)
-            {
-                const float increment = 3f;
+            const float increment = 3f;
                 float currentWorldPos = 0.0f;
                 int currentLane = Random.Range(0, 3);
 
@@ -491,10 +467,9 @@ namespace Dev.Scripts.Track
 
                     currentWorldPos += increment;
                 }
-            }
         }
 
-        public void AddScore(int amount)
+        private void AddScore(int amount)
         {
             int finalAmount = amount;
             _score += finalAmount * _mMultiplier;

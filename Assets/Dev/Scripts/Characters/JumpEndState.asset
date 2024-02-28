@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4fb83cbbf01c404785b5008ba3f52301, type: 3}
   m_Name: JumpEndState
   m_EditorClassIdentifier: 
-  transitionTiming: 0
+  transitionTiming: 0.1

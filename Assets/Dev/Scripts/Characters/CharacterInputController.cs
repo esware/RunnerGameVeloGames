@@ -26,14 +26,7 @@ namespace Dev.Scripts.Characters
 	{
 		_getInputs = false;
 	}
-
-	private bool TutorialMoveCheck(int tutorialLevel)
-	{
-		
-		tutorialWaitingForValidation = currentTutorialLevel != tutorialLevel;
-
-		return (!TrackManager.Instance.isTutorial || currentTutorialLevel >= tutorialLevel);
-	}
+	
     private void GetMobileInputs()
     {
 	    if(!_getInputs)
@@ -64,16 +57,16 @@ namespace Dev.Scripts.Characters
 			    {
 				    if(Mathf.Abs(diff.y) > Mathf.Abs(diff.x))
 				    {
-					    if(TutorialMoveCheck(2) && diff.y < 0)
+					    if(diff.y < 0)
 					    {
 						    SwipeDown = true;
 					    }
-					    else if(TutorialMoveCheck(1))
+					    else
 					    {
 						    SwipeUp = true;
 					    }
 				    }
-				    else if(TutorialMoveCheck(0))
+				    else
 				    {
 					    if(diff.x < 0)
 					    {

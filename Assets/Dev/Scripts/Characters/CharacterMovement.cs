@@ -47,7 +47,6 @@ namespace Characters
         {
             GameEvents.RunStartEvent += () => PlayAnim(TransitionParameter.Running.ToString(), 0.1f, 1f);
             GameEvents.PlayerDeathEvent += () => PlayAnim(TransitionParameter.Dead.ToString(), 0.01f, 1f);
-            //GameEvents.GameStartEvent += () => ChangeState(new CharacterIdleState(this));
         }
         public void Move()
         {

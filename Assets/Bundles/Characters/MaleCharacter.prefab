@@ -71,8 +71,8 @@ MonoBehaviour:
   characterName: Male
   cost: 0
   animator: {fileID: 7958664727054231222}
-  icon: {fileID: 0}
-  CharacterBg: {fileID: 0}
+  icon: {fileID: 21300000, guid: 506dc8c9f03ff4f4da2c82767213f5f9, type: 3}
+  CharacterBg: {fileID: 21300000, guid: d7560b0f336bba7498aa575d232ef81f, type: 3}
   jumpSound: {fileID: 0}
   hitSound: {fileID: 0}
   deathSound: {fileID: 0}
@@ -1997,7 +1997,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: dd41db2cdb4e66e4985303e1287ab101, type: 2}
+  - {fileID: 2100000, guid: 2c8c856f82654b349abfbd91f2e42438, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

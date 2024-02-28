@@ -17,7 +17,7 @@ namespace Dev.Scripts.Character.CharacterStates
         {
             if (!_characterMovement.isGrounded)
             {
-                if (_characterMovement.IsCloseToGround(.6f))
+                if (_characterMovement.IsCloseToGround(.5f))
                 {
                     animator.SetBool(TransitionParameter.JumpEnd.ToString(),true);
                 }

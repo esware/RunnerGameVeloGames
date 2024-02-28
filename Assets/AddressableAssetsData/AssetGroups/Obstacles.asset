@@ -17,7 +17,7 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: ad2dc03a5593a2145858776dcc0049aa
   m_SerializeEntries:
-  - m_GUID: d6e2601c4f144db459adb4f5e7affc65
+  - m_GUID: af707e451812dc645beae22cfd643303
     m_Address: Car_Obstacle
     m_ReadOnly: 0
     m_SerializedLabels: []
@@ -27,6 +27,30 @@ MonoBehaviour:
     m_SerializedLabels: []
   - m_GUID: 96c5923b5b0045147bfa7d77743edeee
     m_Address: Barricade
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: a986a735f25d6294bbc095ecb633d007
+    m_Address: Barricade_Ramp_two
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 0e2f46ead9a900845a549396f5513e3d
+    m_Address: Wall_Door
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: c680a14c6991a2e44a7de9a16bbefd41
+    m_Address: Block_Long
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: de38e6444c6221940819c4ce404ab8bf
+    m_Address: Block
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 69ebbe8a0b9eacd42bb7d284835c29cb
+    m_Address: DoorFrame
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: a741febc92f7d9d4f84f01ea7e81d9d6
+    m_Address: Prop_Crate
     m_ReadOnly: 0
     m_SerializedLabels: []
   m_ReadOnly: 0

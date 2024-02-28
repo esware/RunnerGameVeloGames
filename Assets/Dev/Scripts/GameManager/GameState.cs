@@ -29,16 +29,16 @@ namespace Dev.Scripts.GameManager
         private Image[] _lifeHearts;
         private RectTransform _countdownRectTransform;
         private bool _wasMoving;
-        private int _maxLives = 3;
         private int _currentSegmentObstacleIndex = 0;
         private TrackSegment _nextValidSegment = null;
-        private int _obstacleToClear = 3;
+
         public override void Enter(AState from)
         {
             _countdownRectTransform = countdownText.GetComponent<RectTransform>();
-            _lifeHearts = new Image[_maxLives];
-            for (int i = 0; i < _maxLives; i++)
+            _lifeHearts = new Image[trackManager.characterController.maxLife];
+            for (int i = 0; i < trackManager.characterController.maxLife; i++)
             {
+                lifeRectTransform.GetChild(i).gameObject.SetActive(true);
                 _lifeHearts[i] = lifeRectTransform.GetChild(i).GetComponent<Image>();
             }
 
@@ -50,10 +50,10 @@ namespace Dev.Scripts.GameManager
             canvas.gameObject.SetActive(true);
             pauseMenu.gameObject.SetActive(false);
             wholeUI.gameObject.SetActive(true);
-            pauseButton.gameObject.SetActive(!trackManager.isTutorial);
+            pauseButton.gameObject.SetActive(true);
             if (!trackManager.isRerun)
             {
-                trackManager.characterController.currentLife = _maxLives;
+                trackManager.characterController.currentLife = trackManager.characterController.maxLife;
                 trackManager.ClearSegments();
             }
             _finished = false;
@@ -82,7 +82,7 @@ namespace Dev.Scripts.GameManager
         {
             coinText.text = trackManager.characterController.coins.ToString();
 
-            for (int i = 0; i < 3; ++i)
+            for (int i = 0; i < trackManager.characterController.maxLife; ++i)
             {
 
                 if(trackManager.characterController.currentLife > i)
@@ -97,7 +97,7 @@ namespace Dev.Scripts.GameManager
 
             scoreText.text = trackManager.score.ToString();
 
-            distanceText.text = Mathf.FloorToInt(trackManager.worldDistance).ToString() + "m";
+            distanceText.text = Mathf.FloorToInt(trackManager.worldDistance).ToString() + " m";
 
             if (trackManager.timeToStart >= 0)
             {
@@ -142,7 +142,6 @@ namespace Dev.Scripts.GameManager
         }
         public void Pause(bool displayMenu = true)
         {
-            //check if we aren't finished OR if we aren't already in pause (as that would mess states)
             if (_finished || AudioListener.pause == true)
                 return;
 

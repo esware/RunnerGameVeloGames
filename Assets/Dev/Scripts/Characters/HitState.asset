@@ -12,3 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7319504e871b40459fd2052a579703b2, type: 3}
   m_Name: HitState
   m_EditorClassIdentifier: 
+  transitionTiming: 0.9

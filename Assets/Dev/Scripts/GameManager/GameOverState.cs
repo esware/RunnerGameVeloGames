@@ -38,7 +38,6 @@ namespace Dev.Scripts.GameManager
         
         public void GoToLoadout()
         {
-	    
             trackManager.isRerun = false;
             manager.SwitchState("Loadout");
         }
