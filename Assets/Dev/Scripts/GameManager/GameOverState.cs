@@ -50,22 +50,7 @@ namespace Dev.Scripts.GameManager
 
         private void FinishRun()
         {
-            CharacterControl.DeathEvent de = trackManager.characterController.deathData;
-            //register data to analytics
-#if UNITY_ANALYTICS
-        AnalyticsEvent.GameOver(null, new Dictionary<string, object> {
-            { "coins", de.coins },
-            { "premium", de.premium },
-            { "score", de.score },
-            { "distance", de.worldDistance },
-            { "obstacle",  de.obstacleType },
-            { "theme", de.themeUsed },
-            { "character", de.character },
-        });
-#endif
-
             PlayerData.Instance.Save();
-
             trackManager.End();
         }
     }

@@ -130,7 +130,7 @@ MonoBehaviour:
   objectRoot: {fileID: 0}
   collectibleTransform: {fileID: 0}
   possibleObstacles:
-  - m_AssetGUID: 68f0f5568d9917b46a7aebddf8143f70
+  - m_AssetGUID: 96c5923b5b0045147bfa7d77743edeee
     m_SubObjectName: 
     m_SubObjectType: 
     m_EditorAssetChanged: 0
@@ -138,17 +138,12 @@ MonoBehaviour:
     m_SubObjectName: 
     m_SubObjectType: 
     m_EditorAssetChanged: 0
-  - m_AssetGUID: a741febc92f7d9d4f84f01ea7e81d9d6
-    m_SubObjectName: 
-    m_SubObjectType: 
-    m_EditorAssetChanged: 0
-  - m_AssetGUID: 69ebbe8a0b9eacd42bb7d284835c29cb
+  - m_AssetGUID: c680a14c6991a2e44a7de9a16bbefd41
     m_SubObjectName: 
     m_SubObjectType: 
     m_EditorAssetChanged: 0
   obstaclePositions:
-  - 0.2
-  - 0.791
+  - 0.5
   segmentType: 0
 --- !u!1 &205645352631647120
 GameObject:

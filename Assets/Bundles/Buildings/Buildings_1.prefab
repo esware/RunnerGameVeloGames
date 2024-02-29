@@ -96,18 +96,12 @@ MonoBehaviour:
     m_SubObjectName: 
     m_SubObjectType: 
     m_EditorAssetChanged: 0
-  - m_AssetGUID: 69ebbe8a0b9eacd42bb7d284835c29cb
-    m_SubObjectName: 
-    m_SubObjectType: 
-    m_EditorAssetChanged: 0
-  - m_AssetGUID: 0e2f46ead9a900845a549396f5513e3d
+  - m_AssetGUID: c680a14c6991a2e44a7de9a16bbefd41
     m_SubObjectName: 
     m_SubObjectType: 
     m_EditorAssetChanged: 0
   obstaclePositions:
   - 0.5
-  - 0
-  - 0.9
   segmentType: 0
 --- !u!1 &2413201184851167389
 GameObject:

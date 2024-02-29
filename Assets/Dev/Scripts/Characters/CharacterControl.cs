@@ -35,17 +35,6 @@ public static class GameEvents
 
 public class CharacterControl : MonoBehaviour
 {
-    public struct DeathEvent
-    {
-        public string Character;
-        public string ObstacleType;
-        public string ThemeUsed;
-        public int Coins;
-        public int Premium;
-        public int Score;
-        public float WorldDistance;
-    }
-    
     public CharacterInputController inputController;
     public CharacterMovement characterMovement;
     public Character character;
@@ -59,9 +48,6 @@ public class CharacterControl : MonoBehaviour
     public AudioClip powerUpUseSound;
     public AudioSource powerupSource;
     
-    
-    
-    public DeathEvent deathData { get { return _deathData; } }
     public new AudioSource audio { get { return _audio; } }
     public int coins { get { return _mCoins; } set { _mCoins = value; } }
     public int currentLife { get { return _mCurrentLife; } set { _mCurrentLife = value; } }
@@ -72,7 +58,6 @@ public class CharacterControl : MonoBehaviour
     public List<GameObject> magnetCoins = new List<GameObject>();
 
     private bool _invincible;
-    private DeathEvent _deathData;
     private AudioSource _audio;
     
     private const float MagnetSpeed = 10f;
@@ -248,18 +233,16 @@ public class CharacterControl : MonoBehaviour
                 return;
             StopMoving();
             
-            c.gameObject.SetActive(false);
-
-            Obstacle ob = c.gameObject.GetComponent<Obstacle>();
+            var ob = c.gameObject.GetComponent<Obstacle>();
 
 			if (ob != null)
 			{
 				ob.Impacted();
-			}
+            }
 			else
 			{
 			    Addressables.ReleaseInstance(c.gameObject);
-			}
+            }
 
             currentLife -= 1;
             
@@ -272,14 +255,7 @@ public class CharacterControl : MonoBehaviour
 			else
 			{
                  GameEvents.PlayerDeathEvent?.Invoke();
-                _deathData.Character = character.characterName;
-                _deathData.ThemeUsed = trackManager.currentTheme.themeName;
-                //_deathData.ObstacleType = ob.GetType().ToString();
-                _deathData.Coins = coins;
-                _deathData.Score = trackManager.score;
-                _deathData.WorldDistance = trackManager.worldDistance;
-
-			}
+            }
         }
         else if(c.gameObject.layer == PowerupLayerIndex)
         {

@@ -8,9 +8,8 @@ namespace Dev.Scripts.Obstacles
     public abstract class Obstacle : MonoBehaviour
     {
         public AudioClip impactedSound;
-
-        public virtual void Setup() {}
-
+        public Color[] colors;
+        
         public abstract IEnumerator Spawn(TrackSegment segment, float t);
 
         public virtual void Impacted()

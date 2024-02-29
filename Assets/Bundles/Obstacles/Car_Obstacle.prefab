@@ -144,6 +144,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   impactedSound: {fileID: 0}
+  colors:
+  - {r: 0.078987174, g: 0.53774476, b: 0.6698113, a: 1}
+  - {r: 0.38314345, g: 0.4459203, b: 0.7735849, a: 1}
+  - {r: 0.3700605, g: 0.7924528, b: 0.51748365, a: 1}
+  - {r: 0.8207547, g: 0.3747749, b: 0.33681917, a: 1}
+  - {r: 1, g: 1, b: 1, a: 1}
 --- !u!65 &4469785571420416422
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -244,6 +250,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 23889050435259212, guid: d6e2601c4f144db459adb4f5e7affc65, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 1367954f4e3bbc247a3d30b5fa3e86f1, type: 2}
     - target: {fileID: 7969692778881885827, guid: d6e2601c4f144db459adb4f5e7affc65, type: 3}
       propertyPath: m_Size.x
       value: 1.8482713
@@ -275,3 +285,24 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4508286580018686, guid: d6e2601c4f144db459adb4f5e7affc65, type: 3}
   m_PrefabInstance: {fileID: 6969624509245524562}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &6970151286262467466 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1098664898953688, guid: d6e2601c4f144db459adb4f5e7affc65, type: 3}
+  m_PrefabInstance: {fileID: 6969624509245524562}
+  m_PrefabAsset: {fileID: 0}
+--- !u!111 &229704393921889774
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6970151286262467466}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 7400000, guid: 14b65ebee37ee1d4caa61fdaae0fdd8c, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: 14b65ebee37ee1d4caa61fdaae0fdd8c, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 0
+  m_AnimatePhysics: 0
+  m_CullingType: 0
