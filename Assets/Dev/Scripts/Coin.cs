@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Dev.Scripts
 {
@@ -12,6 +13,11 @@ namespace Dev.Scripts
             {
                 coinPool.Free(this.gameObject);
             }
+        }
+        void OnDrawGizmosSelected()
+        {
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawWireSphere(transform.position, 1.3f);
         }
     }
 }

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1430615193250028545}
   - component: {fileID: 8265297040793016538}
   - component: {fileID: 4040937005520554012}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Prop_Crate
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -143,6 +143,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   impactedSound: {fileID: 0}
+  randomColor: 0
   colors:
   - {r: 0.078987174, g: 0.53774476, b: 0.6698113, a: 1}
   - {r: 0.38314345, g: 0.4459203, b: 0.7735849, a: 1}
@@ -237,9 +238,9 @@ Animation:
   m_GameObject: {fileID: 88070088154926841}
   m_Enabled: 1
   serializedVersion: 3
-  m_Animation: {fileID: 7400000, guid: 7bcf523793c12234aafeed6eb06a5092, type: 2}
+  m_Animation: {fileID: 7400000, guid: 7828a5b6adbcf7148a1c8bbe9a893e9c, type: 2}
   m_Animations:
-  - {fileID: 7400000, guid: 7bcf523793c12234aafeed6eb06a5092, type: 2}
+  - {fileID: 7400000, guid: 7828a5b6adbcf7148a1c8bbe9a893e9c, type: 2}
   m_WrapMode: 0
   m_PlayAutomatically: 0
   m_AnimatePhysics: 0

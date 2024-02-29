@@ -8,6 +8,7 @@ using Dev.Scripts.Consumables;
 using Dev.Scripts.Obstacles;
 using Dev.Scripts.Sounds;
 using Dev.Scripts.Themes;
+using Unity.VisualScripting;
 using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 #if UNITY_ANALYTICS
@@ -385,41 +386,76 @@ namespace Dev.Scripts.Track
         } 
         private IEnumerator SpawnFromAssetReference(AssetReference reference, TrackSegment segment, int posIndex)
         {
+            Vector3 position;
+            Quaternion rotation;
+            segment.GetPointAt(segment.obstaclePositions[posIndex], out position, out rotation);
             
             AsyncOperationHandle op = Addressables.LoadAssetAsync<GameObject>(reference);
-        yield return op; 
-        GameObject obj = op.Result as GameObject;
-        
-        if (obj != null)
-        {
-            Obstacle obstacle = obj.GetComponent<Obstacle>();
-            if (obstacle != null)
-                yield return obstacle.Spawn(segment, segment.obstaclePositions[posIndex]);
-        }
-        }
+            yield return op; 
+            GameObject obj = op.Result as GameObject;
+            
+            if (CheckCollision(obj, posIndex))
+            {
+                Addressables.ReleaseInstance(obj.gameObject);
+                //DestroyImmediate (obj, true);
+                yield break;
+            }
 
+            
+            if (obj != null)
+            {
+                Obstacle obstacle = obj.GetComponent<Obstacle>();
+                if (obstacle != null)
+                    yield return obstacle.Spawn(segment, segment.obstaclePositions[posIndex]);
+            }
+        }
+        private bool CheckCollision(GameObject obstacle, int currentIndex)
+        {
+            Bounds obstacleBounds = obstacle.GetComponentInChildren<Renderer>().bounds;
+
+            for (int i = 0; i < currentIndex; i++)
+            {
+                if (obstacle == null)
+                {
+                    Debug.LogWarning("Failed to load existing obstacle prefab.");
+                    continue;
+                }
+
+                Bounds existingBounds = obstacle.GetComponentInChildren<Renderer>().bounds;
+
+                if (obstacleBounds.Intersects(existingBounds))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
         private IEnumerator SpawnCoinAndPowerup(TrackSegment segment)
         {
-            const float increment = 3f;
+                const float increment = 3.5f;
                 float currentWorldPos = 0.0f;
                 int currentLane = Random.Range(0, 3);
 
                 float powerupChance = Mathf.Clamp01(Mathf.Floor(_mTimeSincePowerup) * 0.5f * 0.001f);
-                float premiumChance = Mathf.Clamp01(Mathf.Floor(_mTimeSinceLastPremium) * 0.5f * 0.0001f);
-                while (currentWorldPos < segment.WorldLength/2)
+                while (currentWorldPos < segment.WorldLength)
                 {
                     Vector3 pos;
                     Quaternion rot;
                     segment.GetPointAtInWorldUnit(currentWorldPos, out pos, out rot);
-                    pos += new Vector3(0, 1, 0);
+                    pos += new Vector3(0, 1.3f, 0);
 
-                    bool laneValid = true;
-                    int testedLane = currentLane;
-                    while (Physics.CheckSphere(pos + ((testedLane - 1) * laneOffset * (rot * Vector3.right)), 0.4f, 1 << 9))
+                    var laneValid = true;
+                    var testedLane = currentLane;
+                    var radius = 1.3f;
+
+                    while (Physics.CheckSphere(pos + (testedLane-1) * laneOffset * (Vector3.right), radius, 9))
                     {
                         testedLane = (testedLane + 1) % 3;
                         if (currentLane == testedLane)
                         {
+                            currentWorldPos += increment;
+                            segment.GetPointAtInWorldUnit(currentWorldPos, out pos, out rot);
                             laneValid = false;
                             break;
                         }
@@ -429,7 +465,7 @@ namespace Dev.Scripts.Track
 
                     if (laneValid)
                     {
-                        pos = pos + ((currentLane - 1) * laneOffset * (rot * Vector3.right));
+                        pos += ((currentLane-1) * laneOffset) *(Vector3.right);
 
                         GameObject toUse = null;
                         if (Random.value < powerupChance)
@@ -457,12 +493,12 @@ namespace Dev.Scripts.Track
                             toUse = Coin.coinPool.Get(pos, rot,false);
                             toUse.transform.SetParent(segment.collectibleTransform, true);
                         }
-                        if (toUse != null)
+                        /*if (toUse != null)
                         {
                             Vector3 oldPos = toUse.transform.position;
                             toUse.transform.position += Vector3.back;
                             toUse.transform.position = oldPos;
-                        }
+                        }*/
                     }
 
                     currentWorldPos += increment;

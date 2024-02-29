@@ -57,9 +57,9 @@ public class TrackSegment : MonoBehaviour
     public void GetPointAt(float t, out Vector3 pos, out Quaternion rot)
     {
         float clampedT = Mathf.Clamp01(t);
-        float scaledT = (pathParent.childCount - 1) * clampedT;
-        int index = Mathf.FloorToInt(scaledT);
-        float segmentT = scaledT - index;
+        //float scaledT = (pathParent.childCount - 1) * clampedT;
+        int index = Mathf.FloorToInt(clampedT);
+        float segmentT = clampedT - index;
 
         Transform orig = pathParent.GetChild(index);
         if (index == pathParent.childCount - 1)

@@ -144,6 +144,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   impactedSound: {fileID: 0}
+  randomColor: 0
   colors:
   - {r: 0.078987174, g: 0.53774476, b: 0.6698113, a: 1}
   - {r: 0.38314345, g: 0.4459203, b: 0.7735849, a: 1}
@@ -216,7 +217,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4508286580018686, guid: d6e2601c4f144db459adb4f5e7affc65, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.2
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 4508286580018686, guid: d6e2601c4f144db459adb4f5e7affc65, type: 3}
       propertyPath: m_LocalPosition.z
@@ -240,7 +241,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4508286580018686, guid: d6e2601c4f144db459adb4f5e7affc65, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
+      value: 2.3084922
       objectReference: {fileID: 0}
     - target: {fileID: 4508286580018686, guid: d6e2601c4f144db459adb4f5e7affc65, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
@@ -248,12 +249,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4508286580018686, guid: d6e2601c4f144db459adb4f5e7affc65, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
+      value: -3.1938334
       objectReference: {fileID: 0}
     - target: {fileID: 23889050435259212, guid: d6e2601c4f144db459adb4f5e7affc65, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 1367954f4e3bbc247a3d30b5fa3e86f1, type: 2}
+      objectReference: {fileID: 2100000, guid: dd41db2cdb4e66e4985303e1287ab101, type: 2}
     - target: {fileID: 7969692778881885827, guid: d6e2601c4f144db459adb4f5e7affc65, type: 3}
       propertyPath: m_Size.x
       value: 1.8482713
@@ -278,6 +279,10 @@ PrefabInstance:
       propertyPath: m_Center.z
       value: 0.14008889
       objectReference: {fileID: 0}
+    - target: {fileID: 7969692778881885827, guid: d6e2601c4f144db459adb4f5e7affc65, type: 3}
+      propertyPath: m_IsTrigger
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d6e2601c4f144db459adb4f5e7affc65, type: 3}
 --- !u!4 &6965116800472860588 stripped
@@ -299,9 +304,9 @@ Animation:
   m_GameObject: {fileID: 6970151286262467466}
   m_Enabled: 1
   serializedVersion: 3
-  m_Animation: {fileID: 7400000, guid: 14b65ebee37ee1d4caa61fdaae0fdd8c, type: 2}
+  m_Animation: {fileID: 7400000, guid: c13f1ea157807624c9f8f9da4432afc0, type: 2}
   m_Animations:
-  - {fileID: 7400000, guid: 14b65ebee37ee1d4caa61fdaae0fdd8c, type: 2}
+  - {fileID: 7400000, guid: c13f1ea157807624c9f8f9da4432afc0, type: 2}
   m_WrapMode: 0
   m_PlayAutomatically: 0
   m_AnimatePhysics: 0

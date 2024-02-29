@@ -17,8 +17,7 @@ namespace Dev.Scripts.Obstacles
             
             int count =  Random.Range(MinObstacleCount, MaxObstacleCount + 1);
             int startLane =  Random.Range(LeftMostLaneIndex, RightMostLaneIndex + 1);
-            int colorIndex = Random.Range(0, colors.Length - 1);
-
+            
             Vector3 position;
             Quaternion rotation;
             segment.GetPointAt(t, out position, out rotation);
@@ -49,11 +48,17 @@ namespace Dev.Scripts.Obstacles
                     Vector3 oldPos = obj.transform.position;
                     obj.transform.position += Vector3.back;
                     obj.transform.position = oldPos;
-                    var renderers = obj.GetComponentsInChildren<Renderer>();
-                    foreach (var r in renderers)
+                    
+                    if (randomColor)
                     {
-                        r.materials[0].color = colors[colorIndex];
+                        int colorIndex = Random.Range(0, colors.Length - 1);
+                        var renderers = obj.GetComponentsInChildren<Renderer>();
+                        foreach (var r in renderers)
+                        {
+                            r.materials[0].color = colors[colorIndex];
+                        }
                     }
+                    
                 }
             }
         }

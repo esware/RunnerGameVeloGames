@@ -233,16 +233,18 @@ public class CharacterControl : MonoBehaviour
                 return;
             StopMoving();
             
-            var ob = c.gameObject.GetComponent<Obstacle>();
+            var ob = c.gameObject.GetComponent<Obstacle>() ?? c.gameObject.GetComponentInParent<Obstacle>();
 
-			if (ob != null)
-			{
-				ob.Impacted();
+            if (ob != null)
+            {
+                ob.Impacted();
+                //c.GetComponentInChildren<Collider>().enabled = false;
             }
-			else
-			{
-			    Addressables.ReleaseInstance(c.gameObject);
+            else
+            {
+                Addressables.ReleaseInstance(c.gameObject);
             }
+
 
             currentLife -= 1;
             

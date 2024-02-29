@@ -145,6 +145,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   impactedSound: {fileID: 0}
+  randomColor: 1
   colors:
   - {r: 0.078987174, g: 0.53774476, b: 0.6698113, a: 1}
   - {r: 0.38314345, g: 0.4459203, b: 0.7735849, a: 1}

@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using NaughtyAttributes;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 namespace Dev.Scripts.Obstacles
 {
@@ -8,6 +10,8 @@ namespace Dev.Scripts.Obstacles
     public abstract class Obstacle : MonoBehaviour
     {
         public AudioClip impactedSound;
+        public bool randomColor;
+        [ShowIf("randomColor")]
         public Color[] colors;
         
         public abstract IEnumerator Spawn(TrackSegment segment, float t);
@@ -20,6 +24,8 @@ namespace Dev.Scripts.Obstacles
             if (anim != null)
             {
                 anim.Play();
+                float animationLength = anim.clip.length;
+                StartCoroutine(DestroyAfterDelay(animationLength+0.6f));
             }
 
             if (audioSource != null && impactedSound != null)
@@ -30,5 +36,12 @@ namespace Dev.Scripts.Obstacles
                 audioSource.Play();
             }
         }
+
+        private IEnumerator DestroyAfterDelay(float delay)
+        {
+            yield return new WaitForSeconds(delay);
+            Addressables.ReleaseInstance(gameObject);
+        }
+
     }
 }
