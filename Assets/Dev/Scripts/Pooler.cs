@@ -23,10 +23,10 @@ namespace Dev.Scripts
 
         public GameObject Get()
         {
-            return Get(Vector3.zero, Quaternion.identity,false);
+            return Get(Vector3.zero, Quaternion.identity);
         }
 
-        public GameObject Get(Vector3 pos, Quaternion quat,bool value)
+        public GameObject Get(Vector3 pos, Quaternion quat)
         {
             GameObject ret = _freeInstances.Count > 0 ? _freeInstances.Pop() : Object.Instantiate(_original);
             

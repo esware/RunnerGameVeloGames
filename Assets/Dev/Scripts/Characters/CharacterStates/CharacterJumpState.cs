@@ -11,7 +11,7 @@ namespace Dev.Scripts.Character.CharacterStates
         public override void OnEnter(BaseState characterState, Animator animator, AnimatorStateInfo stateInfo)
         {
             _characterMovement = characterState.GetCharacterMovement(animator);
-            
+
         }
         public override void UpdateAbility(BaseState characterState, Animator animator,AnimatorStateInfo stateInfo)
         {

@@ -15,12 +15,6 @@ using UnityEditor;
 ///
 public class TrackSegment : MonoBehaviour
 {
-    [System.Serializable]
-    public enum SegmentType
-    {
-        A,
-        B
-    }
     public Transform pathParent;
     public TrackManager manager;
 
@@ -31,8 +25,6 @@ public class TrackSegment : MonoBehaviour
     
     public float[] obstaclePositions;
     
-    [Space,Header("Segment Type")]
-    public SegmentType segmentType;
 
 
     public float WorldLength => _worldLength;
