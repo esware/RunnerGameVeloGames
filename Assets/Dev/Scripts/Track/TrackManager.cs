@@ -11,6 +11,8 @@ using Dev.Scripts.Themes;
 using Unity.VisualScripting;
 using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
+using System.Linq;
+using Unity.Mathematics;
 #if UNITY_ANALYTICS
 using UnityEngine.Analytics;
 #endif
@@ -143,7 +145,7 @@ namespace Dev.Scripts.Track
 
         public IEnumerator Begin()
         {
-            _currentSegmentDistance = 10;
+            _currentSegmentDistance = 0;
             characterController.transform.position = new Vector3(0,.2f,10);
             
             if (!_mRerun)
@@ -433,12 +435,13 @@ namespace Dev.Scripts.Track
         }
         private IEnumerator SpawnCoinAndPowerup(TrackSegment segment)
         {
-                const float increment = 3.5f;
+                const float increment = 3f;
                 float currentWorldPos = 0.0f;
                 int currentLane = Random.Range(0, 3);
-
                 float powerupChance = Mathf.Clamp01(Mathf.Floor(_mTimeSincePowerup) * 0.5f * 0.001f);
-                while (currentWorldPos < segment.WorldLength)
+
+
+                while (currentWorldPos < segment.WorldLength/2f)
                 {
                     Vector3 pos;
                     Quaternion rot;
@@ -447,15 +450,15 @@ namespace Dev.Scripts.Track
 
                     var laneValid = true;
                     var testedLane = currentLane;
-                    var radius = 1.3f;
-
-                    while (Physics.CheckSphere(pos + (testedLane-1) * laneOffset * (Vector3.right), radius, 9))
+                    while (Physics.SphereCast(new Ray(pos + (testedLane-1) * laneOffset * Vector3.right,Vector3.forward),.5f,5,9))
                     {
                         testedLane = (testedLane + 1) % 3;
                         if (currentLane == testedLane)
                         {
-                            currentWorldPos += increment;
-                            segment.GetPointAtInWorldUnit(currentWorldPos, out pos, out rot);
+                            var cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                            cube.transform.SetParent(segment.collectibleTransform);
+                            cube.transform.position = pos + (testedLane - 1) * laneOffset * Vector3.right;
+                            
                             laneValid = false;
                             break;
                         }
@@ -466,7 +469,6 @@ namespace Dev.Scripts.Track
                     if (laneValid)
                     {
                         pos += ((currentLane-1) * laneOffset) *(Vector3.right);
-
                         GameObject toUse = null;
                         if (Random.value < powerupChance)
                         {
@@ -493,18 +495,11 @@ namespace Dev.Scripts.Track
                             toUse = Coin.coinPool.Get(pos, rot,false);
                             toUse.transform.SetParent(segment.collectibleTransform, true);
                         }
-                        /*if (toUse != null)
-                        {
-                            Vector3 oldPos = toUse.transform.position;
-                            toUse.transform.position += Vector3.back;
-                            toUse.transform.position = oldPos;
-                        }*/
                     }
 
                     currentWorldPos += increment;
                 }
         }
-
         private void AddScore(int amount)
         {
             int finalAmount = amount;
