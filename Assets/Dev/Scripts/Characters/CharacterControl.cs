@@ -9,7 +9,6 @@ using Dev.Scripts.Obstacles;
 using Dev.Scripts.Track;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
-using UnityEngine.TextCore.Text;
 using Dev.Scripts.Characters;
 using Character = Dev.Scripts.Characters.Character;
 
