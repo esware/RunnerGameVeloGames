@@ -50,6 +50,7 @@ namespace Dev.Scripts.GameManager
 
         private void FinishRun()
         {
+            PlayerData.Instance.InsertScore(trackManager.score, "Male" );
             PlayerData.Instance.Save();
             trackManager.End();
         }

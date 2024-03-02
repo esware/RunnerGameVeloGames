@@ -142,6 +142,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43db7997176f4612b453caca5902fe2b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  coinSpawnType: 0
   impactedSound: {fileID: 0}
   randomColor: 1
   colors:
@@ -161,8 +162,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 3.1230822, y: 1.6369185, z: 8.592632}
-  m_Center: {x: -0.09633803, y: 1.2738383, z: 3.9782925}
+  m_Size: {x: 3.1230822, y: 2.2519968, z: 8.376105}
+  m_Center: {x: -0.09633803, y: 1.4740015, z: 3.9881349}
 --- !u!1001 &5479100267721754981
 PrefabInstance:
   m_ObjectHideFlags: 0

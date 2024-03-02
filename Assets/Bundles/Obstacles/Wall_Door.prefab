@@ -232,6 +232,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43db7997176f4612b453caca5902fe2b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  coinSpawnType: 2
   impactedSound: {fileID: 0}
   randomColor: 1
   colors:

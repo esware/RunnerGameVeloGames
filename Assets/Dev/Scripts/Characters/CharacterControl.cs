@@ -237,7 +237,6 @@ public class CharacterControl : MonoBehaviour
             if (ob != null)
             {
                 ob.Impacted();
-                //c.GetComponentInChildren<Collider>().enabled = false;
             }
             else
             {
@@ -252,8 +251,7 @@ public class CharacterControl : MonoBehaviour
                 _audio.PlayOneShot(character.hitSound);
                 SetInvincible();
 			}
-            // The collision killed the player, record all data to analytics.
-			else
+            else
 			{
                  GameEvents.PlayerDeathEvent?.Invoke();
             }

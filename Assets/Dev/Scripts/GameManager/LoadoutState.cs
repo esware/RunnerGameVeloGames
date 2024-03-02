@@ -18,7 +18,8 @@ namespace Dev.Scripts.GameManager
         [SerializeField] private GameObject mainMenu;
         [SerializeField] private GameObject characterMenu;
         [SerializeField] private GameObject player;
-        
+        [SerializeField] private Text rankText;
+        [SerializeField] private Text highScoreText;
         
         [Header("Character UI")] 
         [SerializeField] private SpriteRenderer characterBackground;
@@ -57,6 +58,8 @@ namespace Dev.Scripts.GameManager
                 StartCoroutine(MusicPlayer.instance.RestartAllStems());
             }
 
+            rankText.text = "Level " + PlayerData.Instance.rank;
+            
             runButton.interactable = false;
             runButton.GetComponentInChildren<Text>().text = "Loading...";
             StartCoroutine(PopulateCharacters());
@@ -104,51 +107,58 @@ namespace Dev.Scripts.GameManager
             StartCoroutine(PopulateCharacters());
         }
         private IEnumerator PopulateCharacters()
-    {
-	    yield return new WaitForSeconds(.5f);
-
-        if (!_isLoadingCharacter)
         {
-            _isLoadingCharacter = true;
-            GameObject newChar = null;
-            while (newChar == null)
+	        yield return new WaitForSeconds(.5f);
+
+            if (!_isLoadingCharacter)
             {
-                Characters.Character c = CharacterDatabase.GetCharacter(PlayerData.Instance.characters[PlayerData.Instance.usedCharacter]);
-
-                if (c != null)
+                _isLoadingCharacter = true;
+                GameObject newChar = null;
+                while (newChar == null)
                 {
-                    AsyncOperationHandle op = Addressables.InstantiateAsync(c.characterName);
-                    yield return op;
-                    if (op.Result == null || !(op.Result is GameObject))
+                    Characters.Character c = CharacterDatabase.GetCharacter(PlayerData.Instance.characters[PlayerData.Instance.usedCharacter]);
+
+                    if (c != null)
                     {
-                        Debug.LogWarning(string.Format("Unable to load character {0}.", c.characterName));
-                        yield break;
+                        AsyncOperationHandle op = Addressables.InstantiateAsync(c.characterName);
+                        yield return op;
+                        if (op.Result == null || !(op.Result is GameObject))
+                        {
+                            Debug.LogWarning(string.Format("Unable to load character {0}.", c.characterName));
+                            yield break;
+                        }
+                        newChar = op.Result as GameObject;
+                        newChar.transform.SetParent(charPosition, false);
+                        newChar.transform.rotation = Quaternion.Euler(0,180,0);
+
+                        foreach (var highscore in PlayerData.Instance.highscores)
+                        {
+                            if (highscore.name == newChar.name)
+                            {
+                                highScoreText.text = "HighScore :" + highscore.score;
+                                Debug.Log(newChar.name+highscore.score);
+                            }
+                        }
+                        
+                        characterIcon.sprite = newChar.GetComponent<Characters.Character>().icon;
+                        characterBackground.GetComponent<SpriteRenderer>().sprite = newChar.GetComponent<Characters.Character>().CharacterBg;
+
+                        if (_character != null)
+                            Addressables.ReleaseInstance(_character);
+
+                        _character = newChar;
+                        charNameDisplay.text = c.characterName;
+
+                        _character.transform.localPosition = Vector3.right * 1000;
+                        yield return new WaitForEndOfFrame();
+                        _character.transform.localPosition = Vector3.zero;
                     }
-                    newChar = op.Result as GameObject;
-                    newChar.transform.SetParent(charPosition, false);
-                    newChar.transform.rotation = Quaternion.Euler(0,180,0);
-                    
-                    //videoPlayer.clip = newChar.GetComponent<Character>().characterVideo;
-                    //videoPlayer.Play();
-                    characterIcon.sprite = newChar.GetComponent<Characters.Character>().icon;
-                    characterBackground.GetComponent<SpriteRenderer>().sprite = newChar.GetComponent<Characters.Character>().CharacterBg;
-
-                    if (_character != null)
-                        Addressables.ReleaseInstance(_character);
-
-                    _character = newChar;
-                    charNameDisplay.text = c.characterName;
-
-                    _character.transform.localPosition = Vector3.right * 1000;
-                    yield return new WaitForEndOfFrame();
-                    _character.transform.localPosition = Vector3.zero;
+                    else
+                        yield return new WaitForSeconds(1.0f);
                 }
-                else
-                    yield return new WaitForSeconds(1.0f);
+                _isLoadingCharacter = false;
             }
-            _isLoadingCharacter = false;
-        }
-	}
+	    }
         
         public void StartGame()
         {

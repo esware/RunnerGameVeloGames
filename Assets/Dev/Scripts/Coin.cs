@@ -18,23 +18,17 @@ namespace Dev.Scripts
                 coinPool.Free(this.gameObject);
             }
         }
-
-        private void Start()
+        
+       /* private void Update()
         {
-            //StartCoroutine(CollisionDetection());
-        }
-
-        private IEnumerator CollisionDetection()
-        {
-            while (true)
+            RaycastHit hitInfo;
+            if (Physics.Raycast(transform.position, Vector3.forward, out hitInfo, 5, 1 << 9))
             {
-                if (Physics.CheckSphere(transform.position,1f,1<<9))
-                {
-                    Debug.Log("Obstacle");
-                }
-
-                yield return null;
+                Debug.Log("Collided");
+                Debug.DrawRay(transform.position, Vector3.forward,Color.green);
             }
-        }
+            
+            Debug.DrawRay(transform.position, Vector3.forward,Color.red);
+        }*/
     }
 }

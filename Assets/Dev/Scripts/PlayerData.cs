@@ -18,17 +18,16 @@ public struct HighscoreEntry : System.IComparable<HighscoreEntry>
 
 	public int CompareTo(HighscoreEntry other)
 	{
-		// We want to sort from highest to lowest, so inverse the comparison.
 		return other.score.CompareTo(score);
 	}
 }
 
 public class PlayerData
 {
-    static protected PlayerData _instance;
-    static public PlayerData Instance => _instance;
+	private static PlayerData _instance;
+    public static PlayerData Instance => _instance;
 
-    protected string saveFile = "";
+    private string saveFile = "";
 
 
     public int coins;
@@ -40,19 +39,16 @@ public class PlayerData
     public List<HighscoreEntry> highscores = new List<HighscoreEntry>();
 
     public string previousName = "Male";
-
-    public bool licenceAccepted;
-    public bool tutorialDone;
-
+    
+    
 	public float masterVolume = float.MinValue, musicVolume = float.MinValue, masterSFXVolume = float.MinValue;
 	
     public int ftueLevel = 0;
  
     public int rank = 0;
     
-    static int s_Version = 12; 
+    static int s_Version = 12;
     
-
     public void AddCharacter(string name)
     {
         characters.Add(name);
@@ -63,7 +59,7 @@ public class PlayerData
         themes.Add(theme);
     }
     
-    public int GetScorePlace(int score)
+    private int GetScorePlace(int score)
 	{
 		HighscoreEntry entry = new HighscoreEntry();
 		entry.score = score;
@@ -86,9 +82,7 @@ public class PlayerData
             highscores.RemoveAt(highscores.Count - 1);
 	}
 
-    // File management
-
-    public static void Create()
+	public static void Create()
     {
 		if (_instance == null)
 		{
@@ -110,8 +104,9 @@ public class PlayerData
         }
     }
 
-	public static void NewSave()
+	private static void NewSave()
 	{
+		Debug.Log(Application.persistentDataPath);
 		_instance.characters.Clear();
 		_instance.themes.Clear();
 		
@@ -130,7 +125,7 @@ public class PlayerData
         _instance.Save();
 	}
 
-    public void Read()
+     private void Read()
     {
         BinaryReader r = new BinaryReader(new FileStream(saveFile, FileMode.Open));
 
@@ -191,11 +186,7 @@ public class PlayerData
 		{
 			previousName = r.ReadString();
 		}
-
-        if(ver >= 8)
-        {
-            licenceAccepted = r.ReadBoolean();
-        }
+		
 
 		if (ver >= 9) 
 		{
@@ -209,16 +200,12 @@ public class PlayerData
             ftueLevel = r.ReadInt32();
             rank = r.ReadInt32();
         }
-
-        if (ver >= 12)
-        {
-            tutorialDone = r.ReadBoolean();
-        }
+        
 
         r.Close();
     }
 
-    public void Save()
+     public void Save()
     {
         BinaryWriter w = new BinaryWriter(new FileStream(saveFile, FileMode.OpenOrCreate));
 
@@ -256,8 +243,7 @@ public class PlayerData
 
 		// Write name.
 		w.Write(previousName);
-
-        w.Write(licenceAccepted);
+		
 
 		w.Write (masterVolume);
 		w.Write (musicVolume);
@@ -265,9 +251,7 @@ public class PlayerData
 
         w.Write(ftueLevel);
         w.Write(rank);
-
-        w.Write(tutorialDone);
-
+        
         w.Close();
     }
 

@@ -3,12 +3,22 @@ using System.Collections.Generic;
 using NaughtyAttributes;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using UnityEngine.Serialization;
 
 namespace Dev.Scripts.Obstacles
 {
+    public enum ObstacleCoinSpawnType
+    {
+        DontSpawn,
+        SpawnByJumping,
+        SpawnByUnder,
+        SpawnFromAbove
+        
+    }
     [RequireComponent(typeof(AudioSource))]
     public abstract class Obstacle : MonoBehaviour
     {
+        public ObstacleCoinSpawnType coinSpawnType;
         public AudioClip impactedSound;
         public bool randomColor;
         [ShowIf("randomColor")]
