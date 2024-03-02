@@ -25,7 +25,7 @@ MonoBehaviour:
     m_Address: Magnet
     m_ReadOnly: 0
     m_SerializedLabels: []
-  - m_GUID: f93ec21027d434a408006d550f99314a
+  - m_GUID: 42fceb9e7daf8b241979f6e44b27b47b
     m_Address: ExtraLife
     m_ReadOnly: 0
     m_SerializedLabels: []

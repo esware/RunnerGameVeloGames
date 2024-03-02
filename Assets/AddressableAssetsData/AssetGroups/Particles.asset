@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Particles
+  m_EditorClassIdentifier: 
+  m_GroupName: Particles
+  m_Data:
+    m_SerializedData: []
+  m_GUID: df98fb68ac0065a44b9c595156853030
+  m_SerializeEntries:
+  - m_GUID: 36cbce0b7a96e29418535aa3c8e706de
+    m_Address: HealOnce
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: af1a91f64075749459f8ad3d0c44607e
+    m_Address: PowerupGlow1
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 808f79af1f77c0848bd1fe6c9a2b9a44, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 13380a4093ec58848948e0e12fef10cf, type: 2}
+    - {fileID: 11400000, guid: 1e9ee390e090caf429cecd1a5f9e86ab, type: 2}

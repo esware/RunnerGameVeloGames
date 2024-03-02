@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Consumables
   m_EditorClassIdentifier: 
   consumbales:
-  - {fileID: 5525958800851991203, guid: f93ec21027d434a408006d550f99314a, type: 3}
+  - {fileID: 653958398438927277, guid: 42fceb9e7daf8b241979f6e44b27b47b, type: 3}
   - {fileID: -4617664889215226663, guid: a4c50680a9927ec4f9af0a0c4616ead0, type: 3}
