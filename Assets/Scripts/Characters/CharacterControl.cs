@@ -51,8 +51,6 @@ public class CharacterControl : MonoBehaviour
     public int coins { get { return _mCoins; } set { _mCoins = value; } }
     public int currentLife { get { return _mCurrentLife; } set { _mCurrentLife = value; } }
     public List<Consumable> consumables => m_ActiveConsumables;
-    public List<Consumable> inventory = new List<Consumable>();
-
     [HideInInspector]
     public List<GameObject> magnetCoins = new List<GameObject>();
 
@@ -123,7 +121,6 @@ public class CharacterControl : MonoBehaviour
         {
             if(m_ActiveConsumables[i].GetType() == c.GetType())
             {
-                // If we already have an active consumable of that type, we just reset the time
                 m_ActiveConsumables[i].ResetTime();
                 Addressables.ReleaseInstance(c.gameObject);
                 return;
@@ -145,7 +142,7 @@ public class CharacterControl : MonoBehaviour
         {
             if (magnetCoins[i].gameObject!=null)
             {
-                magnetCoins[i].transform.position = Vector3.MoveTowards(magnetCoins[i].transform.position, transform.position, MagnetSpeed * Time.deltaTime);
+                magnetCoins[i].transform.position = Vector3.MoveTowards(magnetCoins[i].transform.position, transform.position+Vector3.up, MagnetSpeed * Time.deltaTime);
             }
         }
     }

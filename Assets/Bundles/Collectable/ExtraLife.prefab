@@ -60,10 +60,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   duration: 0.01
-  powerupIcon: {fileID: 0}
-  icon: {fileID: 0}
   activatedSound: {fileID: 0}
-  ActivatedParticleReference:
+  activatedParticleReference:
     m_AssetGUID: 36cbce0b7a96e29418535aa3c8e706de
     m_SubObjectName: 
     m_SubObjectType: 

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using Dev.Scripts.Consumables;
 using Dev.Scripts.Track;
 using UnityEngine;
 using UnityEngine.UI;
@@ -75,6 +77,25 @@ namespace Dev.Scripts.GameManager
                 {
                     pauseButton.gameObject.SetActive(false);
                     StartCoroutine(WaitForGameOver());
+                }
+
+                List<Consumable> toRemove = new List<Consumable>();
+
+                for (int i = 0; i < characterControl.consumables.Count; i++)
+                {
+                    
+                    characterControl.consumables[i].Tick(characterControl);
+                    if (!characterControl.consumables[i].active)
+                    {
+                        toRemove.Add(characterControl.consumables[i]);
+                    }
+                    
+                }
+
+                for (int i = 0; i < toRemove.Count; i++)
+                {
+                    toRemove[i].Ended(trackManager.characterController);
+                    characterControl.consumables.Remove(toRemove[i]);
                 }
                 UpdateUI();
             }
