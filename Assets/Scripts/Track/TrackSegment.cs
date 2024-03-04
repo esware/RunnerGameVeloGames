@@ -8,11 +8,6 @@ using Random = UnityEngine.Random;
 using UnityEditor;
 #endif
 
-/// <summary>
-/// This defines a "piece" of the track. This is attached to the prefab and contains data such as what obstacles can spawn on it.
-/// It also defines places on the track where obstacles can spawn. The prefab is placed into a ThemeData list.
-/// </summary>
-///
 public class TrackSegment : MonoBehaviour
 {
     public Transform pathParent;
@@ -49,8 +44,8 @@ public class TrackSegment : MonoBehaviour
     public void GetPointAt(float t, out Vector3 pos, out Quaternion rot)
     {
         float clampedT = Mathf.Clamp01(t);
-        //float scaledT = (pathParent.childCount - 1) * clampedT;
-        int index = Mathf.FloorToInt(clampedT);
+        float scaledT = (pathParent.childCount - 1) * clampedT;
+        int index = Mathf.FloorToInt(scaledT);
         float segmentT = clampedT - index;
 
         Transform orig = pathParent.GetChild(index);

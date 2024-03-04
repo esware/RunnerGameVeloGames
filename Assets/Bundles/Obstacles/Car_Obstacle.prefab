@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 850299142534264116}
   - component: {fileID: 7435126598241901304}
-  - component: {fileID: 7606910441664172013}
   - component: {fileID: 4469785571420416422}
+  - component: {fileID: 7606910441664172013}
   m_Layer: 9
   m_Name: Car_Obstacle
   m_TagString: Untagged
@@ -29,6 +29,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6965116800472860588}
   m_Father: {fileID: 0}
@@ -130,26 +131,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &7606910441664172013
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7355747104095324045}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 43db7997176f4612b453caca5902fe2b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  impactedSound: {fileID: 0}
-  randomColor: 0
-  colors:
-  - {r: 0.078987174, g: 0.53774476, b: 0.6698113, a: 1}
-  - {r: 0.38314345, g: 0.4459203, b: 0.7735849, a: 1}
-  - {r: 0.3700605, g: 0.7924528, b: 0.51748365, a: 1}
-  - {r: 0.8207547, g: 0.3747749, b: 0.33681917, a: 1}
-  - {r: 1, g: 1, b: 1, a: 1}
 --- !u!65 &4469785571420416422
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -163,6 +144,28 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 2.554794, y: 1.286082, z: 5.714136}
   m_Center: {x: 0.018657565, y: 1.0137258, z: -0.16791725}
+--- !u!114 &7606910441664172013
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7355747104095324045}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43db7997176f4612b453caca5902fe2b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  coinSpawnType: 0
+  impactedSound: {fileID: 0}
+  randomColor: 0
+  colors:
+  - {r: 0.078987174, g: 0.53774476, b: 0.6698113, a: 1}
+  - {r: 0.38314345, g: 0.4459203, b: 0.7735849, a: 1}
+  - {r: 0.3700605, g: 0.7924528, b: 0.51748365, a: 1}
+  - {r: 0.8207547, g: 0.3747749, b: 0.33681917, a: 1}
+  - {r: 1, g: 1, b: 1, a: 1}
+  obstacleLength: 6
 --- !u!1001 &6969624509245524562
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -284,14 +287,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d6e2601c4f144db459adb4f5e7affc65, type: 3}
---- !u!1 &6970151286262467466 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1098664898953688, guid: d6e2601c4f144db459adb4f5e7affc65, type: 3}
-  m_PrefabInstance: {fileID: 6969624509245524562}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &6965116800472860588 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4508286580018686, guid: d6e2601c4f144db459adb4f5e7affc65, type: 3}
+  m_PrefabInstance: {fileID: 6969624509245524562}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &6970151286262467466 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1098664898953688, guid: d6e2601c4f144db459adb4f5e7affc65, type: 3}
   m_PrefabInstance: {fileID: 6969624509245524562}
   m_PrefabAsset: {fileID: 0}
 --- !u!111 &229704393921889774

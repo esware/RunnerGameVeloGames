@@ -99,7 +99,7 @@ namespace Dev.Scripts.Track
         private const int StartingSafeSegments = 1;
         private const int DesiredSegmentCount = 10;
         private const float Acceleration = 0.1f;
-        private const float SegmentRemovalDistance = 15f;
+        private const float SegmentRemovalDistance = 60f;
         private int _spawnedSegments = 0;
         
 
@@ -280,7 +280,7 @@ namespace Dev.Scripts.Track
             // Still move past segment until they aren't visible anymore.
             for (int i = 0; i < m_PastSegments.Count; ++i)
             {
-                if ((m_PastSegments[i].transform.position - characterController.transform.position).z < SegmentRemovalDistance)
+                if ((characterController.transform.position-m_PastSegments[i].transform.position ).z > SegmentRemovalDistance)
                 {
                     m_PastSegments[i].Cleanup();
                     m_PastSegments.RemoveAt(i);
@@ -382,9 +382,12 @@ namespace Dev.Scripts.Track
                 {
                     var assetRef = segment.possibleObstacles[Random.Range(0, segment.possibleObstacles.Length)];
                     yield return StartCoroutine(SpawnFromAssetReference(assetRef, segment, i));
+                    yield return null;
                 }
             }
+            
             yield return StartCoroutine(SpawnCoinAndPowerup(segment));
+            
         }
 
         private IEnumerator SpawnFromAssetReference(AssetReference reference, TrackSegment segment, int posIndex)
@@ -397,7 +400,7 @@ namespace Dev.Scripts.Track
             yield return op; 
             GameObject obj = op.Result as GameObject;
             
-            if (CheckCollision(obj, posIndex))
+            if (CheckCollision(obj,posIndex))
             {
                 Addressables.ReleaseInstance(obj.gameObject);
                 yield break;
@@ -439,90 +442,96 @@ namespace Dev.Scripts.Track
             const float increment = 2f;
             float currentWorldPos = 0.0f;
             int currentLane = Random.Range(0, 3);
-            float powerupChance = Mathf.Clamp01(Mathf.Floor(_mTimeSincePowerup) * 500f * 0.001f);
+            float powerupChance = Mathf.Clamp01(Mathf.Floor(_mTimeSincePowerup) * 50f * 0.001f);
 
-
+            Vector3 pos;
+            Quaternion rot;
+            GameObject toUse;
+            
             while (currentWorldPos < segment.WorldLength/2f)
             {
-                Vector3 pos;
-                Quaternion rot;
                 segment.GetPointAtInWorldUnit(currentWorldPos, out pos, out rot);
-                pos+=Vector3.up*1.3f;
+                pos += Vector3.up;
                 int testedLane = currentLane;
                 bool laneValid = true;
                 RaycastHit hitInfo;
-                GameObject toUse;
-                
-                while (Physics.Raycast(pos + ((testedLane - 1) * laneOffset * (rot * Vector3.right)), Vector3.forward, out hitInfo, speed/2, 1 << 9))
+                Obstacle obstacle = null;
+                while(Physics.Raycast(pos + ((testedLane - 1) * laneOffset * (rot * Vector3.right)), Vector3.forward, out hitInfo, speed/2, 1 << 9))
                 {
-                    var obstacle = hitInfo.collider.gameObject.GetComponent<Obstacle>();
-                    var collider = hitInfo.collider;
-                    
+                    obstacle = hitInfo.collider.gameObject.GetComponent<Obstacle>() ?? hitInfo.collider.gameObject.GetComponentInParent<Obstacle>();
+                    if (obstacle.coinSpawnType==ObstacleCoinSpawnType.SpawnByJumping)
+                    {
+                        break;
+                    }
                     if (obstacle.coinSpawnType==ObstacleCoinSpawnType.DontSpawn)
                     {
-                        testedLane = (testedLane + 1) % 3;
+                        for (int i = 0; i < (int)obstacle.obstacleLength+speed/2; i++)
+                        {
+                            currentWorldPos += increment;
+                        }
+                        
                         laneValid = false;
                         break;
                     }
                     
-                    if (obstacle.coinSpawnType==ObstacleCoinSpawnType.SpawnByJumping)
+                    testedLane = (testedLane + 1) % 3;
+                    
+                    if (testedLane==currentLane)
                     {
-                        float radius = characterController.characterMovement.jumpHeight*2f;
-                        float circleCircumference = Mathf.PI * radius;
-                        int numberOfPoints = Mathf.RoundToInt(circleCircumference / increment);
-                        
-                        while (collider.gameObject.transform.position.z-currentWorldPos >= radius)
-                        {
-                            currentWorldPos += increment;
-                        }
-            
-                        var obstaclePosition =collider.gameObject.transform.position;
-                        for (int i = 0; i < numberOfPoints; i++)
-                        {
-                            segment.GetPointAtInWorldUnit(currentWorldPos, out pos, out rot);
-                
-                            float angle = i * 180f / numberOfPoints;
-                            segment.GetPointAt(currentWorldPos,out pos,out rot);
-                            pos+= Vector3.up;
-
-                            float y = obstaclePosition.y+(Mathf.Sin(angle * Mathf.Deg2Rad) * radius);
-                            float z = obstaclePosition.z+(Mathf.Cos(angle * Mathf.Deg2Rad) * speed/2);
-
-
-                            Vector3 coinPosition = ((testedLane - 1) * laneOffset * (Vector3.right) +
-                                                    new Vector3(pos.x, y , z));
-
-                            toUse = Coin.coinPool.Get(coinPosition, rot);
-                            toUse.transform.SetParent(segment.collectibleTransform, true);
-                
-                            if (toUse != null)
-                            {
-                                Vector3 oldPos = toUse.transform.position;
-                                toUse.transform.position += Vector3.back;
-                                toUse.transform.position = oldPos;
-                            }
-                            currentWorldPos += increment;
-                        }
-                        continue;
+                        laneValid = false;
+                        break;
                     }
                     
-                    if (obstacle.coinSpawnType==ObstacleCoinSpawnType.SpawnFromAbove)
-                    {
-                        break;
-                    }
-
-                    if (obstacle.coinSpawnType==ObstacleCoinSpawnType.SpawnByUnder)
-                    {
-                        break;
-                    }
                 }
+                
+                
                 
                 currentLane = testedLane;
                 
                 if (laneValid)
                 {
-                    pos += (currentLane - 1) * laneOffset * (rot * Vector3.right);
+                    if (obstacle != null)
+                    {
+                        pos += (currentLane - 1) * laneOffset * (rot * Vector3.right);
+                        var newPos = pos + (Vector3.forward*(obstacle.obstacleLength+speed/2f));
+                    
+                        if (obstacle.coinSpawnType==ObstacleCoinSpawnType.SpawnByJumping)
+                        {
+                            float radius = characterController.characterMovement.jumpHeight*2f;
+                            float circleCircumference = Mathf.PI * radius;
+                            int numberOfPoints = Mathf.RoundToInt(circleCircumference / increment);
+                            
+                            var obstaclePosition =obstacle.transform.position;
+                            for (int i = 0; i < numberOfPoints; i++)
+                            {
+                                segment.GetPointAtInWorldUnit(currentWorldPos, out pos, out rot);
+                    
+                                float angle = i * 180f / numberOfPoints;
+                                segment.GetPointAtInWorldUnit(currentWorldPos,out pos,out rot);
+                                pos+= Vector3.up;
 
+                                float y = obstaclePosition.y+(Mathf.Sin(angle * Mathf.Deg2Rad) * radius);
+                                float z = obstaclePosition.z+(Mathf.Cos(angle * Mathf.Deg2Rad) * speed/2);
+
+
+                                Vector3 coinPosition = ((testedLane - 1) * laneOffset * (Vector3.right) +
+                                                        new Vector3(pos.x, y , z));
+
+                                toUse = Coin.coinPool.Get(coinPosition, rot);
+                                toUse.transform.SetParent(segment.collectibleTransform, true);
+                    
+                                if (toUse != null)
+                                {
+                                    Vector3 oldPos = toUse.transform.position;
+                                    toUse.transform.position += Vector3.back;
+                                    toUse.transform.position = oldPos;
+                                }
+                                currentWorldPos += increment;
+                            }
+                        }
+                        continue;
+                    }
+                    
                     if (Random.value < powerupChance)
                     {
                         int picked = Random.Range(0, consumableDatabase.consumbales.Length);
@@ -532,7 +541,7 @@ namespace Dev.Scripts.Track
                             _mTimeSincePowerup = 0.0f;
                             powerupChance = 0.0f;
 
-                            AsyncOperationHandle op = Addressables.InstantiateAsync(consumableDatabase.consumbales[picked].gameObject.name, pos, rot);
+                            AsyncOperationHandle op = Addressables.InstantiateAsync(consumableDatabase.consumbales[picked].gameObject.name, pos, Quaternion.identity);
                             yield return op;
                             if (op.Result == null || !(op.Result is GameObject))
                             {
@@ -545,7 +554,7 @@ namespace Dev.Scripts.Track
                     }
                     else
                     {
-                        toUse = Coin.coinPool.Get(pos, rot);
+                        toUse = Coin.coinPool.Get(pos, Quaternion.identity);
                         toUse.transform.SetParent(segment.collectibleTransform, true);
             
                         if (toUse != null)

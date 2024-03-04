@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using NaughtyAttributes;
 using UnityEngine;
@@ -11,9 +12,6 @@ namespace Dev.Scripts.Obstacles
     {
         DontSpawn,
         SpawnByJumping,
-        SpawnByUnder,
-        SpawnFromAbove
-        
     }
     [RequireComponent(typeof(AudioSource))]
     public abstract class Obstacle : MonoBehaviour
@@ -23,7 +21,10 @@ namespace Dev.Scripts.Obstacles
         public bool randomColor;
         [ShowIf("randomColor")]
         public Color[] colors;
+
+        public float obstacleLength;
         
+
         public abstract IEnumerator Spawn(TrackSegment segment, float t);
 
         public virtual void Impacted()
