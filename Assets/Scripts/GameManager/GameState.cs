@@ -186,6 +186,11 @@ namespace Dev.Scripts.GameManager
             PlayerData.Instance.Save();
             manager.SwitchState ("Loadout");
         }
+
+        private void OnApplicationQuit()
+        {
+            PlayerData.Instance.Save();
+        }
     }
     
     
