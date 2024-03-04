@@ -1,17 +1,9 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Dev.Scripts.Characters
 {
-    public struct Events
-    {
-        public static Action PlayerDetect;
-
-        public static void DestroyEvents()
-        {
-            PlayerDetect = null;
-        }
-    }
     public class Character : MonoBehaviour
     {
           public string characterName;
@@ -20,7 +12,7 @@ namespace Dev.Scripts.Characters
 
           public Animator animator;
           public Sprite icon;
-          public Sprite CharacterBg;
+          public Sprite characterBg;
 
           [Header("Sound")]
           public AudioClip jumpSound;

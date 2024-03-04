@@ -103,7 +103,7 @@ public class CharacterControl : MonoBehaviour
     {
         return _invincible;
     }
-    private void CleanConsumable()
+    public void CleanConsumable()
     {
         for (int i = 0; i < m_ActiveConsumables.Count; ++i)
         {
@@ -158,7 +158,7 @@ public class CharacterControl : MonoBehaviour
             GameEvents.RunStartEvent?.Invoke();
         }
     }
-    private void StopMoving()
+    public void StopMoving()
     {
         trackManager.StopMove();
         if (character.animator)

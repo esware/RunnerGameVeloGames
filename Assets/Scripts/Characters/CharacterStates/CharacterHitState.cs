@@ -17,6 +17,8 @@ namespace Dev.Scripts.Character.CharacterStates
         {
             _characterMovement = characterState.GetCharacterMovement(animator);
             _characterMovement.cameraShake.Shake(0.5f);
+            _characterMovement.characterControl.StopMoving();
+            _characterMovement.characterControl.CleanConsumable();
         }
 
         public override void UpdateAbility(BaseState characterState, Animator animator, AnimatorStateInfo stateInfo)

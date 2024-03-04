@@ -53,6 +53,10 @@ MonoBehaviour:
     m_Address: Barricade_Ramp
     m_ReadOnly: 0
     m_SerializedLabels: []
+  - m_GUID: a7e3606c66d93f3469c5e94e7c9557b3
+    m_Address: Block_AllLane
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 808f79af1f77c0848bd1fe6c9a2b9a44, type: 2}
   m_SchemaSet:

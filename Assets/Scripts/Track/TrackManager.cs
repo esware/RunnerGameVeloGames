@@ -442,41 +442,47 @@ namespace Dev.Scripts.Track
             const float increment = 2f;
             float currentWorldPos = 0.0f;
             int currentLane = Random.Range(0, 3);
-            float powerupChance = Mathf.Clamp01(Mathf.Floor(_mTimeSincePowerup) * 50f * 0.001f);
+            float powerupChance = Mathf.Clamp01(Mathf.Floor(_mTimeSincePowerup) * 500f * 0.001f);
 
             Vector3 pos;
             Quaternion rot;
             GameObject toUse;
             
-            while (currentWorldPos < segment.WorldLength/2f)
+            while (currentWorldPos < segment.WorldLength*0.7f)
             {
                 segment.GetPointAtInWorldUnit(currentWorldPos, out pos, out rot);
                 pos += Vector3.up;
                 int testedLane = currentLane;
                 bool laneValid = true;
-                RaycastHit hitInfo;
                 Obstacle obstacle = null;
-                while(Physics.Raycast(pos + ((testedLane - 1) * laneOffset * (rot * Vector3.right)), Vector3.forward, out hitInfo, speed/2, 1 << 9))
+                
+                while (Physics.CheckSphere(pos + ((testedLane - 1) * laneOffset * (Vector3.right)), 1f, 1 << 9))
                 {
-                    obstacle = hitInfo.collider.gameObject.GetComponent<Obstacle>() ?? hitInfo.collider.gameObject.GetComponentInParent<Obstacle>();
-                    if (obstacle.coinSpawnType==ObstacleCoinSpawnType.SpawnByJumping)
+                    
+                   Collider[] colliders = new Collider[10];
+
+                    int colliderCount = Physics.OverlapSphereNonAlloc(pos + (testedLane - 1) * laneOffset * Vector3.right, 1f, colliders, 1 << 9);
+                
+                    for (int i = 0; i < colliderCount; i++)
                     {
-                        break;
-                    }
-                    if (obstacle.coinSpawnType==ObstacleCoinSpawnType.DontSpawn)
-                    {
-                        for (int i = 0; i < (int)obstacle.obstacleLength+speed/2; i++)
+                        Collider c = colliders[i];
+                        if (c.GetComponent<Obstacle>() || c.GetComponentInParent<Obstacle>())
                         {
-                            currentWorldPos += increment;
+                            obstacle = c.GetComponent<Obstacle>() ?? c.GetComponentInParent<Obstacle>();
+                            break;
                         }
-                        
-                        laneValid = false;
-                        break;
+                    }
+
+                    if (obstacle != null)
+                    {
+                        if (obstacle.coinSpawnType == ObstacleCoinSpawnType.SpawnByJumping)
+                        {
+                            break;
+                        }
                     }
                     
                     testedLane = (testedLane + 1) % 3;
-                    
-                    if (testedLane==currentLane)
+                    if (currentLane == testedLane)
                     {
                         laneValid = false;
                         break;
@@ -484,16 +490,18 @@ namespace Dev.Scripts.Track
                     
                 }
                 
-                
-                
                 currentLane = testedLane;
                 
                 if (laneValid)
                 {
+                    segment.GetPointAtInWorldUnit(currentWorldPos, out pos, out rot);
+                    pos += Vector3.up;
+                    pos += (currentLane - 1) * laneOffset * (Vector3.right);
+                    
                     if (obstacle != null)
                     {
-                        pos += (currentLane - 1) * laneOffset * (rot * Vector3.right);
-                        var newPos = pos + (Vector3.forward*(obstacle.obstacleLength+speed/2f));
+                        //pos += (currentLane - 1) * laneOffset * (Vector3.right);
+                        //var newPos = pos + (Vector3.forward*(obstacle.obstacleLength+speed/2f));
                     
                         if (obstacle.coinSpawnType==ObstacleCoinSpawnType.SpawnByJumping)
                         {
@@ -523,7 +531,7 @@ namespace Dev.Scripts.Track
                                 if (toUse != null)
                                 {
                                     Vector3 oldPos = toUse.transform.position;
-                                    toUse.transform.position += Vector3.back;
+                                    toUse.transform.position += Vector3.back*3;
                                     toUse.transform.position = oldPos;
                                 }
                                 currentWorldPos += increment;
@@ -560,7 +568,7 @@ namespace Dev.Scripts.Track
                         if (toUse != null)
                         {
                             Vector3 oldPos = toUse.transform.position;
-                            toUse.transform.position += Vector3.back;
+                            toUse.transform.position +=  Vector3.back*3;;
                             toUse.transform.position = oldPos;
                         }
                     }

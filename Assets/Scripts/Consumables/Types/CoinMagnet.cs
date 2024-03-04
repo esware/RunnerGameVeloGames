@@ -16,20 +16,6 @@ namespace Dev.Scripts.Consumables.Types
         {
             return "Magnet";
         }
-        
-        void OnDrawGizmos() {
-            Vector3 center = transform.position;
-            Vector3 size = new Vector3(20, 5, 1); 
-            Quaternion rotation = Quaternion.identity; 
-            int layerMask = 1 << 8;
-            
-            Collider[] colliders = new Collider[20];
-            int hitCount = Physics.OverlapBoxNonAlloc(center, size, colliders, rotation, layerMask);
-            
-            Gizmos.color = Color.red;
-            Gizmos.DrawWireCube(center, size);
-        }
-
 
         public override void Tick(CharacterControl c)
         {

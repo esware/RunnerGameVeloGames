@@ -136,7 +136,7 @@ namespace Dev.Scripts.GameManager
                         highScoreText.text = "HighScore " + PlayerData.Instance.highscore;
                         
                         characterIcon.sprite = newChar.GetComponent<Characters.Character>().icon;
-                        characterBackground.GetComponent<SpriteRenderer>().sprite = newChar.GetComponent<Characters.Character>().CharacterBg;
+                        characterBackground.GetComponent<SpriteRenderer>().sprite = newChar.GetComponent<Characters.Character>().characterBg;
 
                         if (_character != null)
                             Addressables.ReleaseInstance(_character);

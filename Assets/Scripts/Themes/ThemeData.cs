@@ -14,7 +14,6 @@ namespace Dev.Scripts.Themes
     {
         [Header("Theme Data")] 
         public string themeName;
-        public int cost;
         public Sprite themeIcon;
 
         [Header("Objects")] 
