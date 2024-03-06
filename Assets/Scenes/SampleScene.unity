@@ -872,7 +872,7 @@ MonoBehaviour:
   laneOffset: 3
   invincible: 0
   consumableDatabase: {fileID: 11400000, guid: 1d6ee7471d2128148bf69059280668e2, type: 2}
-  parentObject: {fileID: 650229021}
+  parentObject: {fileID: 492179864}
   characterPosition: {fileID: 1700412285}
   _segments: []
   m_PastSegments: []
@@ -1262,6 +1262,37 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!1 &492179864
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 492179865}
+  m_Layer: 0
+  m_Name: ----------------------
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &492179865
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 492179864}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.4052932, z: 21.962547}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 13
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &573749396
 GameObject:
   m_ObjectHideFlags: 3
@@ -2813,10 +2844,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 938761117}
+  - component: {fileID: 938761118}
   - component: {fileID: 938761121}
   - component: {fileID: 938761120}
   - component: {fileID: 938761119}
-  - component: {fileID: 938761118}
   m_Layer: 3
   m_Name: Player_Pivot
   m_TagString: Untagged
@@ -2875,16 +2906,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   trackManager: {fileID: 281946503}
   characterControl: {fileID: 938761121}
-  velocity: {x: 0, y: 0, z: 0}
+  controller: {fileID: 938761118}
   laneChangeSpeed: 2
+  groundCheck: {fileID: 790274200}
   gravity: -20
   jumpHeight: 2.5
-  isGrounded: 0
-  groundCheck: {fileID: 790274200}
   cameraController: {fileID: 140304480}
   cameraShake: {fileID: 960888820}
   movementDirection: {x: 0, y: 0, z: 0}
-  controller: {fileID: 938761118}
+  velocity: {x: 0, y: 0, z: 0}
+  isGrounded: 0
 --- !u!114 &938761120
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2897,8 +2928,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d96493eb51147529846603ceba4aa6b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentTutorialLevel: 0
-  tutorialWaitingForValidation: 0
 --- !u!114 &938761121
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2920,7 +2949,7 @@ MonoBehaviour:
   coinSound: {fileID: 0}
   powerUpUseSound: {fileID: 0}
   powerupSource: {fileID: 0}
-  magnetCoins: []
+  MagnetCoins: []
 --- !u!4 &942195632 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4251109630112746, guid: 139b3e971e6648b459617b164e32d96d, type: 3}
@@ -2989,7 +3018,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 960888817}
-  m_LocalRotation: {x: 0.062137432, y: -0.000000017173132, z: 0.0000000010691601, w: 0.9980676}
+  m_LocalRotation: {x: 0.06213745, y: 0.000000017173132, z: -0.0000000010691605, w: 0.9980676}
   m_LocalPosition: {x: 4.5111957, y: -2.4441667, z: 3.1852455}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -5574,7 +5603,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1665063496}
-  m_LocalRotation: {x: 0.16018222, y: 0.000000025470568, z: -0.0000000041333035, w: 0.9870875}
+  m_LocalRotation: {x: 0.16018224, y: 0.000000004252742, z: -6.9012535e-10, w: 0.9870875}
   m_LocalPosition: {x: 4.5111957, y: -2.4441667, z: 7.1852455}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0

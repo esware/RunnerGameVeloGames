@@ -10,20 +10,26 @@ using UnityEditor;
 
 public class TrackSegment : MonoBehaviour
 {
-    public Transform pathParent;
+    [HideInInspector]
     public TrackManager manager;
-
-	public Transform objectRoot;
+    
+    [Space,Header("Segment Settings")]
+    public Transform pathParent;
+    public Transform objectRoot;
 	public Transform collectibleTransform;
 
-    public AssetReference[] possibleObstacles; 
-    
+    [Space,Header("Obstacle Settings")]
+    public AssetReference[] possibleObstacles;
     public float[] obstaclePositions;
-    
 
+
+    #region Properties
 
     public float WorldLength => _worldLength;
     private float _worldLength;
+
+    #endregion
+    
 
     private void OnEnable()
     {
@@ -81,14 +87,14 @@ public class TrackSegment : MonoBehaviour
 		{
 			Transform t = collectibleTransform.GetChild(0);
 			t.SetParent(null);
-            Coin.coinPool.Free(t.gameObject);
+            Coin.CoinPool.Free(t.gameObject);
 		}
 
 	    Addressables.ReleaseInstance(gameObject);
 	}
 
-#if UNITY_EDITOR
-    void OnDrawGizmos()
+    #if UNITY_EDITOR
+    private void OnDrawGizmos()
     {
         if (pathParent == null)
             return;
@@ -113,7 +119,8 @@ public class TrackSegment : MonoBehaviour
         }
         Gizmos.color = c;
     }
-#endif
+    
+    #endif
 }
 
 #if UNITY_EDITOR

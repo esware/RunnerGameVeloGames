@@ -6,9 +6,9 @@ namespace Dev.Scripts.Consumables
     [CreateAssetMenu(fileName="Consumables", menuName = "EWGames/Consumables Database")]
     public class ConsumableDatabase : ScriptableObject
     {
-        public Consumable[] consumbales;
+        public Consumable[] consumables;
 
-        static protected Dictionary<Consumable.ConsumableType, Consumable> _consumablesDict;
+        private static Dictionary<Consumable.ConsumableType, Consumable> _consumablesDict;
 
         public void Load()
         {
@@ -16,17 +16,24 @@ namespace Dev.Scripts.Consumables
             {
                 _consumablesDict = new Dictionary<Consumable.ConsumableType, Consumable>();
 
-                for (int i = 0; i < consumbales.Length; ++i)
+                foreach (var t in consumables)
                 {
-                    _consumablesDict.Add(consumbales[i].GetConsumableType(), consumbales[i]);
+                    _consumablesDict.Add(t.GetConsumableType(), t);
                 }
             }
         }
 
-        static public Consumable GetConsumbale(Consumable.ConsumableType type)
+        public static Consumable GetConsumable(Consumable.ConsumableType type)
         {
+            if (_consumablesDict == null)
+            {
+                Debug.LogError("Consumable database is not loaded. Call Load method before accessing consumables.");
+                return null;
+            }
+
             Consumable c;
-            return _consumablesDict.TryGetValue (type, out c) ? c : null;
+            return _consumablesDict.TryGetValue(type, out c) ? c : null;
         }
     }
+
 }

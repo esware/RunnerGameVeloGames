@@ -13,6 +13,7 @@ namespace Dev.Scripts.Obstacles
         DontSpawn,
         SpawnByJumping,
     }
+
     [RequireComponent(typeof(AudioSource))]
     public abstract class Obstacle : MonoBehaviour
     {
@@ -23,7 +24,6 @@ namespace Dev.Scripts.Obstacles
         public Color[] colors;
 
         public float obstacleLength;
-        
 
         public abstract IEnumerator Spawn(TrackSegment segment, float t);
 
@@ -36,7 +36,7 @@ namespace Dev.Scripts.Obstacles
             {
                 anim.Play();
                 float animationLength = anim.clip.length;
-                StartCoroutine(DestroyAfterDelay(animationLength+0.6f));
+                StartCoroutine(DestroyAfterDelay(animationLength + 0.6f));
             }
 
             if (audioSource != null && impactedSound != null)
@@ -53,6 +53,6 @@ namespace Dev.Scripts.Obstacles
             yield return new WaitForSeconds(delay);
             Addressables.ReleaseInstance(gameObject);
         }
-
     }
+
 }

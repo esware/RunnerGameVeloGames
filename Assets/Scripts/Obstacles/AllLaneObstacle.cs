@@ -20,12 +20,19 @@ namespace Dev.Scripts.Obstacles
                 yield break;
             }
             GameObject obj = op.Result as GameObject;
-            obj.transform.SetParent(segment.objectRoot, true);
+            if (obj != null)
+            {
+                obj.transform.SetParent(segment.objectRoot, true);
 
-            //TODO : remove that hack related to #issue7
-            Vector3 oldPos = obj.transform.position;
-            obj.transform.position += Vector3.back;
-            obj.transform.position = oldPos;
+                Vector3 oldPos = obj.transform.position;
+                obj.transform.position += Vector3.back;
+                obj.transform.position = oldPos;
+            }
+        }
+
+        public override void Impacted()
+        {
+            base.Impacted();
         }
         
     }

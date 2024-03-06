@@ -14,9 +14,8 @@ namespace Dev.Scripts.Themes
     {
         [Header("Theme Data")] 
         public string themeName;
-        public Sprite themeIcon;
 
-        [Header("Objects")] 
+        [Header("Theme Settings")] 
         public ThemeZone[] zones;
         public GameObject collectiblePrefab;
 

@@ -9,21 +9,12 @@ using Dev.Scripts.Consumables;
 using Dev.Scripts.Obstacles;
 using Dev.Scripts.Sounds;
 using Dev.Scripts.Themes;
-using Unity.VisualScripting;
-using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
-using System.Linq;
-using System.Numerics;
-using Unity.Mathematics;
 using Quaternion = UnityEngine.Quaternion;
 using Vector3 = UnityEngine.Vector3;
-#if UNITY_ANALYTICS
-using UnityEngine.Analytics;
-#endif
 
 namespace Dev.Scripts.Track
 {
-    
     public class TrackManager : MonoBehaviour
     {
         public static TrackManager Instance => _instance;
@@ -184,22 +175,14 @@ namespace Dev.Scripts.Track
 
                 gameObject.SetActive(true);
                 characterController.gameObject.SetActive(true);
-                characterController.coins = 0;
+                characterController.Coins = 0;
 
                 _score = 0;
                 _mScoreAccum = 0;
 
                 _safeSegementLeft = StartingSafeSegments;
-                Coin.coinPool = new Pooler(currentTheme.collectiblePrefab, 50);
+                Coin.CoinPool = new Pooler(currentTheme.collectiblePrefab,100);
                 
-
-#if UNITY_ANALYTICS
-            AnalyticsEvent.GameStart(new Dictionary<string, object>
-            {
-                { "theme", m_CurrentThemeData.themeName},
-                { "character", player.characterName },
-            });
-#endif
             }
             characterController.Begin();
             characterController.character.animator.Play(TransitionParameter.Start.ToString());
@@ -298,7 +281,7 @@ namespace Dev.Scripts.Track
                 PlayerData.Instance.rank += 1;
                 PlayerData.Instance.Save();
             }
-            MusicPlayer.instance.UpdateVolumes(speedRatio);
+            MusicPlayer.Instance.UpdateVolumes(speedRatio);
         }
 
         private void PowerupSpawnUpdate()
@@ -525,7 +508,7 @@ namespace Dev.Scripts.Track
                                 Vector3 coinPosition = ((testedLane - 1) * laneOffset * (Vector3.right) +
                                                         new Vector3(pos.x, y , z));
 
-                                toUse = Coin.coinPool.Get(coinPosition, rot);
+                                toUse = Coin.CoinPool.Get(coinPosition, rot);
                                 toUse.transform.SetParent(segment.collectibleTransform, true);
                     
                                 if (toUse != null)
@@ -542,18 +525,18 @@ namespace Dev.Scripts.Track
                     
                     if (Random.value < powerupChance)
                     {
-                        int picked = Random.Range(0, consumableDatabase.consumbales.Length);
+                        int picked = Random.Range(0, consumableDatabase.consumables.Length);
                         
-                        if (consumableDatabase.consumbales[picked].canBeSpawned)
+                        if (consumableDatabase.consumables[picked].canBeSpawned)
                         {
                             _mTimeSincePowerup = 0.0f;
                             powerupChance = 0.0f;
 
-                            AsyncOperationHandle op = Addressables.InstantiateAsync(consumableDatabase.consumbales[picked].gameObject.name, pos, Quaternion.identity);
+                            AsyncOperationHandle op = Addressables.InstantiateAsync(consumableDatabase.consumables[picked].gameObject.name, pos, Quaternion.identity);
                             yield return op;
                             if (op.Result == null || !(op.Result is GameObject))
                             {
-                                Debug.LogWarning(string.Format("Unable to load consumable {0}.", consumableDatabase.consumbales[picked].gameObject.name));
+                                Debug.LogWarning(string.Format("Unable to load consumable {0}.", consumableDatabase.consumables[picked].gameObject.name));
                                 yield break;
                             }
                             toUse = op.Result as GameObject;
@@ -562,7 +545,7 @@ namespace Dev.Scripts.Track
                     }
                     else
                     {
-                        toUse = Coin.coinPool.Get(pos, Quaternion.identity);
+                        toUse = Coin.CoinPool.Get(pos, Quaternion.identity);
                         toUse.transform.SetParent(segment.collectibleTransform, true);
             
                         if (toUse != null)

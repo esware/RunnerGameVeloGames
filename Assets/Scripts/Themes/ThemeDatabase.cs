@@ -7,16 +7,16 @@ namespace Dev.Scripts.Themes
 {
     public static class ThemeDatabase
     {
-        private static Dictionary<string, ThemeData> themeDataList;
-        public static Dictionary<string, ThemeData> Dictionary => themeDataList;
+        private static Dictionary<string, ThemeData> _themeDataList;
+        public static Dictionary<string, ThemeData> Dictionary => _themeDataList;
 
         private static bool _loaded = false;
-        public static bool loaded => _loaded;
+        public static bool Loaded => _loaded;
 
         public static ThemeData GetThemeData(string type)
         {
             ThemeData list;
-            if (themeDataList == null || !themeDataList.TryGetValue(type, out list))
+            if (_themeDataList == null || !_themeDataList.TryGetValue(type, out list))
                 return null;
 
             return list;
@@ -24,17 +24,17 @@ namespace Dev.Scripts.Themes
 
         public static IEnumerator LoadDatabase()
         {
-            if (themeDataList == null)
+            if (_themeDataList == null)
             {
-                themeDataList = new Dictionary<string, ThemeData>();
+                _themeDataList = new Dictionary<string, ThemeData>();
 
 
                 yield return Addressables.LoadAssetsAsync<ThemeData>("ThemeData", op =>
                 {
                     if (op != null)
                     {
-                        if(!themeDataList.ContainsKey(op.themeName))
-                            themeDataList.Add(op.themeName, op);
+                        if(!_themeDataList.ContainsKey(op.themeName))
+                            _themeDataList.Add(op.themeName, op);
                     }
                 });
 

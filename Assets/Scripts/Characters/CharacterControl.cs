@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using Characters;
 using Dev.Scripts;
-using Dev.Scripts.Character;
 using Dev.Scripts.Consumables;
 using Dev.Scripts.Obstacles;
 using Dev.Scripts.Track;
@@ -12,28 +11,53 @@ using UnityEngine.AddressableAssets;
 using Dev.Scripts.Characters;
 using Character = Dev.Scripts.Characters.Character;
 
-public enum TransitionParameter
-{
-    Start,
-    Dead,
-    Running,
-    Jumping,
-    Sliding,
-    SlideEnd,
-    Landing,
-    Hit,
-    ForceTransition,
-    JumpEnd
-}
-public static class GameEvents
-{
-    public static Action PlayerDeathEvent;
-    public static Action RunStartEvent;
-    public static Action GameStartEvent;
-}
+#region Enums
 
+    public enum TransitionParameter
+    {
+        Start,
+        Dead,
+        Running,
+        Jumping,
+        Sliding,
+        SlideEnd,
+        Landing,
+        Hit,
+        ForceTransition,
+        JumpEnd
+    }
+
+#endregion
+
+#region GameEvents
+
+    public static class GameEvents
+    {
+        public static Action PlayerDeathEvent;
+        public static Action RunStartEvent;
+    }
+
+#endregion
+
+#region Requirements
+
+[
+    RequireComponent
+    (
+        typeof(CharacterInputController),
+        typeof(CharacterMovement),
+        typeof(CharacterController)
+    )
+]
+
+#endregion
 public class CharacterControl : MonoBehaviour
 {
+    #region Variables
+
+    #region Public Variables
+
+    [Header("Character Components")]
     public CharacterInputController inputController;
     public CharacterMovement characterMovement;
     public Character character;
@@ -46,48 +70,67 @@ public class CharacterControl : MonoBehaviour
     public AudioClip coinSound;
     public AudioClip powerUpUseSound;
     public AudioSource powerupSource;
-    
-    public new AudioSource audio { get { return _audio; } }
-    public int coins { get { return _mCoins; } set { _mCoins = value; } }
-    public int currentLife { get { return _mCurrentLife; } set { _mCurrentLife = value; } }
-    public List<Consumable> consumables => m_ActiveConsumables;
-    [HideInInspector]
-    public List<GameObject> magnetCoins = new List<GameObject>();
 
-    private bool _invincible;
-    private AudioSource _audio;
+    #endregion
+    
+    #region Properties
+    public new AudioSource audio => _audio;
+    public int Coins
+    {
+        get => _coins;
+        set => _coins = value;
+    }
+
+    public int CurrentLife
+    {
+        get => _currentLife;
+        set => _currentLife = value;
+    }
+
+    public List<Consumable> Consumables => _activeConsumables;
+
+    [HideInInspector]
+    public List<GameObject> MagnetCoins = new List<GameObject>();
+
+    #endregion
+    
+    #region Constants
     
     private const float MagnetSpeed = 10f;
     private const int CoinsLayerIndex = 8;
     private const int ObstacleLayerIndex = 9;
-    private const int PowerupLayerIndex = 7;
-    private const float DefaultInvinsibleTime = 3f;
+    private const int PowerUpLayer = 7;
+    private const float DefaultInvincibleTime = 3f;
     
-    private int _mCoins;
-    private int _mCurrentLife;
+    #endregion
 
-    private List<Consumable> m_ActiveConsumables = new List<Consumable>();
+    #region Private Variables
 
+    private List<Consumable> _activeConsumables = new List<Consumable>();
+    private bool _invincible;
+    private AudioSource _audio;
+    private int _coins;
+    private int _currentLife;
+
+    #endregion
+
+    #endregion
+    
     #region Inital Methods
-    
-    private void Start()
-    {
-        _audio = GetComponent<AudioSource>();
-    }
-    protected void Awake ()
+    private void Awake ()
     {
         Init();
     }
     private void Init()
     {
+        _audio = GetComponent<AudioSource>();
         controller = GetComponent<CharacterController>();
         _invincible = false;
-        currentLife = maxLife;
-
+        _currentLife = maxLife;
     }
     public void Begin()
     {
-        m_ActiveConsumables.Clear();
+        _activeConsumables.Clear();
     }
     public void End()
     {
@@ -95,84 +138,55 @@ public class CharacterControl : MonoBehaviour
     }
     #endregion
 
+    #region Consumable Control
+    
+    public void CleanConsumable()
+    {
+        foreach (var t in _activeConsumables)
+        {
+            t.Ended(this);
+            Addressables.ReleaseInstance(t.gameObject);
+        }
+
+        _activeConsumables.Clear();
+    }
+    private void UseConsumable(Consumable c)
+    {
+        if (audio != null)
+            audio.PlayOneShot(powerUpUseSound);
+
+        bool isConsumableActive = false;
+        foreach (var consumable in _activeConsumables)
+        {
+            if (consumable.GetType() == c.GetType())
+            {
+                consumable.ResetTime();
+                Addressables.ReleaseInstance(c.gameObject);
+                isConsumableActive = true;
+                break;
+            }
+        }
+
+        if (!isConsumableActive)
+        {
+            c.transform.SetParent(transform, false);
+            c.gameObject.SetActive(false);
+
+            _activeConsumables.Add(c);
+            StartCoroutine(c.Started(this));
+        }
+    }
+    #endregion
+    
+    #region Invincible Control
     public void CheatInvincible(bool invincible)
     {
         _invincible = invincible;
     }
-    private bool IsCheatInvincible()
-    {
-        return _invincible;
-    }
-    public void CleanConsumable()
-    {
-        for (int i = 0; i < m_ActiveConsumables.Count; ++i)
-        {
-            m_ActiveConsumables[i].Ended(this);
-            Addressables.ReleaseInstance(m_ActiveConsumables[i].gameObject);
-        }
-
-        m_ActiveConsumables.Clear();
-    }
-    private void UseConsumable(Consumable c)
-    {
-        //audio.PlayOneShot(powerUpUseSound);
-
-        for(int i = 0; i < m_ActiveConsumables.Count; ++i)
-        {
-            if(m_ActiveConsumables[i].GetType() == c.GetType())
-            {
-                m_ActiveConsumables[i].ResetTime();
-                Addressables.ReleaseInstance(c.gameObject);
-                return;
-            }
-        }
-        
-        c.transform.SetParent(transform, false);
-        c.gameObject.SetActive(false);
-
-        m_ActiveConsumables.Add(c);
-        StartCoroutine(c.Started(this));
-    }
-    
-    private void Update()
-    {
-        if(!trackManager.isMoving)
-            return;
-        for(int i = 0; i < magnetCoins.Count; ++i)
-        {
-            if (magnetCoins[i].gameObject!=null)
-            {
-                magnetCoins[i].transform.position = Vector3.MoveTowards(magnetCoins[i].transform.position, transform.position+Vector3.up, MagnetSpeed * Time.deltaTime);
-            }
-        }
-    }
-    
-    #region States
-    
-    public void StartRunning()
-    {
-        trackManager.StartMove();
-        if (character.animator)
-        {
-            characterMovement.PlayAnim(TransitionParameter.Running.ToString(),0.1f,1f);
-            GameEvents.RunStartEvent?.Invoke();
-        }
-    }
-    public void StopMoving()
-    {
-        trackManager.StopMove();
-        if (character.animator)
-        {
-            characterMovement.PlayAnim(TransitionParameter.Hit.ToString(),0.1f,1f);
-        }
-    }
-    
-    #endregion
-    public void SetInvincible(float timer = DefaultInvinsibleTime)
+    public void SetInvincible(float timer = DefaultInvincibleTime)
     {
         StartCoroutine(InvincibleTimer(timer));
     }
-    
     private IEnumerator InvincibleTimer(float timer)
     {
         var c = GetComponentInChildren<Character>();
@@ -180,11 +194,11 @@ public class CharacterControl : MonoBehaviour
         var originalMaterial = r.materials[0];
         var originalColor = originalMaterial.color;
         
-        Material invincibleMaterial = new Material(originalMaterial);
-        invincibleMaterial.color = Color.white;
+        var invincibleMaterial = new Material(originalMaterial);
+        invincibleMaterial.color = Color.red;
 
         _invincible = true;
-        
+
         float time = 0;
         float currentBlink = 1.0f;
         float lastBlink = 0.0f;
@@ -204,61 +218,138 @@ public class CharacterControl : MonoBehaviour
                 r.materials[0].color = (currentBlink > 0.5f) ? originalColor : invincibleMaterial.color;
             }
         }
+        
         r.materials[0].color = originalColor;
 
         _invincible = false;
     }
 
+    #endregion
     
-    private void OnTriggerEnter(Collider c)
+    #region States
+    public void StartRunning()
     {
-        if (c.gameObject.layer == CoinsLayerIndex)
-		{
-            if (magnetCoins.Contains(c.gameObject))
-				magnetCoins.Remove(c.gameObject);
-            
-            Coin.coinPool.Free(c.gameObject);
-            PlayerData.Instance.coins += 1;
-            coins += 1;
-            _audio.PlayOneShot(coinSound);
-        }
-        else if(c.gameObject.layer == ObstacleLayerIndex)
+        trackManager.StartMove();
+        if (character.animator)
         {
-            if (_invincible || IsCheatInvincible())
-                return;
-            StopMoving();
-            
-            var ob = c.gameObject.GetComponent<Obstacle>() ?? c.gameObject.GetComponentInParent<Obstacle>();
-
-            if (ob != null)
-            {
-                ob.Impacted();
-            }
-            else
-            {
-                Addressables.ReleaseInstance(c.gameObject);
-            }
-
-
-            currentLife -= 1;
-            
-            if (currentLife > 0)
-			{
-                _audio.PlayOneShot(character.hitSound);
-                SetInvincible();
-			}
-            else
-			{
-                 GameEvents.PlayerDeathEvent?.Invoke();
-            }
-        }
-        else if(c.gameObject.layer == PowerupLayerIndex)
-        {
-            Consumable consumable = c.GetComponent<Consumable>();
-            if(consumable != null)
-            {
-                UseConsumable(consumable);
-            }
+            characterMovement.PlayAnim(TransitionParameter.Running.ToString(),0.1f,1f);
+            GameEvents.RunStartEvent?.Invoke();
         }
     }
+    public void StopMoving()
+    {
+        trackManager.StopMove();
+        if (character.animator)
+        {
+            characterMovement.PlayAnim(TransitionParameter.Hit.ToString(),0.1f,1f);
+        }
+    }
+    
+    #endregion
+    
+    #region Trigger Events
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (IsCoinTrigger(other))
+        {
+            HandleCoin(other.gameObject);
+        }
+        else if (IsObstacleTrigger(other))
+        {
+            HandleObstacle(other.gameObject);
+        }
+        else if (IsPowerUpTrigger(other))
+        {
+            HandlePowerUp(other.gameObject);
+        }
+    }
+
+    #endregion
+
+    #region Trigger Conditions
+
+    private bool IsCoinTrigger(Collider other) => other.gameObject.layer == CoinsLayerIndex;
+
+    private bool IsObstacleTrigger(Collider other) => other.gameObject.layer == ObstacleLayerIndex;
+
+    private bool IsPowerUpTrigger(Collider other) => other.gameObject.layer == PowerUpLayer;
+
+    #endregion
+
+    #region Trigger Handlers
+
+    private void HandleCoin(GameObject coinObject)
+    {
+        if (MagnetCoins.Contains(coinObject))
+        {
+            MagnetCoins.Remove(coinObject);
+        }
+    
+        Coin.CoinPool.Free(coinObject);
+        PlayerData.Instance.coins += 1;
+        Coins += 1;
+
+        if (audio != null)
+        {
+            _audio.PlayOneShot(coinSound);
+        }
+    }
+
+    private void HandleObstacle(GameObject obstacleObject)
+    {
+        if (_invincible)
+            return;
+
+        StopMoving();
+    
+        var obstacle = obstacleObject.GetComponent<Obstacle>() ?? obstacleObject.GetComponentInParent<Obstacle>();
+
+        if (obstacle != null)
+        {
+            obstacle.Impacted();
+        }
+        else
+        {
+            Addressables.ReleaseInstance(obstacleObject);
+        }
+
+        CurrentLife -= 1;
+
+        if (CurrentLife > 0)
+        {
+            if (audio != null)
+                _audio.PlayOneShot(character.hitSound);
+
+            SetInvincible();
+        }
+        else
+        {
+            GameEvents.PlayerDeathEvent?.Invoke();
+        }
+    }
+
+    private void HandlePowerUp(GameObject powerUpObject)
+    {
+        Consumable consumable = powerUpObject.GetComponent<Consumable>();
+        if (consumable != null)
+        {
+            UseConsumable(consumable);
+        }
+    }
+
+    #endregion
+    
+    private void Update()
+    {
+        if (!trackManager.isMoving)
+            return;
+        
+        MagnetCoins.RemoveAll(item => item == null);
+        foreach (var t in MagnetCoins)
+        {
+            t.transform.position = Vector3.MoveTowards(t.transform.position, transform.position + Vector3.up, MagnetSpeed * Time.deltaTime);
+        }
+    }
+
 }

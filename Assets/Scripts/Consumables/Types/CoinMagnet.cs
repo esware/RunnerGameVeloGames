@@ -2,14 +2,15 @@
 
 namespace Dev.Scripts.Consumables.Types
 {
-    public class CoinMagnet:Consumable
+    public class CoinMagnet : Consumable
     {
-        private readonly Vector3 _halfExtendsBox = new Vector3(20f, 5.0f, 1.0f);
-        private const int _layerMask = 1 << 8;
-        private Collider[] _returnColliders = new Collider[20];
+        private const int LayerMask = 1 << 8;
+        private readonly Vector3 _magnetAreaSize = new Vector3(20f, 5.0f, 1.0f);
+        private readonly Collider[] _overlappingColliders = new Collider[20];
+
         public override ConsumableType GetConsumableType()
         {
-            return ConsumableType.COIN_MAG;
+            return ConsumableType.CoinMag;
         }
 
         public override string GetConsumableName()
@@ -20,25 +21,22 @@ namespace Dev.Scripts.Consumables.Types
         public override void Tick(CharacterControl c)
         {
             base.Tick(c);
-            
-            int nb = Physics.OverlapBoxNonAlloc(c.transform.position, 
-                _halfExtendsBox, _returnColliders,
-                c.transform.rotation, _layerMask);
-            
-            for (int i = 0; i < nb; ++i)
+
+            var cTransform = c.transform;
+            int numOverlapping = Physics.OverlapBoxNonAlloc(cTransform.position, 
+                _magnetAreaSize, _overlappingColliders,
+                cTransform.rotation, LayerMask);
+        
+            for (int i = 0; i < numOverlapping; ++i)
             {
-                Coin returnCoin = _returnColliders[i].GetComponent<Coin>();
-                if (returnCoin != null && !c.magnetCoins.Contains(returnCoin.gameObject))
+                Coin coin = _overlappingColliders[i].GetComponent<Coin>();
+                if (coin != null && !c.MagnetCoins.Contains(coin.gameObject))
                 {
-                    _returnColliders[i].transform.SetParent(c.transform);
-                    c.magnetCoins.Add(_returnColliders[i].gameObject);
+                    _overlappingColliders[i].transform.SetParent(c.transform);
+                    c.MagnetCoins.Add(_overlappingColliders[i].gameObject);
                 }
             }
         }
-
-        public override void Ended(CharacterControl c)
-        {
-            base.Ended(c);
-        }
     }
+
 }

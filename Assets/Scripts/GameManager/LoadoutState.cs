@@ -53,10 +53,10 @@ namespace Dev.Scripts.GameManager
             
             charNameDisplay.text = "";
             
-            if (MusicPlayer.instance.GetStem(0) != menuTheme)
+            if (MusicPlayer.Instance.GetStem(0) != menuTheme)
             {
-                MusicPlayer.instance.SetStem(0, menuTheme);
-                StartCoroutine(MusicPlayer.instance.RestartAllStems());
+                MusicPlayer.Instance.SetStem(0, menuTheme);
+                StartCoroutine(MusicPlayer.Instance.RestartAllStems());
             }
 
             rankText.text = "Level " + PlayerData.Instance.rank;
@@ -76,7 +76,7 @@ namespace Dev.Scripts.GameManager
         {
             if (!runButton.interactable)
             {
-                bool interactable = CharacterDatabase.loaded;
+                bool interactable = CharacterDatabase.Loaded;
                 if(interactable)
                 {
                     runButton.interactable = true;
@@ -163,7 +163,7 @@ namespace Dev.Scripts.GameManager
                 PlayerData.Instance.Save();
             }
             manager.SwitchState("Game");
-            GameEvents.GameStartEvent?.Invoke();
+           // GameEvents.GameStartEvent?.Invoke();
         }
     }
 }

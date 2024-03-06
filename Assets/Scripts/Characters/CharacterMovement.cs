@@ -1,45 +1,68 @@
 ﻿using Dev.Scripts.Camera;
 using Dev.Scripts.Characters;
 using Dev.Scripts.Track;
-
+using System.Collections;
+using NaughtyAttributes;
+using UnityEngine;
 
 namespace Characters
 {
-    using System.Collections;
-    using UnityEngine;
-
     public class CharacterMovement : MonoBehaviour
     {
+        #region Public Variables
         
+        [Space,Header("Helpers")]
         public TrackManager trackManager;
         public CharacterControl characterControl;
+        public CharacterController controller;
         
         [Space,Header("Movement Settings")]
-        public Vector3 velocity;
         public float laneChangeSpeed = 2f;
 
         [Space,Header("Jump Settings")]
+        public Transform groundCheck;
         public float gravity = -9.81f;
         public float jumpHeight = 3.0f;
-        public bool isGrounded;
-        public Transform groundCheck;
         
+        [Space,Header("Camera Settings")]
         public CameraController cameraController;
         public CameraShake cameraShake;
-        
-        private int _layerMask = (1 << 6) | (1 << 9);
 
+        #endregion
+
+        #region Getter Setter
         public int DesiredLane
         {
             get => _desiredLane;
             set => _desiredLane = value;
         }
-        private int _desiredLane = 1;//0:left, 1:middle, 2:right
-        public Vector3 movementDirection;
+        
+        #endregion
+        
+        #region Debugging Variables
 
-        public CharacterController controller;
+        [Space,Header("Debug")]
+        [SerializeField,ReadOnly]
+        private Vector3 movementDirection;
 
-        private void Start()
+        [ReadOnly]
+        public Vector3 velocity;
+
+        [ReadOnly]
+        public bool isGrounded;
+
+        #endregion
+
+        #region Private Variables
+        
+        private int _layerMask = (1 << 6) | (1 << 9);
+        private int _desiredLane = 1;
+
+        #endregion
+
+        #region Private Methods
+        
+        private void Awake()
         {
             SignUpEvents();
         }
@@ -47,56 +70,6 @@ namespace Characters
         {
             GameEvents.RunStartEvent += () => PlayAnim(TransitionParameter.Running.ToString(), 0.1f, 1f);
             GameEvents.PlayerDeathEvent += () => PlayAnim(TransitionParameter.Dead.ToString(), 0.01f, 1f);
-        }
-        public void Move()
-        {
-            movementDirection.z = trackManager.speed;
-            GroundCheck();
-            var targetPosition = transform.position.z * Vector3.forward + transform.position.y * Vector3.up;
-
-            if (CharacterInputController.SwipeRight)
-            {
-                StartCoroutine(CharacterRotation(Quaternion.Euler(0, 90, 0)));
-                _desiredLane++;
-                if (_desiredLane == 3)
-                    _desiredLane = 2;
-            }
-            if (CharacterInputController.SwipeLeft)
-            {
-                StartCoroutine(CharacterRotation(Quaternion.Euler(0, -90, 0)));
-                _desiredLane--;
-                if (_desiredLane == -1)
-                    _desiredLane = 0;
-            }
-        
-            if (_desiredLane == 0)
-            {
-                targetPosition += Vector3.left * trackManager.laneOffset;
-            }
-            else if (_desiredLane== 2)
-            {
-                targetPosition += Vector3.right * trackManager.laneOffset;
-            }
-
-            if (!transform.position.Equals(targetPosition))
-            {
-                Vector3 diff = targetPosition - transform.position;
-            
-                Vector3 moveDir = diff * (laneChangeSpeed * Time.deltaTime);
-            
-                controller.Move(diff* (laneChangeSpeed * Time.deltaTime));
-
-                if (moveDir.sqrMagnitude < diff.magnitude)
-                {
-                    controller.Move(moveDir);
-                }
-                else
-                {
-                    controller.Move(diff);
-                }
-            }
-            controller.Move(movementDirection* Time.deltaTime);
-
         }
         private IEnumerator CharacterRotation(Quaternion rot)
         {
@@ -116,6 +89,56 @@ namespace Characters
             }
             characterControl.character.transform.rotation = Quaternion.identity;
         }
+        
+        #endregion
+        
+        #region Public State Methods
+
+        public void Move()
+        {
+            movementDirection.z = trackManager.speed;
+            var position = transform.position;
+            var targetPosition = position.z * Vector3.forward + position.y * Vector3.up;
+
+            if (CharacterInputController.SwipeRight && _desiredLane < 2)
+            {
+                StartCoroutine(CharacterRotation(Quaternion.Euler(0, 90, 0)));
+                _desiredLane++;
+            }
+            else if (CharacterInputController.SwipeLeft && _desiredLane > 0)
+            {
+                StartCoroutine(CharacterRotation(Quaternion.Euler(0, -90, 0)));
+                _desiredLane--;
+            }
+
+            if (_desiredLane == 0)
+            {
+                targetPosition += Vector3.left * trackManager.laneOffset;
+            }
+            else if (_desiredLane == 2)
+            {
+                targetPosition += Vector3.right * trackManager.laneOffset;
+            }
+            
+            if (!transform.position.Equals(targetPosition))
+            {
+                Vector3 diff = targetPosition - transform.position;
+            
+                Vector3 moveDir = diff * (laneChangeSpeed * Time.deltaTime);
+            
+                controller.Move(diff* (laneChangeSpeed * Time.deltaTime));
+
+                if (moveDir.sqrMagnitude < diff.magnitude)
+                {
+                    controller.Move(moveDir);
+                }
+                else
+                {
+                    controller.Move(diff);
+                }
+            }
+            controller.Move(movementDirection * Time.deltaTime);
+        }
         public void GroundCheck()
         {
             bool grounded = Physics.CheckSphere(groundCheck.position, .5f, _layerMask);
@@ -130,22 +153,11 @@ namespace Characters
 
             controller.Move(velocity * Time.deltaTime);
         }
-
         public bool IsCloseToGround(float distance)
         {
-            Ray ray = new Ray(groundCheck.position, Vector3.down);
-            RaycastHit hit;
-            
-            if (Physics.Raycast(ray, out hit, distance, _layerMask))
-            {
-                Debug.DrawRay(groundCheck.position, Vector3.down * hit.distance, Color.red);
-                return true;
-            }
-            else
-            {
-                Debug.DrawRay(groundCheck.position, Vector3.down * distance, Color.blue);
-                return false;
-            }
+            var ray = new Ray(groundCheck.position, Vector3.down);
+
+            return Physics.Raycast(ray, distance, _layerMask);
         }
         public void Jump()
         {
@@ -161,5 +173,7 @@ namespace Characters
             characterControl.character.animator.speed = animationSpeed;
         }
 
+        #endregion
+        
     }
 }

@@ -7,7 +7,7 @@ namespace Dev.Scripts.Sounds
 {
     public class MusicPlayer:MonoBehaviour
     {
-        [System.Serializable]
+        [Serializable]
         public class Stem
         {
             public AudioSource source;
@@ -16,7 +16,7 @@ namespace Dev.Scripts.Sounds
         }
 
         private static MusicPlayer _instance;
-        public static MusicPlayer instance => _instance;
+        public static MusicPlayer Instance => _instance;
 
         public AudioMixer mixer;
         public Stem[] stems;
@@ -34,7 +34,6 @@ namespace Dev.Scripts.Sounds
             AudioListener.pause = false;
             DontDestroyOnLoad(gameObject);
         }
-
         private void Start()
         {
             PlayerData.Create();
@@ -56,6 +55,7 @@ namespace Dev.Scripts.Sounds
 
             StartCoroutine(RestartAllStems());
         }
+        
         
         public void SetStem(int index, AudioClip clip)
         {

@@ -62,8 +62,8 @@ public class PlayerData
 		{
 			_instance = new PlayerData();
 			
-		    CoroutineHandler.StartStaticCoroutine(CharacterDatabase.LoadDatabase());
-		    CoroutineHandler.StartStaticCoroutine(ThemeDatabase.LoadDatabase());
+		    CoroutineHandler.Instance.StartStaticCoroutine(CharacterDatabase.LoadDatabase());
+		    CoroutineHandler.Instance.StartStaticCoroutine(ThemeDatabase.LoadDatabase());
         }
 
         _instance.saveFile = Application.persistentDataPath + "/save.bin";

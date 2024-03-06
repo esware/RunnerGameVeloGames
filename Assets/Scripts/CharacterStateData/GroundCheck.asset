@@ -9,9 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3a33b908fbb64c51ae2f42922be0ec5d, type: 3}
-  m_Name: Consumables
+  m_Script: {fileID: 11500000, guid: 4de6e881025c41d4b776f32b9f162a31, type: 3}
+  m_Name: GroundCheck
   m_EditorClassIdentifier: 
-  consumables:
-  - {fileID: 653958398438927277, guid: 42fceb9e7daf8b241979f6e44b27b47b, type: 3}
-  - {fileID: -4617664889215226663, guid: a4c50680a9927ec4f9af0a0c4616ead0, type: 3}

@@ -4,36 +4,33 @@ namespace Dev.Scripts.Consumables.Types
 {
     public class ExtraLife:Consumable
     {
-        private const int _maxLives = 3;
-        private const int _coinValue = 10;
+        private const int MaxLives = 3;
+        private const int CoinValue = 10;
+        
         public override ConsumableType GetConsumableType()
         {
-            return ConsumableType.EXTRALIFE;
+            return ConsumableType.Extralife;
         }
-
         public override string GetConsumableName()
         {
             return "Life";
         }
-        
-
         public override bool CanBeUsed(CharacterControl c)
         {
-            if (c.currentLife == _maxLives)
+            if (c.CurrentLife == MaxLives)
             {
                 return false;
             }
 
             return true;
         }
-
         public override IEnumerator Started(CharacterControl c)
         {
             yield return base.Started(c);
-            if (c.currentLife < _maxLives)
-                c.currentLife += 1;
+            if (c.CurrentLife < MaxLives)
+                c.CurrentLife += 1;
             else
-                c.coins += _coinValue;
+                c.Coins += CoinValue;
         }
     }
 }

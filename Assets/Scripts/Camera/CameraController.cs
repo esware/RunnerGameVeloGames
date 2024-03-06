@@ -11,36 +11,27 @@ namespace Dev.Scripts.Camera
     }
     public class CameraController:MonoBehaviour
     {
+        #region Private Variables
+
         private Animator _animator;
+
+        #endregion
+        
+        #region Unity Callbacks
         private void Awake()
         {
             _animator = GetComponent<Animator>();
         }
-        
+        #endregion
+
+        #region Public Methods
+
         public void ChangeState(string states)
         {
             _animator.Play(states);
         }
         
-        public IEnumerator Shake(float duration, float magnitude)
-        {
-            Vector3 originalPos = transform.localPosition;
-            float elapsed = 0.0f;
-            while (elapsed  <duration)
-            {
-                var x = Random.Range(-1f, 1f) * magnitude;
-                var y = Random.Range(-1f, 1f) * magnitude;
-
-                transform.localPosition = new Vector3(originalPos.x+x, originalPos.y+y, originalPos.z);
-
-                elapsed += Time.deltaTime;
-                        
-                yield return null;
-            }
-
-            transform.localPosition = originalPos;
-            yield return new WaitForSeconds(0.2f);
-        }
+        #endregion
         
     }
 }

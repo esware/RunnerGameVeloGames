@@ -6,17 +6,34 @@ using UnityEngine;
 namespace Dev.Scripts.Character.CharacterStates
 {
     [CreateAssetMenu(menuName = "EWGames/CharacterStates/IdleState",fileName = "NewState")]
-    public class CharacterIdleState:StateData
+    public class CharacterIdleState : StateData
     {
-        private CharacterMovement _characterControl;
+        private CharacterMovement _characterMovement;
+
         public override void OnEnter(BaseState characterState, Animator animator, AnimatorStateInfo stateInfo)
         {
-            _characterControl = characterState.GetCharacterMovement(animator);
-            _characterControl.cameraController.ChangeState(CameraStates.PlayerCam.ToString());
-            _characterControl.trackManager.characterInputController.GetInputs = true;
+            _characterMovement = characterState.GetCharacterMovement(animator);
+            
+            if (_characterMovement != null)
+            {
+                _characterMovement.cameraController.ChangeState(CameraStates.PlayerCam.ToString());
+                
+                if (_characterMovement.trackManager != null && _characterMovement.trackManager.characterInputController != null)
+                {
+                    _characterMovement.trackManager.characterInputController.GetInputs = true;
+                }
+                else
+                {
+                    Debug.LogError("CharacterInputController component could not be found!");
+                }
+            }
+            else
+            {
+                Debug.LogError("CharacterMovement component could not be found!");
+            }
         }
 
-        public override void UpdateAbility(BaseState characterState, Animator animator,AnimatorStateInfo stateInfo)
+        public override void UpdateAbility(BaseState characterState, Animator animator, AnimatorStateInfo stateInfo)
         {
             
         }
@@ -26,4 +43,5 @@ namespace Dev.Scripts.Character.CharacterStates
             
         }
     }
+
 }

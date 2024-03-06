@@ -4,20 +4,21 @@ using UnityEngine.Serialization;
 
 namespace Dev.Scripts.Characters
 {
+    using UnityEngine;
+
     public class Character : MonoBehaviour
     {
-          public string characterName;
-          public int cost;
+        [Header("Character Information")]
+        public string characterName;
+        public Sprite icon;
+        public Sprite characterBg;
 
-
-          public Animator animator;
-          public Sprite icon;
-          public Sprite characterBg;
-
-          [Header("Sound")]
-          public AudioClip jumpSound;
-          public AudioClip hitSound;
-          public AudioClip deathSound;
-          
+        [Header("Animation and Sounds")]
+        public Animator animator;
+        public AudioClip jumpSound;
+        public AudioClip hitSound;
+        public AudioClip deathSound;
+        
     }
+
 }

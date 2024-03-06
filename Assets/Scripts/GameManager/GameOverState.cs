@@ -13,10 +13,10 @@ namespace Dev.Scripts.GameManager
         public override void Enter(AState from)
         {
             canvas.gameObject.SetActive(true);
-            if (MusicPlayer.instance.GetStem(0)!=gameOverTheme)
+            if (MusicPlayer.Instance.GetStem(0)!=gameOverTheme)
             {
-                MusicPlayer.instance.SetStem(0, gameOverTheme);
-                StartCoroutine(MusicPlayer.instance.RestartAllStems());
+                MusicPlayer.Instance.SetStem(0, gameOverTheme);
+                StartCoroutine(MusicPlayer.Instance.RestartAllStems());
             }
         }
 

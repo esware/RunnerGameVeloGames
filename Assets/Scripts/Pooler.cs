@@ -5,9 +5,9 @@ namespace Dev.Scripts
 {
     public class Pooler
     {
-        private Stack<GameObject> _freeInstances = new Stack<GameObject>();
-        private GameObject _original;
-
+        private readonly Stack<GameObject> _freeInstances;
+        private readonly GameObject _original;
+        
         public Pooler(GameObject original, int initialSize)
         {
             _original = original;

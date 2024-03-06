@@ -27,7 +27,7 @@ namespace Dev
                 Destroy(_instance.gameObject);
         }
 
-        public static Coroutine StartStaticCoroutine(IEnumerator coroutine)
+        public Coroutine StartStaticCoroutine(IEnumerator coroutine)
         {
             return Instance.StartCoroutine(coroutine);
         }

@@ -56,7 +56,7 @@ namespace Dev.Scripts.GameManager
             pauseButton.gameObject.SetActive(true);
             if (!trackManager.isRerun)
             {
-                trackManager.characterController.currentLife = trackManager.characterController.maxLife;
+                trackManager.characterController.CurrentLife = trackManager.characterController.maxLife;
                 trackManager.ClearSegments();
             }
             _finished = false;
@@ -73,7 +73,7 @@ namespace Dev.Scripts.GameManager
             if (trackManager.isLoaded)
             {
                 CharacterControl characterControl = trackManager.characterController;
-                if (characterControl.currentLife<=0)
+                if (characterControl.CurrentLife<=0)
                 {
                     pauseButton.gameObject.SetActive(false);
                     StartCoroutine(WaitForGameOver());
@@ -81,13 +81,13 @@ namespace Dev.Scripts.GameManager
 
                 List<Consumable> toRemove = new List<Consumable>();
 
-                for (int i = 0; i < characterControl.consumables.Count; i++)
+                for (int i = 0; i < characterControl.Consumables.Count; i++)
                 {
                     
-                    characterControl.consumables[i].Tick(characterControl);
-                    if (!characterControl.consumables[i].active)
+                    characterControl.Consumables[i].Tick(characterControl);
+                    if (!characterControl.Consumables[i].IsActive)
                     {
-                        toRemove.Add(characterControl.consumables[i]);
+                        toRemove.Add(characterControl.Consumables[i]);
                     }
                     
                 }
@@ -95,19 +95,19 @@ namespace Dev.Scripts.GameManager
                 for (int i = 0; i < toRemove.Count; i++)
                 {
                     toRemove[i].Ended(trackManager.characterController);
-                    characterControl.consumables.Remove(toRemove[i]);
+                    characterControl.Consumables.Remove(toRemove[i]);
                 }
                 UpdateUI();
             }
         }
         private void UpdateUI()
         {
-            coinText.text = trackManager.characterController.coins.ToString();
+            coinText.text = trackManager.characterController.Coins.ToString();
 
             for (int i = 0; i < trackManager.characterController.maxLife; ++i)
             {
 
-                if(trackManager.characterController.currentLife > i)
+                if(trackManager.characterController.CurrentLife > i)
                 {
                     _lifeHearts[i].color = Color.white;
                 }
