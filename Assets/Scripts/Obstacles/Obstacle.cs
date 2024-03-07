@@ -5,6 +5,7 @@ using NaughtyAttributes;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.Serialization;
+using Random = UnityEngine.Random;
 
 namespace Dev.Scripts.Obstacles
 {
@@ -20,6 +21,7 @@ namespace Dev.Scripts.Obstacles
         public ObstacleCoinSpawnType coinSpawnType;
         public AudioClip impactedSound;
         public bool randomColor;
+        
         [ShowIf("randomColor")]
         public Color[] colors;
 
@@ -29,16 +31,16 @@ namespace Dev.Scripts.Obstacles
 
         public virtual void Impacted()
         {
-            Animation anim = GetComponentInChildren<Animation>();
             AudioSource audioSource = GetComponent<AudioSource>();
-
+            Animation anim = GetComponentInChildren<Animation>();
+            
             if (anim != null)
             {
                 anim.Play();
                 float animationLength = anim.clip.length;
                 StartCoroutine(DestroyAfterDelay(animationLength + 0.6f));
             }
-
+            
             if (audioSource != null && impactedSound != null)
             {
                 audioSource.Stop();

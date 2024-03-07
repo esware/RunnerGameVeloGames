@@ -31,7 +31,7 @@ namespace Dev.Scripts.Character.CharacterStates
             }
             _characterMovement.Move();
             
-            if (!_characterMovement.isGrounded && _characterMovement.IsCloseToGround(0.5f))
+            if (_characterMovement.isGrounded && stateInfo.normalizedTime >= 0.1f)
             {
                 animator.SetBool(TransitionParameter.JumpEnd.ToString(), true);
             }

@@ -125,28 +125,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25f0033ccf184f298f2c01287a0c419b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trackManager: {fileID: 0}
   pathParent: {fileID: 851479074514095426}
-  manager: {fileID: 0}
   objectRoot: {fileID: 0}
   collectibleTransform: {fileID: 0}
   possibleObstacles:
+  - m_AssetGUID: af707e451812dc645beae22cfd643303
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0
   - m_AssetGUID: 96c5923b5b0045147bfa7d77743edeee
     m_SubObjectName: 
     m_SubObjectType: 
     m_EditorAssetChanged: 0
-  - m_AssetGUID: a7e3606c66d93f3469c5e94e7c9557b3
+  - m_AssetGUID: d1370f9001861da429a741aeb156ac1a
     m_SubObjectName: 
     m_SubObjectType: 
     m_EditorAssetChanged: 0
-  - m_AssetGUID: 0e2f46ead9a900845a549396f5513e3d
-    m_SubObjectName: 
-    m_SubObjectType: 
-    m_EditorAssetChanged: 0
-  - m_AssetGUID: c680a14c6991a2e44a7de9a16bbefd41
-    m_SubObjectName: 
-    m_SubObjectType: 
-    m_EditorAssetChanged: 0
-  - m_AssetGUID: 68f0f5568d9917b46a7aebddf8143f70
+  - m_AssetGUID: a741febc92f7d9d4f84f01ea7e81d9d6
     m_SubObjectName: 
     m_SubObjectType: 
     m_EditorAssetChanged: 0

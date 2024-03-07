@@ -83,8 +83,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25f0033ccf184f298f2c01287a0c419b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trackManager: {fileID: 0}
   pathParent: {fileID: 4972846386299387956}
-  manager: {fileID: 0}
   objectRoot: {fileID: 0}
   collectibleTransform: {fileID: 0}
   possibleObstacles:
@@ -96,15 +96,11 @@ MonoBehaviour:
     m_SubObjectName: 
     m_SubObjectType: 
     m_EditorAssetChanged: 0
-  - m_AssetGUID: 69ebbe8a0b9eacd42bb7d284835c29cb
-    m_SubObjectName: 
-    m_SubObjectType: 
-    m_EditorAssetChanged: 0
-  - m_AssetGUID: a741febc92f7d9d4f84f01ea7e81d9d6
-    m_SubObjectName: 
-    m_SubObjectType: 
-    m_EditorAssetChanged: 0
   - m_AssetGUID: 0e2f46ead9a900845a549396f5513e3d
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0
+  - m_AssetGUID: 69ebbe8a0b9eacd42bb7d284835c29cb
     m_SubObjectName: 
     m_SubObjectType: 
     m_EditorAssetChanged: 0

@@ -11,7 +11,6 @@ namespace Dev.Scripts.GameManager
     public class GameState:AState
     {
         public Canvas canvas;
-        public TrackManager trackManager;
         public AudioClip gameTheme;
         
         [Header("UI")]
@@ -19,6 +18,7 @@ namespace Dev.Scripts.GameManager
         public Text scoreText;
         public Text distanceText;
         public Text countdownText;
+        public Text scoreMultiplierText;
         public RectTransform lifeRectTransform;
 
         public RectTransform pauseMenu;
@@ -32,8 +32,6 @@ namespace Dev.Scripts.GameManager
         private Image[] _lifeHearts;
         private RectTransform _countdownRectTransform;
         private bool _wasMoving;
-        private int _currentSegmentObstacleIndex = 0;
-        private TrackSegment _nextValidSegment = null;
 
         public override void Enter(AState from)
         {
@@ -54,7 +52,7 @@ namespace Dev.Scripts.GameManager
             pauseMenu.gameObject.SetActive(false);
             wholeUI.gameObject.SetActive(true);
             pauseButton.gameObject.SetActive(true);
-            if (!trackManager.isRerun)
+            if (!trackManager.IsRerun)
             {
                 trackManager.characterController.CurrentLife = trackManager.characterController.maxLife;
                 trackManager.ClearSegments();
@@ -70,7 +68,7 @@ namespace Dev.Scripts.GameManager
 
         public override void Tick()
         {
-            if (trackManager.isLoaded)
+            if (trackManager.IsLoaded)
             {
                 CharacterControl characterControl = trackManager.characterController;
                 if (characterControl.CurrentLife<=0)
@@ -83,7 +81,6 @@ namespace Dev.Scripts.GameManager
 
                 for (int i = 0; i < characterControl.Consumables.Count; i++)
                 {
-                    
                     characterControl.Consumables[i].Tick(characterControl);
                     if (!characterControl.Consumables[i].IsActive)
                     {
@@ -103,6 +100,7 @@ namespace Dev.Scripts.GameManager
         private void UpdateUI()
         {
             coinText.text = trackManager.characterController.Coins.ToString();
+            scoreMultiplierText.text = trackManager.Multiplier + "x";
 
             for (int i = 0; i < trackManager.characterController.maxLife; ++i)
             {
@@ -117,15 +115,15 @@ namespace Dev.Scripts.GameManager
                 }
             }
 
-            scoreText.text = trackManager.score.ToString();
+            scoreText.text = trackManager.Score.ToString();
 
-            distanceText.text = Mathf.FloorToInt(trackManager.worldDistance).ToString() + " m";
+            distanceText.text = Mathf.FloorToInt(trackManager.WorldDistance).ToString() + " m";
 
-            if (trackManager.timeToStart >= 0)
+            if (trackManager.TimeToStart >= 0)
             {
                 countdownText.gameObject.SetActive(true);
-                countdownText.text = Mathf.Ceil(trackManager.timeToStart).ToString();
-                _countdownRectTransform.localScale = Vector3.one * (1.0f - (trackManager.timeToStart - Mathf.Floor(trackManager.timeToStart)));
+                countdownText.text = Mathf.Ceil(trackManager.TimeToStart).ToString();
+                _countdownRectTransform.localScale = Vector3.one * (1.0f - (trackManager.TimeToStart - Mathf.Floor(trackManager.TimeToStart)));
             }
             else
             {
@@ -173,7 +171,7 @@ namespace Dev.Scripts.GameManager
             pauseButton.gameObject.SetActive(false);
             pauseMenu.gameObject.SetActive (displayMenu);
             wholeUI.gameObject.SetActive(false);
-            _wasMoving = trackManager.isMoving;
+            _wasMoving = trackManager.IsMoving;
             trackManager.StopMove();
         }
         
@@ -182,7 +180,7 @@ namespace Dev.Scripts.GameManager
             Time.timeScale = 1.0f;
             AudioListener.pause = false;
             trackManager.End();
-            trackManager.isRerun = false;
+            trackManager.IsRerun = false;
             PlayerData.Instance.Save();
             manager.SwitchState ("Loadout");
         }

@@ -25,16 +25,12 @@ MonoBehaviour:
     m_Address: Barricade
     m_ReadOnly: 0
     m_SerializedLabels: []
-  - m_GUID: a986a735f25d6294bbc095ecb633d007
-    m_Address: Barricade_Ramp_two
-    m_ReadOnly: 0
-    m_SerializedLabels: []
   - m_GUID: 0e2f46ead9a900845a549396f5513e3d
     m_Address: Wall_Door
     m_ReadOnly: 0
     m_SerializedLabels: []
-  - m_GUID: c680a14c6991a2e44a7de9a16bbefd41
-    m_Address: Block_Long
+  - m_GUID: d1370f9001861da429a741aeb156ac1a
+    m_Address: Block_Long_3
     m_ReadOnly: 0
     m_SerializedLabels: []
   - m_GUID: de38e6444c6221940819c4ce404ab8bf
@@ -49,12 +45,28 @@ MonoBehaviour:
     m_Address: Prop_Crate
     m_ReadOnly: 0
     m_SerializedLabels: []
-  - m_GUID: 68f0f5568d9917b46a7aebddf8143f70
-    m_Address: Barricade_Ramp
+  - m_GUID: c9df82ed2c336014591c3944d54d9ac1
+    m_Address: Block_Long
     m_ReadOnly: 0
     m_SerializedLabels: []
   - m_GUID: a7e3606c66d93f3469c5e94e7c9557b3
     m_Address: Block_AllLane
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 00f14e46b0f65fb4888f1ef95717228d
+    m_Address: Two_Way_Ramp_3
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 72ba80235f8f81e46a1f99c729f8d961
+    m_Address: Two_Way_Ramp
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: d61bc3ba975914a45bca0034e850d6f7
+    m_Address: One_Way_Ramp_3
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: e9eecb60079f3974c924145ed3b9d72a
+    m_Address: One_Way_Ramp
     m_ReadOnly: 0
     m_SerializedLabels: []
   m_ReadOnly: 0

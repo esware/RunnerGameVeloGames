@@ -13,7 +13,6 @@ namespace Characters
         
         [Space,Header("Helpers")]
         public TrackManager trackManager;
-        public CharacterControl characterControl;
         public CharacterController controller;
         
         [Space,Header("Movement Settings")]
@@ -74,6 +73,8 @@ namespace Characters
         private IEnumerator CharacterRotation(Quaternion rot)
         {
             float dur = 0;
+            var characterControl = trackManager.characterController;
+
             while (dur < .2f)
             {
                 characterControl.character.transform.rotation = Quaternion.Slerp(characterControl.character.transform.rotation,rot,.2f);
@@ -96,7 +97,7 @@ namespace Characters
 
         public void Move()
         {
-            movementDirection.z = trackManager.speed;
+            movementDirection.z = trackManager.characterController.trackManager.Speed;
             var position = transform.position;
             var targetPosition = position.z * Vector3.forward + position.y * Vector3.up;
 
@@ -141,23 +142,17 @@ namespace Characters
         }
         public void GroundCheck()
         {
-            bool grounded = Physics.CheckSphere(groundCheck.position, .5f, _layerMask);
+            bool grounded = Physics.CheckSphere(groundCheck.position, 0.03f, _layerMask);
 
             isGrounded = grounded;
             
             if (grounded && velocity.y <0)
-                velocity.y = -1f;
+                velocity.y = 0f;
         
             if(!grounded)
                 velocity.y += gravity * Time.deltaTime;
 
             controller.Move(velocity * Time.deltaTime);
-        }
-        public bool IsCloseToGround(float distance)
-        {
-            var ray = new Ray(groundCheck.position, Vector3.down);
-
-            return Physics.Raycast(ray, distance, _layerMask);
         }
         public void Jump()
         {
@@ -167,6 +162,8 @@ namespace Characters
         }
         public void PlayAnim(string animationName,float animTransSpeed,float animationSpeed)
         {
+            var characterControl = trackManager.characterController;
+            
             if(characterControl.character.animator.IsInTransition(0)) 
                 return;
             characterControl.character.animator.CrossFade(animationName, animTransSpeed);

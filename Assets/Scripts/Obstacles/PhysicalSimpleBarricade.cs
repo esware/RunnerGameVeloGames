@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
-using Dev.Scripts.Track;
+using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
@@ -8,18 +9,34 @@ using Random = UnityEngine.Random;
 
 namespace Dev.Scripts.Obstacles
 {
-    public class SimpleBarricade : Obstacle
+    public class PhysicalSimpleBarricade:Obstacle
     {
-        public int maxObstacleCount = 3;
-        public int minObstacleCount = 1;
-        
+        private const int MinObstacleCount = 1;
+        private const int MaxObstacleCount = 3;
         private const int LeftMostLaneIndex = -1;
         private const int RightMostLaneIndex = 1;
+        private const int TimeForDestroyAfterInteraction = 1;
+        
+        private readonly List<Rigidbody> _rigidbodies =new();
+        
+        private void Start()
+        {
+            GetChild();
+        }
+
+        private void GetChild()
+        {
+            foreach (Transform child in transform)
+            {
+                var rigid = child.gameObject.GetComponent<Rigidbody>();
+                _rigidbodies.Add(rigid);
+            }
+        }
         
         public override IEnumerator Spawn(TrackSegment segment, float t)
         {
             
-            int count =  Random.Range(minObstacleCount, maxObstacleCount + 1);
+            int count =  Random.Range(MinObstacleCount, MaxObstacleCount + 1);
             int startLane =  Random.Range(LeftMostLaneIndex, RightMostLaneIndex + 1);
             
             Vector3 position;
@@ -69,6 +86,36 @@ namespace Dev.Scripts.Obstacles
         public override void Impacted()
         {
             base.Impacted();
+            
+            StartCoroutine(ApplyForce());
+        }
+        
+        private IEnumerator ApplyForce()
+        {
+            List<GameObject> toRemove = new List<GameObject>();
+            GetComponent<Collider>().enabled = false;
+            foreach (var rigid in _rigidbodies)
+            {
+                rigid.transform.SetParent(null);
+                rigid.useGravity = true;
+                rigid.isKinematic = false;
+
+                var direction = (transform.position - Vector3.back+Vector3.up*5f).normalized;
+                rigid.AddForce(direction * 14f, ForceMode.Impulse);
+                toRemove.Add(rigid.gameObject);
+                yield return null;
+            }
+           
+            yield return new WaitForSeconds(TimeForDestroyAfterInteraction);
+            foreach (var r in toRemove)
+            {
+                r.transform.DOScale(Vector3.zero, 0.5f).SetEase(Ease.InBounce).OnComplete(() =>
+                {
+                    Destroy(r);
+                });
+
+            }
+            DestroyImmediate(gameObject);
         }
 
     }

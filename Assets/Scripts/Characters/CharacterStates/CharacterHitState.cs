@@ -26,10 +26,11 @@ namespace Dev.Scripts.Character.CharacterStates
                 Debug.LogError("CharacterMovement or CameraShake component could not be found!");
             }
             
-            if (_characterMovement != null && _characterMovement.characterControl != null)
+            if (_characterMovement != null && _characterMovement.trackManager.characterController != null)
             {
-                _characterMovement.characterControl.StopMoving();
-                _characterMovement.characterControl.CleanConsumable();
+                var characterControl = _characterMovement.trackManager.characterController;
+                characterControl.StopMoving();
+                characterControl.CleanConsumable();
             }
             else
             {
@@ -39,9 +40,9 @@ namespace Dev.Scripts.Character.CharacterStates
 
         public override void UpdateAbility(BaseState characterState, Animator animator, AnimatorStateInfo stateInfo)
         {
-            if (stateInfo.normalizedTime >= transitionTiming && _characterMovement != null && _characterMovement.characterControl != null)
+            if (stateInfo.normalizedTime >= transitionTiming)
             {
-                _characterMovement.characterControl.StartRunning();
+                _characterMovement.trackManager.characterController.StartRunning();
             }
         }
 

@@ -32,6 +32,12 @@ namespace Dev.Scripts.Character.CharacterStates
                 Debug.LogError("CharacterMovement component is null during update!");
                 return;
             }
+            
+            if (!_characterMovement.isGrounded && _characterMovement.velocity.y <-1)
+            {
+                _characterMovement.PlayAnim(TransitionParameter.Landing.ToString(), 0.01f, 1f);
+            }
+            
             _characterMovement.Move();
         }
 

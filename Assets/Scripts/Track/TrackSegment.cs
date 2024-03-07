@@ -10,8 +10,8 @@ using UnityEditor;
 
 public class TrackSegment : MonoBehaviour
 {
-    [HideInInspector]
-    public TrackManager manager;
+    [HideInInspector] 
+    public TrackManager trackManager;
     
     [Space,Header("Segment Settings")]
     public Transform pathParent;
@@ -127,13 +127,13 @@ public class TrackSegment : MonoBehaviour
 [CustomEditor(typeof(TrackSegment))]
 class TrackSegmentEditor : Editor
 {
-    private TrackSegment m_Segment;
+    private TrackSegment _segment;
 
     public void OnEnable()
     {
-        m_Segment = target as TrackSegment;
-        m_Segment = (TrackSegment)target;
-        EditorUtility.SetDirty(m_Segment);
+        _segment = target as TrackSegment;
+        _segment = (TrackSegment)target;
+        EditorUtility.SetDirty(_segment);
     }
 
     public override void OnInspectorGUI()
@@ -142,16 +142,16 @@ class TrackSegmentEditor : Editor
 
         if (GUILayout.Button("Add obstacles"))
         {
-            ArrayUtility.Add(ref m_Segment.obstaclePositions, 0.0f);
+            ArrayUtility.Add(ref _segment.obstaclePositions, 0.0f);
         }
         
-        if (m_Segment.obstaclePositions.Length > 0)
+        if (_segment.obstaclePositions.Length > 0)
         {
             int toremove = -1;
-            for (int i = 0; i < m_Segment.obstaclePositions.Length; i++)
+            for (int i = 0; i < _segment.obstaclePositions.Length; i++)
             {
                 GUILayout.BeginHorizontal();
-                m_Segment.obstaclePositions[i] = EditorGUILayout.Slider(m_Segment.obstaclePositions[i], 0.0f, 1.0f);
+                _segment.obstaclePositions[i] = EditorGUILayout.Slider(_segment.obstaclePositions[i], 0.0f, 1.0f);
                 if (GUILayout.Button("-", GUILayout.MaxWidth(32)))
                 {
                     toremove = i;
@@ -161,7 +161,7 @@ class TrackSegmentEditor : Editor
 
             if (toremove != -1)
             {
-                ArrayUtility.RemoveAt(ref m_Segment.obstaclePositions, toremove);
+                ArrayUtility.RemoveAt(ref _segment.obstaclePositions, toremove);
             }
         }
     }

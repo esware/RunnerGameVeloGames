@@ -18,7 +18,7 @@ namespace Dev.Scripts.Character.CharacterStates
             {
                 _characterMovement.cameraController.ChangeState(CameraStates.PlayerCam.ToString());
                 
-                if (_characterMovement.trackManager != null && _characterMovement.trackManager.characterInputController != null)
+                if (_characterMovement.trackManager.characterInputController != null)
                 {
                     _characterMovement.trackManager.characterInputController.GetInputs = true;
                 }

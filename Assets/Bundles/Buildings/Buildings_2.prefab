@@ -83,24 +83,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25f0033ccf184f298f2c01287a0c419b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trackManager: {fileID: 0}
   pathParent: {fileID: 7082107119883413341}
-  manager: {fileID: 0}
   objectRoot: {fileID: 0}
   collectibleTransform: {fileID: 0}
   possibleObstacles:
-  - m_AssetGUID: af707e451812dc645beae22cfd643303
+  - m_AssetGUID: c9df82ed2c336014591c3944d54d9ac1
     m_SubObjectName: 
     m_SubObjectType: 
     m_EditorAssetChanged: 0
-  - m_AssetGUID: 0e2f46ead9a900845a549396f5513e3d
+  - m_AssetGUID: d1370f9001861da429a741aeb156ac1a
     m_SubObjectName: 
     m_SubObjectType: 
     m_EditorAssetChanged: 0
-  - m_AssetGUID: 96c5923b5b0045147bfa7d77743edeee
+  - m_AssetGUID: d61bc3ba975914a45bca0034e850d6f7
     m_SubObjectName: 
     m_SubObjectType: 
     m_EditorAssetChanged: 0
-  - m_AssetGUID: de38e6444c6221940819c4ce404ab8bf
+  - m_AssetGUID: e9eecb60079f3974c924145ed3b9d72a
     m_SubObjectName: 
     m_SubObjectType: 
     m_EditorAssetChanged: 0

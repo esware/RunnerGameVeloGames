@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Dev.Scripts.Consumables;
+using Dev.Scripts.Track;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -8,9 +9,6 @@ namespace Dev.Scripts.GameManager
 {
     public class GameManager:MonoBehaviour
     {
-        private static GameManager _instance;
-        public static GameManager Instance => _instance;
-
         public AState[] states;
         private List<AState> _stateStack = new List<AState>();
         private Dictionary<string, AState> _stateDict = new Dictionary<string, AState>();
@@ -18,8 +16,7 @@ namespace Dev.Scripts.GameManager
         protected void OnEnable()
         {
             PlayerData.Create();
-
-            _instance = this;
+            
             _stateDict.Clear();
 
             if (states.Length==0)
@@ -98,7 +95,8 @@ namespace Dev.Scripts.GameManager
     {
         [HideInInspector]
         public GameManager manager;
-
+        public TrackManager trackManager;
+        
         public abstract void Enter(AState from);
         public abstract void Exit(AState to);
         public abstract void Tick();

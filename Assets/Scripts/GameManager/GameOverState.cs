@@ -6,7 +6,6 @@ namespace Dev.Scripts.GameManager
 {
     public class GameOverState:AState
     {
-        public TrackManager trackManager;
         public Canvas canvas;
         public AudioClip gameOverTheme;
         
@@ -38,19 +37,19 @@ namespace Dev.Scripts.GameManager
         
         public void GoToLoadout()
         {
-            trackManager.isRerun = false;
+            trackManager.IsRerun = false;
             manager.SwitchState("Loadout");
         }
         
         public void RunAgain()
         {
-            trackManager.isRerun = false;
+            trackManager.IsRerun = false;
             manager.SwitchState("Game");
         }
 
         private void FinishRun()
         {
-            PlayerData.Instance.InsertScore(trackManager.score);
+            PlayerData.Instance.InsertScore(trackManager.Score);
             PlayerData.Instance.Save();
             trackManager.End();
         }

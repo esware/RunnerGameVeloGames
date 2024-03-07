@@ -41,7 +41,7 @@ namespace Dev.Scripts.Character.CharacterStates
                 return;
             }
             
-            if (CharacterInputController.SwipeUp)
+            if (CharacterInputController.SwipeUp && _characterMovement.isGrounded)
             {
                 _characterMovement.PlayAnim(TransitionParameter.Jumping.ToString(), 0.01f, 1f);
             }

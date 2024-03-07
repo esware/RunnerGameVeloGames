@@ -163,7 +163,6 @@ namespace Dev.Scripts.GameManager
                 PlayerData.Instance.Save();
             }
             manager.SwitchState("Game");
-           // GameEvents.GameStartEvent?.Invoke();
         }
     }
 }

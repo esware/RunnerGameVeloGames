@@ -16,6 +16,7 @@ namespace Dev.Scripts.Character.CharacterStates
             {
                 Debug.LogError("CharacterMovement component could not be found!");
             }
+            
         }
 
         public override void UpdateAbility(BaseState characterState, Animator animator, AnimatorStateInfo stateInfo)
@@ -25,6 +26,9 @@ namespace Dev.Scripts.Character.CharacterStates
                 Debug.LogError("CharacterMovement component is null during update!");
                 return;
             }
+
+            if (!_characterMovement.isGrounded)
+                return;
             
             _characterMovement.Jump();
         }

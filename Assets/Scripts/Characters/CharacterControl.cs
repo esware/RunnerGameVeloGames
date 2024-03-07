@@ -58,11 +58,11 @@ public class CharacterControl : MonoBehaviour
     #region Public Variables
 
     [Header("Character Components")]
+    public TrackManager trackManager;
     public CharacterInputController inputController;
     public CharacterMovement characterMovement;
     public Character character;
     public CharacterController controller;
-    public TrackManager trackManager;
 
     public int maxLife = 3;
     
@@ -179,10 +179,6 @@ public class CharacterControl : MonoBehaviour
     #endregion
     
     #region Invincible Control
-    public void CheatInvincible(bool invincible)
-    {
-        _invincible = invincible;
-    }
     public void SetInvincible(float timer = DefaultInvincibleTime)
     {
         StartCoroutine(InvincibleTimer(timer));
@@ -285,7 +281,8 @@ public class CharacterControl : MonoBehaviour
         {
             MagnetCoins.Remove(coinObject);
         }
-    
+        
+        trackManager.AddScore(1);
         Coin.CoinPool.Free(coinObject);
         PlayerData.Instance.coins += 1;
         Coins += 1;
@@ -342,7 +339,7 @@ public class CharacterControl : MonoBehaviour
     
     private void Update()
     {
-        if (!trackManager.isMoving)
+        if (!trackManager.IsMoving)
             return;
         
         MagnetCoins.RemoveAll(item => item == null);
