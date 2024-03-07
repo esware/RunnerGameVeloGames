@@ -10,8 +10,11 @@ namespace Dev.Scripts.GameManager
     public class GameManager:MonoBehaviour
     {
         public AState[] states;
-        private List<AState> _stateStack = new List<AState>();
-        private Dictionary<string, AState> _stateDict = new Dictionary<string, AState>();
+        
+        private readonly List<AState> _stateStack = new List<AState>();
+        private readonly Dictionary<string, AState> _stateDict = new Dictionary<string, AState>();
+
+        #region Unity  CallBacks
 
         protected void OnEnable()
         {
@@ -22,24 +25,27 @@ namespace Dev.Scripts.GameManager
             if (states.Length==0)
                 return;
             
-            for (int i = 0; i < states.Length; i++)
+            foreach (var state in states)
             {
-                states[i].manager = this;
-                _stateDict.Add(states[i].GetName(),states[i]);
+                state.manager = this;
+                _stateDict.Add(state.GetName(),state);
             }
             
             _stateStack.Clear();
             PushState(states[0].GetName());
         }
-
-
+        
         protected void Update()
         {
             if (_stateStack.Count>0)
             {
-                _stateStack[_stateStack.Count-1].Tick();
+                _stateStack[^1].Tick();
             }
         }
+
+        #endregion
+
+        #region State Management Methods
 
         public void SwitchState(string newState)
         {
@@ -50,27 +56,20 @@ namespace Dev.Scripts.GameManager
                 return;
             }
             
-            _stateStack[_stateStack.Count-1].Exit(state);
-            state.Enter(_stateStack[_stateStack.Count-1]);
+            _stateStack[^1].Exit(state);
+            state.Enter(_stateStack[^1]);
             _stateStack.RemoveAt(_stateStack.Count-1);
             _stateStack.Add(state);
         }
 
         private AState FindState(string stateName)
         {
-            AState state;
-            if (!_stateDict.TryGetValue(stateName,out state))
-            {
-                return null;
-            }
-
-            return state;
+            return !_stateDict.TryGetValue(stateName,out var state) ? null : state;
         }
 
         private void PushState(string stateName)
         {
-            AState state;
-            if (!_stateDict.TryGetValue(stateName,out state))
+            if (!_stateDict.TryGetValue(stateName,out var state))
             {
                 Debug.LogError("cant find the state named"+stateName);
                 return;
@@ -78,8 +77,8 @@ namespace Dev.Scripts.GameManager
 
             if (_stateStack.Count>0)
             {
-                _stateStack[_stateStack.Count-1].Exit(state);
-                state.Enter(_stateStack[_stateStack.Count-1]);
+                _stateStack[^1].Exit(state);
+                state.Enter(_stateStack[^1]);
             }
             else
             {
@@ -87,10 +86,10 @@ namespace Dev.Scripts.GameManager
             }
             _stateStack.Add(state);
         }
+
+        #endregion
     }
     
-    
-
     public abstract class AState : MonoBehaviour
     {
         [HideInInspector]

@@ -16,47 +16,30 @@ public class PlayerData
 	private static PlayerData _instance;
     public static PlayerData Instance => _instance;
 
-    private string saveFile = "";
+    #region Public Variables
 
+    public int Coins;
+    public readonly List<string> Characters = new List<string>();    
+    public int UsedCharacter;
+    public readonly List<string> Themes = new List<string>();                
+    public int UsedTheme;
+    public int Highscore;
+    public float MasterVolume = float.MinValue, MusicVolume = float.MinValue, MasterSfxVolume = float.MinValue;
+    public int FtueLevel = 0;
+    public int Rank = 0;
 
-    public int coins;
+    #endregion
 
-    public List<string> characters = new List<string>();    
-    public int usedCharacter;
-    public List<string> themes = new List<string>();                
-    public int usedTheme;
-    public int highscore;
-
-    public string previousName = "Male";
+    #region Private Variables
     
-    
-	public float masterVolume = float.MinValue, musicVolume = float.MinValue, masterSFXVolume = float.MinValue;
-	
-    public int ftueLevel = 0;
- 
-    public int rank = 0;
-    
-    static int s_Version = 12;
-    
-    public void AddCharacter(string name)
-    {
-        characters.Add(name);
-    }
+    private string _previousName = "Male";
+    private string _saveFile = "";
 
-    public void AddTheme(string theme)
-    {
-        themes.Add(theme);
-    }
-
-    public void InsertScore(int score)
-    {
-	    if (score> highscore)
-	    {
-		    highscore = score;
-	    }
-    }
+    #endregion
     
-	public static void Create()
+    #region File Operations
+
+    public static void Create()
     {
 		if (_instance == null)
 		{
@@ -66,9 +49,9 @@ public class PlayerData
 		    CoroutineHandler.Instance.StartStaticCoroutine(ThemeDatabase.LoadDatabase());
         }
 
-        _instance.saveFile = Application.persistentDataPath + "/save.bin";
+        _instance._saveFile = Application.persistentDataPath + "/save.bin";
 
-        if (File.Exists(_instance.saveFile))
+        if (File.Exists(_instance._saveFile))
         {
 	        _instance.Read();
         }
@@ -80,144 +63,119 @@ public class PlayerData
 
 	private static void NewSave()
 	{
-		_instance.characters.Clear();
-		_instance.themes.Clear();
+		_instance.Characters.Clear();
+		_instance.Themes.Clear();
 		
-		_instance.highscore = 0;
-		_instance.usedCharacter = 0;
-		_instance.usedTheme = 0;
+		_instance.Highscore = 0;
+		_instance.UsedCharacter = 0;
+		_instance.UsedTheme = 0;
 
-		_instance.coins = 0;
+		_instance.Coins = 0;
 
-		_instance.characters.Add("Male");
-		_instance.characters.Add("Female");
-		_instance.themes.Add("Day");
+		_instance.Characters.Add("Male");
+		_instance.Characters.Add("Female");
+		_instance.Themes.Add("Day");
 
-		_instance.ftueLevel = 0;
-        _instance.rank = 0;
+		_instance.FtueLevel = 0;
+        _instance.Rank = 0;
 
         _instance.Save();
 	}
 
-     private void Read()
+	private void Read()
     {
-        BinaryReader r = new BinaryReader(new FileStream(saveFile, FileMode.Open));
-
-        int ver = r.ReadInt32();
-
-		if(ver < 6)
-		{
-			r.Close();
-
-			NewSave();
-			r = new BinaryReader(new FileStream(saveFile, FileMode.Open));
-			ver = r.ReadInt32();
-		}
-
-        coins = r.ReadInt32();
+        BinaryReader r = new BinaryReader(new FileStream(_saveFile, FileMode.Open));
         
-
-        // Read character.
-        characters.Clear();
+        Coins = r.ReadInt32();
+        
+        Characters.Clear();
         int charCount = r.ReadInt32();
         for(int i = 0; i < charCount; ++i)
         {
             string charName = r.ReadString();
 
-            characters.Add(charName);
+            Characters.Add(charName);
         }
 
-        usedCharacter = r.ReadInt32();
-
-        // Read Themes.
-        themes.Clear();
+        UsedCharacter = r.ReadInt32();
+        
+        Themes.Clear();
         int themeCount = r.ReadInt32();
         for (int i = 0; i < themeCount; ++i)
         {
-            themes.Add(r.ReadString());
+            Themes.Add(r.ReadString());
         }
 
-        usedTheme = r.ReadInt32();
+        UsedTheme = r.ReadInt32();
         
         
-		if(ver >= 3)
-		{
-			highscore=0;
-			highscore = r.ReadInt32();
-		}
+        Highscore=0;
+        Highscore = r.ReadInt32();
 		
-		if(ver >= 7)
-		{
-			previousName = r.ReadString();
-		}
+        _previousName = r.ReadString();
 		
 
-		if (ver >= 9) 
-		{
-			masterVolume = r.ReadSingle ();
-			musicVolume = r.ReadSingle ();
-			masterSFXVolume = r.ReadSingle ();
-		}
+        MasterVolume = r.ReadSingle ();
+        MusicVolume = r.ReadSingle ();
+        MasterSfxVolume = r.ReadSingle ();
 
-        if(ver >= 10)
-        {
-            ftueLevel = r.ReadInt32();
-            rank = r.ReadInt32();
-        }
+        FtueLevel = r.ReadInt32();
+        Rank = r.ReadInt32();
         
 
         r.Close();
     }
 
-     public void Save()
+	public void Save()
     {
-        BinaryWriter w = new BinaryWriter(new FileStream(saveFile, FileMode.OpenOrCreate));
-
-        w.Write(s_Version);
-        w.Write(coins);
+        BinaryWriter w = new BinaryWriter(new FileStream(_saveFile, FileMode.OpenOrCreate));
         
-
-        // Write characters.
-        w.Write(characters.Count);
-        foreach (string c in characters)
+        w.Write(Coins);
+        
+        w.Write(Characters.Count);
+        foreach (string c in Characters)
         {
             w.Write(c);
         }
 
-        w.Write(usedCharacter);
+        w.Write(UsedCharacter);
         
-
-        // Write themes.
-        w.Write(themes.Count);
-        foreach (string t in themes)
+        w.Write(Themes.Count);
+        foreach (string t in Themes)
         {
             w.Write(t);
         }
 
-        w.Write(usedTheme);
+        w.Write(UsedTheme);
 
 
-		w.Write(highscore);
+		w.Write(Highscore);
+		
+		w.Write(_previousName);
 		
 
-		// Write name.
-		w.Write(previousName);
-		
+		w.Write (MasterVolume);
+		w.Write (MusicVolume);
+		w.Write (MasterSfxVolume);
 
-		w.Write (masterVolume);
-		w.Write (musicVolume);
-		w.Write (masterSFXVolume);
-
-        w.Write(ftueLevel);
-        w.Write(rank);
+        w.Write(FtueLevel);
+        w.Write(Rank);
         
         w.Close();
     }
 
+    #endregion
+    
+    public void InsertScore(int score)
+    {
+	    if (score> Highscore)
+	    {
+		    Highscore = score;
+	    }
+    }
 
 }
 
-// Helper class to cheat in the editor for test purpose
 #if UNITY_EDITOR
 public class PlayerDataEditor : Editor
 {
@@ -230,7 +188,7 @@ public class PlayerDataEditor : Editor
     [MenuItem("EWGames Debug/Give 1000000 coins and 1000 premium")]
     static public void GiveCoins()
     {
-        PlayerData.Instance.coins += 1000000;
+        PlayerData.Instance.Coins += 1000000;
         PlayerData.Instance.Save();
     }
     

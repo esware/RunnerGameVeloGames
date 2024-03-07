@@ -86,37 +86,41 @@ namespace Dev.Scripts.Obstacles
         public override void Impacted()
         {
             base.Impacted();
-            
-            StartCoroutine(ApplyForce());
-        }
-        
-        private IEnumerator ApplyForce()
-        {
-            List<GameObject> toRemove = new List<GameObject>();
             GetComponent<Collider>().enabled = false;
-            foreach (var rigid in _rigidbodies)
-            {
-                rigid.transform.SetParent(null);
-                rigid.useGravity = true;
-                rigid.isKinematic = false;
 
-                var direction = (transform.position - Vector3.back+Vector3.up*5f).normalized;
-                rigid.AddForce(direction * 14f, ForceMode.Impulse);
-                toRemove.Add(rigid.gameObject);
+            StartCoroutine(ApplyForceAndDestroy());
+        }
+
+        private IEnumerator ApplyForceAndDestroy()
+        {
+            List<Rigidbody> rigidbodiesToRemove = new List<Rigidbody>();
+
+            foreach (var rigidbody in _rigidbodies)
+            {
+                rigidbody.transform.SetParent(null);
+                rigidbody.useGravity = true;
+                rigidbody.isKinematic = false;
+
+                var direction = (transform.position - Vector3.back + Vector3.up * 5f).normalized;
+                rigidbody.AddForce(direction * 14f, ForceMode.Impulse);
                 yield return null;
-            }
-           
-            yield return new WaitForSeconds(TimeForDestroyAfterInteraction);
-            foreach (var r in toRemove)
-            {
-                r.transform.DOScale(Vector3.zero, 0.5f).SetEase(Ease.InBounce).OnComplete(() =>
-                {
-                    Destroy(r);
-                });
 
+                rigidbodiesToRemove.Add(rigidbody);
             }
+
+            yield return new WaitForSeconds(TimeForDestroyAfterInteraction);
+
+            foreach (var rigidbodyToRemove in rigidbodiesToRemove)
+            {
+                rigidbodyToRemove.transform.DOScale(Vector3.zero, 0.5f).SetEase(Ease.InBounce).OnComplete(() =>
+                {
+                    Destroy(rigidbodyToRemove.gameObject);
+                });
+            }
+
             DestroyImmediate(gameObject);
         }
+
 
     }
 }

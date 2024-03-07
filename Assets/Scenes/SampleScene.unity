@@ -947,7 +947,7 @@ MonoBehaviour:
   characterController: {fileID: 938761121}
   characterInputController: {fileID: 938761120}
   minSpeed: 10
-  maxSpeed: 30
+  maxSpeed: 20
   speedStep: 4
   laneOffset: 3
   consumableDatabase: {fileID: 11400000, guid: 1d6ee7471d2128148bf69059280668e2, type: 2}
@@ -2191,7 +2191,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 730960285}
-  m_LocalRotation: {x: 0.09853762, y: -0.000000004280661, z: 4.238689e-10, w: 0.99513334}
+  m_LocalRotation: {x: 0.098537624, y: 0.0000000042806607, z: -4.238689e-10, w: 0.99513334}
   m_LocalPosition: {x: 4.5111957, y: -4.4441667, z: 6.1852455}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -3098,7 +3098,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 960888817}
-  m_LocalRotation: {x: 0.16018224, y: -0.000000004252742, z: 6.9012535e-10, w: 0.9870875}
+  m_LocalRotation: {x: 0.16018225, y: 0.000000023309845, z: -0.000000003782667, w: 0.9870875}
   m_LocalPosition: {x: 4.5111957, y: -2.4441667, z: 5.1852455}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -3197,7 +3197,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_LocalRotation: {x: 0.09853762, y: -0.000000004280661, z: 4.238689e-10, w: 0.99513334}
+  m_LocalRotation: {x: 0.098537624, y: 0.0000000042806607, z: -4.238689e-10, w: 0.99513334}
   m_LocalPosition: {x: 0, y: 1, z: -5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -3907,7 +3907,6 @@ MonoBehaviour:
   pauseMenu: {fileID: 766533861}
   wholeUI: {fileID: 1850496422}
   pauseButton: {fileID: 674436324}
-  gameOverPopup: {fileID: 0}
 --- !u!223 &1148200020
 Canvas:
   m_ObjectHideFlags: 0
@@ -4180,7 +4179,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   manager: {fileID: 0}
   trackManager: {fileID: 281946503}
-  canvas: {fileID: 1192378186}
+  gameOverCanvas: {fileID: 1192378186}
   gameOverTheme: {fileID: 0}
 --- !u!223 &1192378186
 Canvas:
@@ -5684,7 +5683,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1665063496}
-  m_LocalRotation: {x: 0.16018225, y: 0.000000023309845, z: -0.000000003782667, w: 0.9870875}
+  m_LocalRotation: {x: 0.16018225, y: -0.000000023309845, z: 0.000000003782667, w: 0.9870875}
   m_LocalPosition: {x: 4.5111957, y: -2.4441667, z: 7.1852455}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0

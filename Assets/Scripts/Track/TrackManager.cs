@@ -9,7 +9,6 @@ using Dev.Scripts.Consumables;
 using Dev.Scripts.Obstacles;
 using Dev.Scripts.Sounds;
 using Dev.Scripts.Themes;
-using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 using Quaternion = UnityEngine.Quaternion;
 using Vector3 = UnityEngine.Vector3;
@@ -157,13 +156,13 @@ namespace Dev.Scripts.Track
             characterController.transform.position = new Vector3(0, .2f, 10);
             characterController.gameObject.SetActive(true);
     
-            var op = Addressables.InstantiateAsync(PlayerData.Instance.characters[PlayerData.Instance.usedCharacter],
+            var op = Addressables.InstantiateAsync(PlayerData.Instance.Characters[PlayerData.Instance.UsedCharacter],
                 Vector3.zero, 
                 Quaternion.identity);
             yield return op;
             if (op.Result == null)
             {
-                Debug.LogWarning(string.Format("Unable to load character {0}.", PlayerData.Instance.characters[PlayerData.Instance.usedCharacter]));
+                Debug.LogWarning(string.Format("Unable to load character {0}.", PlayerData.Instance.Characters[PlayerData.Instance.UsedCharacter]));
                 yield break;
             }
             var player = op.Result.GetComponent<Characters.Character>();
@@ -175,7 +174,7 @@ namespace Dev.Scripts.Track
 
         private void InitializeTheme()
         {
-            _currentThemeData = ThemeDatabase.GetThemeData(PlayerData.Instance.themes[PlayerData.Instance.usedTheme]);
+            _currentThemeData = ThemeDatabase.GetThemeData(PlayerData.Instance.Themes[PlayerData.Instance.UsedTheme]);
             _currentZone = 0;
             _mCurrentZoneDistance = 0;
             characterController.Coins = 0;
@@ -207,12 +206,11 @@ namespace Dev.Scripts.Track
         
         #region Update Methods
         private void Update()
-        {
+        {  
             CheckSegmentSpawn();
-
+            
             if (!_isMoving) 
                 return;
-
             UpdateGameProgress();
             UpdateSpeed();
             RemovePastSegments();
@@ -249,10 +247,10 @@ namespace Dev.Scripts.Track
         
         private void UpdatePlayerRank()
         {
-            int currentTarget = (PlayerData.Instance.rank + 1) * 300;
+            int currentTarget = (PlayerData.Instance.Rank + 1) * 300;
             if (_totalWorldDistance > currentTarget)
             {
-                PlayerData.Instance.rank += 1;
+                PlayerData.Instance.Rank += 1;
                 PlayerData.Instance.Save();
             }
         }
@@ -443,7 +441,7 @@ namespace Dev.Scripts.Track
             const float increment = 2f;
             float currentWorldPos = 0.0f;
             int currentLane = Random.Range(0, 3);
-            float powerupChance = Mathf.Clamp01(Mathf.Floor(_timeSincePowerup) * 500f * 0.001f);
+            float powerupChance = Mathf.Clamp01(Mathf.Floor(_timeSincePowerup) * 5f * 0.001f);
 
             Vector3 pos;
             Quaternion rot;
@@ -452,7 +450,7 @@ namespace Dev.Scripts.Track
             while (currentWorldPos < segment.WorldLength*0.7f)
             {
                 segment.GetPointAtInWorldUnit(currentWorldPos, out pos, out rot);
-                pos += Vector3.up;
+                pos += Vector3.up*1.5f;
                 int testedLane = currentLane;
                 bool laneValid = true;
                 Obstacle obstacle = null;
@@ -496,7 +494,7 @@ namespace Dev.Scripts.Track
                 if (laneValid)
                 {
                     segment.GetPointAtInWorldUnit(currentWorldPos, out pos, out rot);
-                    pos += Vector3.up;
+                    pos += Vector3.up*1.5f;
                     pos += (currentLane - 1) * laneOffset * (Vector3.right);
                     
                     if (obstacle != null)

@@ -157,8 +157,7 @@ namespace Characters
 
         public float DistanceToGround()
         {
-            RaycastHit hit;
-            if (Physics.Raycast(groundCheck.position, Vector3.down, out hit, Mathf.Infinity, _layerMask))
+            if (Physics.Raycast(groundCheck.position, Vector3.down, out var hit, Mathf.Infinity, _layerMask))
             {
                 return hit.distance;
             }

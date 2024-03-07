@@ -100,7 +100,7 @@ public class CharacterControl : MonoBehaviour
     private const int CoinsLayerIndex = 8;
     private const int ObstacleLayerIndex = 9;
     private const int PowerUpLayer = 7;
-    private const float DefaultInvincibleTime = 3f;
+    private const float DefaultInvincibleTime = 2f;
     
     #endregion
 
@@ -284,7 +284,7 @@ public class CharacterControl : MonoBehaviour
         
         trackManager.AddScore(1);
         Coin.CoinPool.Free(coinObject);
-        PlayerData.Instance.coins += 1;
+        PlayerData.Instance.Coins += 1;
         Coins += 1;
 
         if (audio != null)

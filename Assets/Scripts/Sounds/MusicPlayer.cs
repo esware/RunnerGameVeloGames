@@ -38,17 +38,17 @@ namespace Dev.Scripts.Sounds
         {
             PlayerData.Create();
 
-            if (PlayerData.Instance.masterVolume>float.MinValue)
+            if (PlayerData.Instance.MasterVolume>float.MinValue)
             {
-                mixer.SetFloat("MasterVolume", PlayerData.Instance.masterVolume);
-                mixer.SetFloat("MusicVolume", PlayerData.Instance.musicVolume);
-                mixer.SetFloat ("MasterSFXVolume", PlayerData.Instance.masterSFXVolume);
+                mixer.SetFloat("MasterVolume", PlayerData.Instance.MasterVolume);
+                mixer.SetFloat("MusicVolume", PlayerData.Instance.MusicVolume);
+                mixer.SetFloat ("MasterSFXVolume", PlayerData.Instance.MasterSfxVolume);
             }
             else 
             {
-                mixer.GetFloat ("MasterVolume", out PlayerData.Instance.masterVolume);
-                mixer.GetFloat ("MusicVolume", out PlayerData.Instance.musicVolume);
-                mixer.GetFloat ("MasterSFXVolume", out PlayerData.Instance.masterSFXVolume);
+                mixer.GetFloat ("MasterVolume", out PlayerData.Instance.MasterVolume);
+                mixer.GetFloat ("MusicVolume", out PlayerData.Instance.MusicVolume);
+                mixer.GetFloat ("MasterSFXVolume", out PlayerData.Instance.MasterSfxVolume);
 
                 PlayerData.Instance.Save ();
             }

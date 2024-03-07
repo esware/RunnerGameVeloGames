@@ -12,17 +12,18 @@ using UnityEngine.UI;
 
 namespace Dev.Scripts.GameManager
 {
-    public class LoadoutState:AState
+    public class LoadoutState : AState
     {
-       
+        #region Serialized Fields
+
         [SerializeField] private GameObject mainMenu;
         [SerializeField] private GameObject characterMenu;
         [SerializeField] private GameObject player;
         [SerializeField] private Text rankText;
         [SerializeField] private Text highScoreText;
         [SerializeField] private Text totalCoinText;
-        
-        [Header("Character UI")] 
+
+        [Header("Character UI")]
         [SerializeField] private SpriteRenderer characterBackground;
         [SerializeField] private Image characterIcon;
         [SerializeField] private Text charNameDisplay;
@@ -30,87 +31,145 @@ namespace Dev.Scripts.GameManager
         [SerializeField] private Transform charPosition;
         [SerializeField] private Button runButton;
         [SerializeField] private AudioClip menuTheme;
-        
+
+        #endregion
+
+        #region Private Fields
+
         private GameObject _character;
         private bool _isLoadingCharacter;
         private const float CharacterRotationSpeed = 45f;
         private GameObject _canvas;
+
+        #endregion
+
+        #region State Methods
+
         public override void Enter(AState from)
         {
-            _canvas = gameObject;
-            if (!gameObject.activeSelf)
-            {
-                gameObject.SetActive(true);
-            }
-            
-            characterBackground.gameObject.SetActive(true);
-            
-            mainMenu.gameObject.SetActive(false);
-            characterMenu.gameObject.SetActive(true);
-            player.SetActive(true);
-            player.transform.position = Vector3.zero;
-            player.GetComponent<CharacterMovement>().cameraController.ChangeState(CameraStates.IdleCam.ToString());
-            
-            charNameDisplay.text = "";
-            
-            if (MusicPlayer.Instance.GetStem(0) != menuTheme)
-            {
-                MusicPlayer.Instance.SetStem(0, menuTheme);
-                StartCoroutine(MusicPlayer.Instance.RestartAllStems());
-            }
-
-            rankText.text = "Level " + PlayerData.Instance.rank;
-            
-            runButton.interactable = false;
-            runButton.GetComponentInChildren<Text>().text = "Loading...";
-            StartCoroutine(PopulateCharacters());
+            ActivateCanvasAndMenus();
+            SetRankText();
+            LoadMainMenuTheme();
+            DisableRunButtonAndStartCharacterLoading();
         }
+
         public override void Exit(AState to)
         {
-            characterBackground.gameObject.SetActive(false);
-            _canvas.gameObject.SetActive(false);
-            if (_character != null) Addressables.ReleaseInstance(_character);
+            DeactivateBackground();
+            DeactivateCanvas();
+            ReleaseCharacterInstance();
         }
 
         public override void Tick()
         {
-            if (!runButton.interactable)
-            {
-                bool interactable = CharacterDatabase.Loaded;
-                if(interactable)
-                {
-                    runButton.interactable = true;
-                    runButton.GetComponentInChildren<Text>().text = "Play";
-                }
-            }
-            
-            if(_character != null)
-            {
-                _character.transform.Rotate(0, CharacterRotationSpeed * Time.deltaTime, 0, Space.Self);
-            }
-
-            totalCoinText.text = PlayerData.Instance.coins.ToString();
-            charSelect.gameObject.SetActive(PlayerData.Instance.characters.Count > 1);
+            CheckAndEnableRunButton();
+            RotateCharacter();
+            UpdateCoinText();
+            ToggleCharacterSelect();
         }
 
         public override string GetName()
         {
             return "Loadout";
         }
-        
+
+        #endregion
+
+        #region Public Methods
+
         public void ChangeCharacter(int dir)
         {
-            PlayerData.Instance.usedCharacter += dir;
-            if (PlayerData.Instance.usedCharacter >= PlayerData.Instance.characters.Count)
-                PlayerData.Instance.usedCharacter = 0;
-            else if(PlayerData.Instance.usedCharacter < 0)
-                PlayerData.Instance.usedCharacter = PlayerData.Instance.characters.Count-1;
-
+            UpdateUsedCharacterIndex(dir);
             StartCoroutine(PopulateCharacters());
         }
+
+        public void StartGame()
+        {
+            UpdateFtueLevelAndSave();
+            SwitchToGameState();
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        private void ActivateCanvasAndMenus()
+        {
+            _canvas = gameObject;
+            if (!_canvas.activeSelf)
+            {
+                _canvas.SetActive(true);
+            }
+            characterBackground.gameObject.SetActive(true);
+            mainMenu.gameObject.SetActive(false);
+            characterMenu.gameObject.SetActive(true);
+            player.SetActive(true);
+            player.transform.position = Vector3.zero;
+            player.GetComponent<CharacterMovement>().cameraController.ChangeState(CameraStates.IdleCam.ToString());
+            charNameDisplay.text = "";
+        }
+        
+        private void SetRankText()
+        {
+            rankText.text = "Level " + PlayerData.Instance.Rank;
+        }
+
+        private void LoadMainMenuTheme()
+        {
+            if (MusicPlayer.Instance.GetStem(0) == menuTheme) return;
+            
+            MusicPlayer.Instance.SetStem(0, menuTheme);
+            StartCoroutine(MusicPlayer.Instance.RestartAllStems());
+        }
+
+        private void DisableRunButtonAndStartCharacterLoading()
+        {
+            runButton.interactable = false;
+            runButton.GetComponentInChildren<Text>().text = "Loading...";
+            StartCoroutine(PopulateCharacters());
+        }
+
+        private void CheckAndEnableRunButton()
+        {
+            if (runButton.interactable) return;
+            
+            bool interactable = CharacterDatabase.Loaded;
+            if (!interactable) return;
+                
+            runButton.interactable = true;
+            runButton.GetComponentInChildren<Text>().text = "Play";
+        }
+
+        private void RotateCharacter()
+        {
+            if (_character != null)
+            {
+                _character.transform.Rotate(0, CharacterRotationSpeed * Time.deltaTime, 0, Space.Self);
+            }
+        }
+
+        private void UpdateCoinText()
+        {
+            totalCoinText.text = PlayerData.Instance.Coins.ToString();
+        }
+
+        private void ToggleCharacterSelect()
+        {
+            charSelect.gameObject.SetActive(PlayerData.Instance.Characters.Count > 1);
+        }
+
+        private void UpdateUsedCharacterIndex(int dir)
+        {
+            PlayerData.Instance.UsedCharacter += dir;
+            if (PlayerData.Instance.UsedCharacter >= PlayerData.Instance.Characters.Count)
+                PlayerData.Instance.UsedCharacter = 0;
+            else if (PlayerData.Instance.UsedCharacter < 0)
+                PlayerData.Instance.UsedCharacter = PlayerData.Instance.Characters.Count - 1;
+        }
+
         private IEnumerator PopulateCharacters()
         {
-	        yield return new WaitForSeconds(.5f);
+            yield return new WaitForSeconds(.5f);
 
             if (!_isLoadingCharacter)
             {
@@ -118,7 +177,7 @@ namespace Dev.Scripts.GameManager
                 GameObject newChar = null;
                 while (newChar == null)
                 {
-                    Characters.Character c = CharacterDatabase.GetCharacter(PlayerData.Instance.characters[PlayerData.Instance.usedCharacter]);
+                    Characters.Character c = CharacterDatabase.GetCharacter(PlayerData.Instance.Characters[PlayerData.Instance.UsedCharacter]);
 
                     if (c != null)
                     {
@@ -131,10 +190,10 @@ namespace Dev.Scripts.GameManager
                         }
                         newChar = op.Result as GameObject;
                         newChar.transform.SetParent(charPosition, false);
-                        newChar.transform.rotation = Quaternion.Euler(0,180,0);
+                        newChar.transform.rotation = Quaternion.Euler(0, 180, 0);
 
-                        highScoreText.text = "HighScore " + PlayerData.Instance.highscore;
-                        
+                        highScoreText.text = "HighScore " + PlayerData.Instance.Highscore;
+
                         characterIcon.sprite = newChar.GetComponent<Characters.Character>().icon;
                         characterBackground.GetComponent<SpriteRenderer>().sprite = newChar.GetComponent<Characters.Character>().characterBg;
 
@@ -153,16 +212,38 @@ namespace Dev.Scripts.GameManager
                 }
                 _isLoadingCharacter = false;
             }
-	    }
-        
-        public void StartGame()
+        }
+
+        private void UpdateFtueLevelAndSave()
         {
-            if (PlayerData.Instance.ftueLevel == 1)
+            if (PlayerData.Instance.FtueLevel == 1)
             {
-                PlayerData.Instance.ftueLevel = 2;
+                PlayerData.Instance.FtueLevel = 2;
                 PlayerData.Instance.Save();
             }
+        }
+
+        private void SwitchToGameState()
+        {
             manager.SwitchState("Game");
         }
+
+        private void DeactivateBackground()
+        {
+            characterBackground.gameObject.SetActive(false);
+        }
+
+        private void DeactivateCanvas()
+        {
+            _canvas.gameObject.SetActive(false);
+        }
+
+        private void ReleaseCharacterInstance()
+        {
+            if (_character != null) Addressables.ReleaseInstance(_character);
+        }
+
+        #endregion
     }
+
 }
