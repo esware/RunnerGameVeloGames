@@ -33,7 +33,7 @@ namespace Dev.Scripts.Character.CharacterStates
                 return;
             }
             
-            if (!_characterMovement.isGrounded && _characterMovement.velocity.y <-1)
+            if (!_characterMovement.isGrounded && _characterMovement.velocity.y < -1.0f && _characterMovement.DistanceToGround() >= 1.5f)
             {
                 _characterMovement.PlayAnim(TransitionParameter.Landing.ToString(), 0.01f, 1f);
             }

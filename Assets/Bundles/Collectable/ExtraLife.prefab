@@ -74,21 +74,9 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 6718318933915425439}
     m_Modifications:
-    - target: {fileID: 125272, guid: afa323918a98fe9459a32b7118bfed01, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: 153346, guid: afa323918a98fe9459a32b7118bfed01, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
     - target: {fileID: 185684, guid: afa323918a98fe9459a32b7118bfed01, type: 3}
       propertyPath: m_Name
       value: IconExclamation3D
-      objectReference: {fileID: 0}
-    - target: {fileID: 185684, guid: afa323918a98fe9459a32b7118bfed01, type: 3}
-      propertyPath: m_Layer
-      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 443108, guid: afa323918a98fe9459a32b7118bfed01, type: 3}
       propertyPath: m_RootOrder

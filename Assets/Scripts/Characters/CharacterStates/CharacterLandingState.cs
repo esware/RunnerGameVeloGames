@@ -31,15 +31,16 @@ namespace Dev.Scripts.Character.CharacterStates
             }
             _characterMovement.Move();
             
-            if (_characterMovement.isGrounded && stateInfo.normalizedTime >= 0.1f)
+            if (_characterMovement.DistanceToGround() <= 0.1f && stateInfo.normalizedTime >= 0.025f)
             {
                 animator.SetBool(TransitionParameter.JumpEnd.ToString(), true);
             }
+            
         }
 
         public override void OnExit(BaseState characterState, Animator animator, AnimatorStateInfo stateInfo)
         {
-            animator.SetBool(TransitionParameter.JumpEnd.ToString(), false);
+            
         }
     }
 

@@ -142,17 +142,27 @@ namespace Characters
         }
         public void GroundCheck()
         {
-            bool grounded = Physics.CheckSphere(groundCheck.position, 0.03f, _layerMask);
+            bool grounded = Physics.CheckSphere(groundCheck.position, 0.1f,_layerMask);
 
             isGrounded = grounded;
             
-            if (grounded && velocity.y <0)
+            if (grounded && velocity.y < 0.0f)
                 velocity.y = 0f;
         
             if(!grounded)
                 velocity.y += gravity * Time.deltaTime;
 
             controller.Move(velocity * Time.deltaTime);
+        }
+
+        public float DistanceToGround()
+        {
+            RaycastHit hit;
+            if (Physics.Raycast(groundCheck.position, Vector3.down, out hit, Mathf.Infinity, _layerMask))
+            {
+                return hit.distance;
+            }
+            return -1f;
         }
         public void Jump()
         {

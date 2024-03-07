@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Green
+  m_Name: Road_Mat_3
   m_Shader: {fileID: 4800000, guid: 7ffc1bc2bbb1ef64f84b552b2d2f0619, type: 3}
   m_ValidKeywords:
   - TCP2_MOBILE
@@ -161,8 +161,8 @@ Material:
     - _UseSpecular: 1
     - _ZWrite: 1
     m_Colors:
-    - _BaseColor: {r: 0.35537556, g: 0.6226415, b: 0.42943722, a: 1}
-    - _Color: {r: 0.40000004, g: 0.6238983, b: 0.81960785, a: 1}
+    - _BaseColor: {r: 0.20558918, g: 0.3649454, b: 0.5660378, a: 1}
+    - _Color: {r: 0.2, g: 0.4307458, b: 0.8, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _HColor: {r: 1, g: 1, b: 1, a: 1}
     - _MatCapColor: {r: 1, g: 1, b: 1, a: 1}

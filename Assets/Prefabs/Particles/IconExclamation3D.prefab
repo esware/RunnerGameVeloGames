@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 439474}
   - component: {fileID: 19804592}
   - component: {fileID: 19911296}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Glow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4799,7 +4799,7 @@ GameObject:
   - component: {fileID: 418648}
   - component: {fileID: 19865220}
   - component: {fileID: 19998484}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Particles
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9578,7 +9578,7 @@ GameObject:
   - component: {fileID: 443108}
   - component: {fileID: 19921712}
   - component: {fileID: 19881836}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: IconExclamation3D
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9594,7 +9594,7 @@ Transform:
   m_GameObject: {fileID: 185684}
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 439474}
