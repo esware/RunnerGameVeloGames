@@ -2,7 +2,9 @@
 using Dev.Scripts.Characters;
 using Dev.Scripts.Track;
 using System.Collections;
+using DG.Tweening;
 using NaughtyAttributes;
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace Characters
@@ -70,25 +72,14 @@ namespace Characters
             GameEvents.RunStartEvent += () => PlayAnim(TransitionParameter.Running.ToString(), 0.1f, 1f);
             GameEvents.PlayerDeathEvent += () => PlayAnim(TransitionParameter.Dead.ToString(), 0.01f, 1f);
         }
-        private IEnumerator CharacterRotation(Quaternion rot)
+        private void CharacterRotation(Quaternion rot)
         {
-            float dur = 0;
-            var characterControl = trackManager.characterController;
+            var character = trackManager.characterController.character;
 
-            while (dur < .2f)
+            character.transform.DORotateQuaternion(rot, 0.2f).OnComplete(() =>
             {
-                characterControl.character.transform.rotation = Quaternion.Slerp(characterControl.character.transform.rotation,rot,.2f);
-                dur += Time.deltaTime;
-                yield return null;
-            }
-
-            while (dur < .4f)
-            {
-                characterControl.character.transform.rotation = Quaternion.Slerp(characterControl.character.transform.rotation,Quaternion.identity, .3f);
-                dur += Time.deltaTime;
-                yield return null;
-            }
-            characterControl.character.transform.rotation = Quaternion.identity;
+                character.transform.DORotateQuaternion(Quaternion.identity, 0.2f);
+            });
         }
         
         #endregion
@@ -101,31 +92,32 @@ namespace Characters
             var position = transform.position;
             var targetPosition = position.z * Vector3.forward + position.y * Vector3.up;
 
-            if (CharacterInputController.SwipeRight && _desiredLane < 2)
+            if (CharacterInputController.Instance.swipeRight && _desiredLane < 2)
             {
-                StartCoroutine(CharacterRotation(Quaternion.Euler(0, 90, 0)));
+                CharacterRotation(Quaternion.Euler(0, 70, 0));
                 _desiredLane++;
             }
-            else if (CharacterInputController.SwipeLeft && _desiredLane > 0)
+            else if (CharacterInputController.Instance.swipeLeft && _desiredLane > 0)
             {
-                StartCoroutine(CharacterRotation(Quaternion.Euler(0, -90, 0)));
+                CharacterRotation(Quaternion.Euler(0, -70, 0));
                 _desiredLane--;
             }
 
-            if (_desiredLane == 0)
+            switch (_desiredLane)
             {
-                targetPosition += Vector3.left * trackManager.laneOffset;
-            }
-            else if (_desiredLane == 2)
-            {
-                targetPosition += Vector3.right * trackManager.laneOffset;
+                case 0:
+                    targetPosition += Vector3.left * trackManager.laneOffset;
+                    break;
+                case 2:
+                    targetPosition += Vector3.right * trackManager.laneOffset;
+                    break;
             }
             
             if (!transform.position.Equals(targetPosition))
             {
-                Vector3 diff = targetPosition - transform.position;
+                var diff = targetPosition - transform.position;
             
-                Vector3 moveDir = diff * (laneChangeSpeed * Time.deltaTime);
+                var moveDir = diff * (laneChangeSpeed * Time.deltaTime);
             
                 controller.Move(diff* (laneChangeSpeed * Time.deltaTime));
 
@@ -139,22 +131,21 @@ namespace Characters
                 }
             }
             controller.Move(movementDirection * Time.deltaTime);
+            ApplyGravity();
         }
-        public void GroundCheck()
+        private void ApplyGravity()
         {
-            bool grounded = Physics.CheckSphere(groundCheck.position, 0.1f,_layerMask);
+            int mask = 1 << 6 | 1 << 9;
+            isGrounded = Physics.CheckSphere(groundCheck.position, 0.1f,mask);
 
-            isGrounded = grounded;
-            
-            if (grounded && velocity.y < 0.0f)
+            if (isGrounded && velocity.y < 0.0f)
                 velocity.y = 0f;
-        
-            if(!grounded)
+
+            if (!isGrounded)
                 velocity.y += gravity * Time.deltaTime;
 
             controller.Move(velocity * Time.deltaTime);
         }
-
         public float DistanceToGround()
         {
             if (Physics.Raycast(groundCheck.position, Vector3.down, out var hit, Mathf.Infinity, _layerMask))

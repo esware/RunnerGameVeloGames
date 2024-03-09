@@ -43,7 +43,11 @@ namespace Dev.Scripts.Track
         public float TimeToStart => _timeToStart;
         public int Score => _score;
         public float WorldDistance => _totalWorldDistance;
-        public float Speed => _speed;
+        public float Speed
+        {
+            get => _speed;
+            set => _speed = value;
+        }
         public bool IsMoving => _isMoving;
         public bool IsLoaded => _isLoaded;
         public int Multiplier => _multiplier;

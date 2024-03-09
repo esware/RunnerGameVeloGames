@@ -1,5 +1,6 @@
 ﻿using Characters;
 using Dev.Scripts.Camera;
+using Dev.Scripts.Characters;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -16,6 +17,7 @@ namespace Dev.Scripts.Character.CharacterStates
         public override void OnEnter(BaseState characterState, Animator animator, AnimatorStateInfo stateInfo)
         {
             _characterMovement = characterState.GetCharacterMovement(animator);
+            CharacterInputController.Instance.GetInputs = false;
             
             if (_characterMovement != null && _characterMovement.cameraShake != null)
             {
@@ -48,7 +50,7 @@ namespace Dev.Scripts.Character.CharacterStates
 
         public override void OnExit(BaseState characterState, Animator animator, AnimatorStateInfo stateInfo)
         {
-            
+            CharacterInputController.Instance.GetInputs = true;
         }
     }
 

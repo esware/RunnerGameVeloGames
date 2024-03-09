@@ -20,8 +20,9 @@ namespace Dev.Scripts.Character.CharacterStates
             Debug.LogError("CharacterMovement component could not be found!");
             return;
         }
-        
-        _characterMovement.gravity *= 2;
+
+        _characterMovement.trackManager.Speed *= 1.3f;
+        _characterMovement.gravity *= 3f;
         _characterMovement.controller.center = new Vector3(0, 0.5f, 0);
         _characterMovement.controller.height = 1f;
     }
@@ -34,13 +35,13 @@ namespace Dev.Scripts.Character.CharacterStates
             return;
         }
         
-        _characterMovement.Move();
-        
         if (stateInfo.normalizedTime >= transitionTiming)
         {
             animator.SetBool(TransitionParameter.ForceTransition.ToString(), true);
             animator.SetBool(TransitionParameter.SlideEnd.ToString(), true);
         }
+        
+        _characterMovement.Move();
     }
 
     public override void OnExit(BaseState characterState, Animator animator, AnimatorStateInfo stateInfo)
@@ -50,7 +51,8 @@ namespace Dev.Scripts.Character.CharacterStates
             Debug.LogError("CharacterMovement component is null during exit!");
             return;
         }
-        _characterMovement.gravity = -20;
+        _characterMovement.trackManager.Speed /= 1.3f;
+        _characterMovement.gravity /= 3f;
         _characterMovement.controller.center = new Vector3(0, 1, 0);
         _characterMovement.controller.height = 2f;
         

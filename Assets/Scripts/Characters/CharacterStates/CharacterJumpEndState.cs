@@ -28,7 +28,7 @@ namespace Dev.Scripts.Character.CharacterStates
                 Debug.LogError("CharacterMovement component is null during update!");
                 return;
             }
-            
+            _characterMovement.Move();
             if (_characterMovement.isGrounded && stateInfo.normalizedTime >= transitionTiming)
             {
                 _characterMovement.PlayAnim(TransitionParameter.Running.ToString(), 0.1f, 1f);

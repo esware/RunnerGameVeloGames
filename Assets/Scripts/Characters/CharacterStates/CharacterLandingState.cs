@@ -29,6 +29,7 @@ namespace Dev.Scripts.Character.CharacterStates
                 Debug.LogError("CharacterMovement component is null during update!");
                 return;
             }
+
             _characterMovement.Move();
             
             if (_characterMovement.DistanceToGround() <= 0.1f && stateInfo.normalizedTime >= 0.025f)

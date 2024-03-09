@@ -41,12 +41,12 @@ namespace Dev.Scripts.Character.CharacterStates
                 return;
             }
             
-            if (CharacterInputController.SwipeUp && _characterMovement.isGrounded)
+            if (CharacterInputController.Instance.swipeUp && _characterMovement.isGrounded)
             {
                 _characterMovement.PlayAnim(TransitionParameter.Jumping.ToString(), 0.01f, 1f);
             }
             
-            if (CharacterInputController.SwipeDown)
+            if (CharacterInputController.Instance.swipeDown)
             {
                 _characterMovement.PlayAnim(TransitionParameter.Sliding.ToString(), 0.01f, 1f);
             }

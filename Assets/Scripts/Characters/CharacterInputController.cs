@@ -4,31 +4,39 @@ namespace Dev.Scripts.Characters
 {
     public class CharacterInputController : MonoBehaviour
     {
-        #region Public Variables
+        // Singleton instance
+        private static CharacterInputController _instance;
+        public static CharacterInputController Instance => _instance;
 
-        public static bool SwipeLeft, SwipeRight, SwipeUp, SwipeDown;
+        #region Public Variables
+        public bool swipeLeft, swipeRight, swipeUp, swipeDown;
         public bool GetInputs
         {
             get => _getInputs;
             set => _getInputs = value;
         }
-
         #endregion
 
         #region Private Variables
-
         private const float SwipeThreshold = 0.1f;
-        
         private Vector2 _startingTouch;
         private bool _isSwiping = false;
         private bool _getInputs = false;
-
         #endregion
 
         #region Methods
 
         private void Awake()
         {
+            if (_instance != null && _instance != this)
+            {
+                Destroy(this.gameObject);
+            }
+            else
+            {
+                _instance = this;
+                DontDestroyOnLoad(this.gameObject);
+            }
             _getInputs = false;
         }
 
@@ -52,7 +60,7 @@ namespace Dev.Scripts.Characters
             if (!Input.GetMouseButton(0)) return;
 
             if (!_isSwiping) return;
-            
+
             var swipeDelta = (Vector2)Input.mousePosition - _startingTouch;
 
             swipeDelta = new Vector2(swipeDelta.x / Screen.width, swipeDelta.y / Screen.width);
@@ -64,22 +72,22 @@ namespace Dev.Scripts.Characters
             {
                 if (swipeDelta.y < 0)
                 {
-                    SwipeDown = true;
+                    swipeDown = true;
                 }
                 else
                 {
-                    SwipeUp = true;
+                    swipeUp = true;
                 }
             }
             else
             {
                 if (swipeDelta.x < 0)
                 {
-                    SwipeLeft = true;
+                    swipeLeft = true;
                 }
                 else
                 {
-                    SwipeRight = true;
+                    swipeRight = true;
                 }
             }
             Reset();
@@ -87,7 +95,7 @@ namespace Dev.Scripts.Characters
 
         private void ResetSwipeFlags()
         {
-            SwipeDown = SwipeUp = SwipeLeft = SwipeRight = false;
+            swipeDown = swipeUp = swipeLeft = swipeRight = false;
         }
 
         private void Reset()
@@ -102,6 +110,6 @@ namespace Dev.Scripts.Characters
         }
 
         #endregion
-        
     }
+
 }
