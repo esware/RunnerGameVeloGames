@@ -10,6 +10,7 @@ using Dev.Scripts.Consumables;
 using Dev.Scripts.Obstacles;
 using Dev.Scripts.Sounds;
 using Dev.Scripts.Themes;
+using Unity.VisualScripting;
 using Random = UnityEngine.Random;
 using Quaternion = UnityEngine.Quaternion;
 using Vector3 = UnityEngine.Vector3;
@@ -416,43 +417,31 @@ namespace Dev.Scripts.Track
             
             if (obj != null)
             {
-                var obstacleLength = obj.GetComponent<Obstacle>().obstacleLength;
-    
-                if (IsHittingAnyObstacle(segment,obj,posIndex))
+                Obstacle obstacle = obj.GetComponent<Obstacle>()??obj.GetComponentInParent<Obstacle>();
+               
+                if (IsHittingAnyObstacle(pos))
                 {
                     Addressables.ReleaseInstance(obj.gameObject);
                 }
                 else
                 {
-                    Obstacle obstacle = obj.GetComponent<Obstacle>();
                     if (obstacle != null)
-                        yield return StartCoroutine(obstacle.Spawn(segment, segment.obstaclePositions[posIndex]));
+                        yield return StartCoroutine(obstacle.Spawn(segment, segment.obstaclePositions[posIndex])); 
                 }
             }
         }
 
 
-        private bool IsHittingAnyObstacle(TrackSegment segment,GameObject obstacle,int index)
+        private bool IsHittingAnyObstacle(Vector3 pos)
         {
-            Bounds obstacleBounds = obstacle.GetComponentInChildren<Renderer>().bounds;
-
-            for (int i = 0; i < index; i++)
+            var startPos = pos + (-1) * laneOffset * Vector3.right;
+            var endPos = pos + 1 * laneOffset * Vector3.right;
+            
+            if (Physics.CheckCapsule(startPos, endPos, (_speed/2f)+1f,1 << 9))
             {
-                if (obstacle == null)
-                {
-                    Debug.LogWarning("Failed to load existing obstacle prefab.");
-                    continue;
-                }
-
-                segment.GetPointAt(segment.obstaclePositions[i], out var pos, out _);
-                Bounds existingBounds = obstacle.GetComponentInChildren<Renderer>().bounds;
-
-                if (obstacleBounds.Intersects(existingBounds))
-                {
-                    return true;
-                }
+                return true;
             }
-
+            
             return false;
         }
 
@@ -467,7 +456,7 @@ namespace Dev.Scripts.Track
             Vector3 pos;
             Quaternion rot;
             GameObject toUse;
-            
+
             while (currentWorldPos < segment.WorldLength)
             {
                 segment.GetPointAtInWorldUnit(currentWorldPos, out pos, out rot);
@@ -476,13 +465,12 @@ namespace Dev.Scripts.Track
                 var testedLane = currentLane;
                 var laneValid = true;
                 
-                while(Physics.CheckSphere(pos + ((testedLane-1) * laneOffset * (Vector3.right)), 1f, 1 << 9))
+                while(Physics.CheckSphere(pos + (testedLane-1) * laneOffset * Vector3.right, 1f, 1 << 9))
                 {
                     testedLane = (testedLane + 1) % 3;
-                    currentWorldPos += increment;
-                    segment.GetPointAtInWorldUnit(currentWorldPos, out pos, out rot);
-                    pos += Vector3.up * 1.5f;
-                    
+                    //currentWorldPos += increment;
+                    //segment.GetPointAtInWorldUnit(currentWorldPos, out pos, out rot);
+                    //pos += Vector3.up * 1.5f;
                     if (currentLane == testedLane)
                     {
                         laneValid = false;
@@ -565,7 +553,6 @@ namespace Dev.Scripts.Track
                     {
                         toUse = Coin.CoinPool.Get(pos, rot);
                         toUse.transform.SetParent(segment.collectibleTransform, true);
-                        
                     }
                 }
                 currentWorldPos += increment;

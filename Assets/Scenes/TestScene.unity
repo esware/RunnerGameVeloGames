@@ -378,8 +378,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   trackManager: {fileID: 0}
-  characterSpeed: 5
-  obstacleLength: 5
 --- !u!4 &138092373
 Transform:
   m_ObjectHideFlags: 0
