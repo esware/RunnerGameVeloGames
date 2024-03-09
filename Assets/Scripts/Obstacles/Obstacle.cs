@@ -13,6 +13,7 @@ namespace Dev.Scripts.Obstacles
     {
         DontSpawn,
         SpawnByJumping,
+        SpawnFromAbove,
     }
 
     [RequireComponent(typeof(AudioSource))]

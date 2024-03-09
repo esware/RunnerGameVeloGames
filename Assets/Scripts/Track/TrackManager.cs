@@ -398,7 +398,7 @@ namespace Dev.Scripts.Track
                 {
                     var assetRef = segment.possibleObstacles[Random.Range(0, segment.possibleObstacles.Length)]; 
                     StartCoroutine(SpawnFromAssetReference(assetRef, segment, i));
-                    yield return new WaitForSeconds(0.1f);
+                    yield return null;
                 }
             }
 
@@ -408,17 +408,17 @@ namespace Dev.Scripts.Track
 
         private IEnumerator SpawnFromAssetReference(AssetReference reference, TrackSegment segment, int posIndex)
         {
-            segment.GetPointAtInWorldUnit(segment.obstaclePositions[posIndex], out var pos, out _);
-    
+            segment.GetPointAt(segment.obstaclePositions[posIndex], out var pos, out _);
+
             AsyncOperationHandle op = Addressables.LoadAssetAsync<GameObject>(reference);
             yield return op; 
             GameObject obj = op.Result as GameObject;
-
+            
             if (obj != null)
             {
                 var obstacleLength = obj.GetComponent<Obstacle>().obstacleLength;
     
-                if (IsHittingAnyObstacle(pos,obstacleLength))
+                if (IsHittingAnyObstacle(segment,obj,posIndex))
                 {
                     Addressables.ReleaseInstance(obj.gameObject);
                 }
@@ -432,36 +432,30 @@ namespace Dev.Scripts.Track
         }
 
 
-        private bool IsHittingAnyObstacle(Vector3 pos,float obstacleLength)
+        private bool IsHittingAnyObstacle(TrackSegment segment,GameObject obstacle,int index)
         {
-            var hittingObstacle = Physics.CheckSphere(pos, 1f, 1 << 9);
-            var hitFront = Physics.Raycast(pos,Vector3.forward,out var hitInfo,float.MaxValue,1<<9);
-            var hitBack = Physics.Raycast(pos, Vector3.back, out var hitInfo2, float.MaxValue, 1<<9);
+            Bounds obstacleBounds = obstacle.GetComponentInChildren<Renderer>().bounds;
 
-            if (hitBack)
+            for (int i = 0; i < index; i++)
             {
-                var targetObstacle = hitInfo2.collider.GetComponent<Obstacle>() ??
-                                     hitInfo2.collider.GetComponentInParent<Obstacle>();
-                
-                if (Vector3.Distance(pos,targetObstacle.transform.localPosition) - (obstacleLength/2f+ targetObstacle.obstacleLength/2f)  < _speed)
+                if (obstacle == null)
                 {
-                    hittingObstacle = true;
+                    Debug.LogWarning("Failed to load existing obstacle prefab.");
+                    continue;
+                }
+
+                segment.GetPointAt(segment.obstaclePositions[i], out var pos, out _);
+                Bounds existingBounds = obstacle.GetComponentInChildren<Renderer>().bounds;
+
+                if (obstacleBounds.Intersects(existingBounds))
+                {
+                    return true;
                 }
             }
-            
-            if (hitFront)
-            {
-                var targetObstacle = hitInfo.collider.GetComponent<Obstacle>() ??
-                                     hitInfo.collider.GetComponentInParent<Obstacle>();
 
-                if (Vector3.Distance(pos,targetObstacle.transform.localPosition) - (obstacleLength/2f+ targetObstacle.obstacleLength/2f)  < _speed)
-                {
-                    hittingObstacle = true;
-                }
-            }
-            
-            return hittingObstacle;
+            return false;
         }
+
         
         private IEnumerator SpawnCoinAndPowerup(TrackSegment segment)
         {
@@ -499,7 +493,10 @@ namespace Dev.Scripts.Track
                 {
                     obstacle = hitInfo.collider.GetComponent<Obstacle>() ?? hitInfo.collider.GetComponentInParent<Obstacle>();
 
-                    laneValid = obstacle.coinSpawnType == ObstacleCoinSpawnType.SpawnByJumping;
+                    if (obstacle.coinSpawnType == ObstacleCoinSpawnType.DontSpawn)
+                    {
+                        laneValid = false;
+                    }
                 }
                 
                 if (Physics.Raycast(pos + ((testedLane-1) * laneOffset * (Vector3.right)),Vector3.back,(_speed/2f)-1f,1<<9))
@@ -512,29 +509,34 @@ namespace Dev.Scripts.Track
                 if (laneValid)
                 {
                     pos += (currentLane - 1) * laneOffset * (rot * Vector3.right);
+                    
                     if (obstacle != null)
                     {
-                        float radius = characterController.characterMovement.jumpHeight*1.5f;
-                        float circleCircumference = Mathf.PI * radius;
-                        int numberOfPoints = Mathf.RoundToInt(circleCircumference / (increment));
-                            
-                        var obstaclePosition = obstacle.transform.position;
-                            
-                        for (int i = 0; i < numberOfPoints; i++)
+                        if (obstacle.coinSpawnType==ObstacleCoinSpawnType.SpawnByJumping)
                         {
-                            float angle = (i+1) * 180f / numberOfPoints;
+                            float radius = characterController.characterMovement.jumpHeight*1.5f;
+                            float circleCircumference = Mathf.PI * radius;
+                            int numberOfPoints = Mathf.RoundToInt(circleCircumference / (increment));
+                            
+                            var obstaclePosition = obstacle.transform.position;
+                            
+                            for (int i = 0; i < numberOfPoints; i++)
+                            {
+                                float angle = (i+1) * 180f / numberOfPoints;
 
-                            float y = obstaclePosition.y + Mathf.Sin(angle * Mathf.Deg2Rad) * radius;
-                            float z = obstaclePosition.z + Mathf.Cos(angle * Mathf.Deg2Rad) * _speed/2f;
+                                float y = obstaclePosition.y + Mathf.Sin(angle * Mathf.Deg2Rad) * radius;
+                                float z = obstaclePosition.z + Mathf.Cos(angle * Mathf.Deg2Rad) * _speed/2f;
 
 
-                            Vector3 coinPosition = new Vector3(pos.x, y , z);
+                                Vector3 coinPosition = new Vector3(pos.x, y , z);
 
-                            toUse = Coin.CoinPool.Get(coinPosition, rot);
-                            toUse.transform.SetParent(segment.collectibleTransform, true);
+                                toUse = Coin.CoinPool.Get(coinPosition, rot);
+                                toUse.transform.SetParent(segment.collectibleTransform, true);
                                 
-                            currentWorldPos += increment;
+                                currentWorldPos += increment;
+                            }
                         }
+                        
                         continue;
                     }
 
