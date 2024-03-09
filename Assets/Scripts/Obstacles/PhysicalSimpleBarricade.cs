@@ -63,11 +63,8 @@ namespace Dev.Scripts.Obstacles
                 {
                     obj.transform.position += obj.transform.right * (lane * segment.trackManager.laneOffset);
 
-                    obj.transform.SetParent(segment.objectRoot, true);
+                    obj.transform.SetParent(segment.objectRoot,true);
                     
-                    Vector3 oldPos = obj.transform.position;
-                    obj.transform.position += Vector3.back;
-                    obj.transform.position = oldPos;
                     
                     if (randomColor)
                     {

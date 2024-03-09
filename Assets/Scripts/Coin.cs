@@ -1,5 +1,7 @@
 ﻿using System;
+using Dev.Scripts.Obstacles;
 using Dev.Scripts.Track;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Dev.Scripts
@@ -8,6 +10,7 @@ namespace Dev.Scripts
     {
         [HideInInspector] public TrackManager trackManager;
         public static Pooler CoinPool;
+        
         /*
         private const int LayerMask = 1<<3;
 

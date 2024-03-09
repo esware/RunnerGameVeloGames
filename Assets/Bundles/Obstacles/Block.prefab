@@ -142,8 +142,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 2.9525623, y: 1.8370368, z: 1.0075674}
-  m_Center: {x: -0.01513648, y: 1.43264, z: 0.49570894}
+  m_Size: {x: 2.9525623, y: 1.8370368, z: 2.5967145}
+  m_Center: {x: -0.01513648, y: 1.43264, z: 0.39880973}
 --- !u!114 &5368518157044248029
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -165,7 +165,7 @@ MonoBehaviour:
   - {r: 0.3700605, g: 0.7924528, b: 0.51748365, a: 1}
   - {r: 0.8207547, g: 0.3747749, b: 0.33681917, a: 1}
   - {r: 1, g: 1, b: 1, a: 1}
-  obstacleLength: 4
+  obstacleLength: 1
   maxObstacleCount: 2
   minObstacleCount: 1
 --- !u!1001 &4628948627824067285

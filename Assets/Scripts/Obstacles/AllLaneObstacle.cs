@@ -22,11 +22,7 @@ namespace Dev.Scripts.Obstacles
             GameObject obj = op.Result as GameObject;
             if (obj != null)
             {
-                obj.transform.SetParent(segment.objectRoot, true);
-
-                Vector3 oldPos = obj.transform.position;
-                obj.transform.position += Vector3.back;
-                obj.transform.position = oldPos;
+                obj.transform.SetParent(segment.objectRoot,true);
             }
         }
 
