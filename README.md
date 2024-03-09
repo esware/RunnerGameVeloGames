@@ -29,7 +29,8 @@ Bu proje, Velo Games icin geliştirilmiş bir Runner Game  oyununun GitHub depos
 Proje üzerinde çalışmaya başlamak için aşağıdaki adımları izleyebilirsiniz:
 
 1. Depoyu kendi bilgisayarınıza klonlayın.
-2. Gereksinimlerinizi kurun (`requirements.txt` dosyasında listelenmiştir).
+2. Gereksinimler:
+- Unity 2021.3.15f1 sürümü
 3. Oyunu çalıştırın ve keyfini çıkarın!
 
 ## Katkıda Bulunma
