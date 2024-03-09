@@ -100,7 +100,7 @@ public class CharacterControl : MonoBehaviour
     private const int CoinsLayerIndex = 8;
     private const int ObstacleLayerIndex = 9;
     private const int PowerUpLayer = 7;
-    private const float DefaultInvincibleTime = 2f;
+    private const float DefaultInvincibleTime = 4f;
     
     #endregion
 
