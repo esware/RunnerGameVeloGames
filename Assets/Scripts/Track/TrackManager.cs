@@ -151,7 +151,6 @@ namespace Dev.Scripts.Track
     
             characterController.Begin();
             characterController.character.animator.Play(TransitionParameter.Start.ToString());
-            yield return new WaitForSeconds(0.5f);
             StartCoroutine(WaitToStart());
             _isLoaded = true;
         }

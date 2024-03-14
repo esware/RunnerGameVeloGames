@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Dev.Scripts.Consumables;
 using Dev.Scripts.Track;
 using UnityEngine;
+using UnityEngine.Experimental.Rendering;
 using UnityEngine.UI;
 
 namespace Dev.Scripts.GameManager
@@ -103,7 +104,7 @@ namespace Dev.Scripts.GameManager
         {
             for (int i = 0; i < trackManager.characterController.maxLife; ++i)
             {
-                _lifeHearts[i].color = trackManager.characterController.CurrentLife > i ? Color.white : Color.black;
+                _lifeHearts[i].color = trackManager.characterController.CurrentLife > i ? Color.red : Color.black;
             }
         }
 
@@ -141,6 +142,7 @@ namespace Dev.Scripts.GameManager
             {
                 lifeRectTransform.GetChild(i).gameObject.SetActive(true);
                 _lifeHearts[i] = lifeRectTransform.GetChild(i).GetComponent<Image>();
+
             }
         }
         private void StartGame()
