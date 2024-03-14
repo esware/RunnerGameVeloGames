@@ -13,10 +13,8 @@ MonoBehaviour:
   m_Name: ThemeData
   m_EditorClassIdentifier: 
   themeName: Day
-  cost: 0
-  themeIcon: {fileID: 0}
   zones:
-  - length: 500
+  - length: 100
     prefabList:
     - m_AssetGUID: d89e07cedeaee7948b33547f72d77a80
       m_SubObjectName: 
@@ -26,6 +24,8 @@ MonoBehaviour:
       m_SubObjectName: 
       m_SubObjectType: 
       m_EditorAssetChanged: 0
+  - length: 100
+    prefabList:
     - m_AssetGUID: 1dbe12bcb251fe24d85f2cf49398f5ef
       m_SubObjectName: 
       m_SubObjectType: 
@@ -34,6 +34,8 @@ MonoBehaviour:
       m_SubObjectName: 
       m_SubObjectType: 
       m_EditorAssetChanged: 0
+  - length: 100
+    prefabList:
     - m_AssetGUID: 6a664ea63f48e45418a5ed8c2edd399d
       m_SubObjectName: 
       m_SubObjectType: 

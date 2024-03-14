@@ -122,30 +122,9 @@ MonoBehaviour:
     m_SubObjectName: 
     m_SubObjectType: 
     m_EditorAssetChanged: 0
-  - m_AssetGUID: 0e2f46ead9a900845a549396f5513e3d
-    m_SubObjectName: 
-    m_SubObjectType: 
-    m_EditorAssetChanged: 0
-  - m_AssetGUID: 69ebbe8a0b9eacd42bb7d284835c29cb
-    m_SubObjectName: 
-    m_SubObjectType: 
-    m_EditorAssetChanged: 0
-  - m_AssetGUID: a741febc92f7d9d4f84f01ea7e81d9d6
-    m_SubObjectName: 
-    m_SubObjectType: 
-    m_EditorAssetChanged: 0
-  - m_AssetGUID: c9df82ed2c336014591c3944d54d9ac1
-    m_SubObjectName: 
-    m_SubObjectType: 
-    m_EditorAssetChanged: 0
-  - m_AssetGUID: 72ba80235f8f81e46a1f99c729f8d961
-    m_SubObjectName: 
-    m_SubObjectType: 
-    m_EditorAssetChanged: 0
   obstaclePositions:
-  - 0.1
-  - 1
-  - 0.5
+  - 0.3
+  - 0.7
 --- !u!1 &4212547745172168016
 GameObject:
   m_ObjectHideFlags: 0

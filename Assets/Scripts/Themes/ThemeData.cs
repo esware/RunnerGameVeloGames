@@ -9,6 +9,7 @@ namespace Dev.Scripts.Themes
         public int length;
         public AssetReference[] prefabList;
     }
+    
     [CreateAssetMenu(fileName = "themeData", menuName = "EWGames/Theme Data")]
     public class ThemeData : ScriptableObject
     {

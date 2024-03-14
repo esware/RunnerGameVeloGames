@@ -63,7 +63,7 @@ namespace Dev.Scripts.Track
         private ThemeData _currentThemeData;
         private int _safeSegmentsLeft;
         private int _currentZone;
-        private float _mCurrentZoneDistance;
+        private float _currentZoneDistance;
         private int _score;
         private float _scoreAccumulator;
         private bool _isRerun;
@@ -182,7 +182,7 @@ namespace Dev.Scripts.Track
         {
             _currentThemeData = ThemeDatabase.GetThemeData(PlayerData.Instance.Themes[PlayerData.Instance.UsedTheme]);
             _currentZone = 0;
-            _mCurrentZoneDistance = 0;
+            _currentZoneDistance = 0;
             characterController.Coins = 0;
             _score = 0;
             _scoreAccumulator = 0;
@@ -229,8 +229,8 @@ namespace Dev.Scripts.Track
         {
             float scaledSpeed = _speed * Time.deltaTime;
             _scoreAccumulator += scaledSpeed;
-            _mCurrentZoneDistance += scaledSpeed;
-
+            _currentZoneDistance += scaledSpeed;
+            
             int intScore = Mathf.FloorToInt(_scoreAccumulator);
             if (intScore != 0) 
             {
@@ -272,7 +272,7 @@ namespace Dev.Scripts.Track
             if (_currentZone >= _currentThemeData.zones.Length)
                 _currentZone = 0;
 
-            _mCurrentZoneDistance = 0;
+            _currentZoneDistance = 0;
         }
         public void AddScore(int amount)
         {
@@ -309,7 +309,7 @@ namespace Dev.Scripts.Track
             int segmentUse;
             AsyncOperationHandle segmentToUseOp;
             
-            if (_currentThemeData.zones[_currentZone].length < _mCurrentZoneDistance)
+            if (_currentThemeData.zones[_currentZone].length < _currentZoneDistance)
                 ChangeZone();
             
             segmentUse = Random.Range(0, _currentThemeData.zones[_currentZone].prefabList.Length);
