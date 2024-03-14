@@ -1,6 +1,6 @@
 # RunnerGameVeloGames
 
-Bu proje, Velo Games icin geliştirilmiş bir Runner Game  oyununun GitHub deposudur. Proje, [esware](https://github.com/esware) tarafından geliştirilmekte ve sürdürülmektedir.
+Bu proje, Velo Games icin geliştirilmiş bir Runner Game  oyununun GitHub deposudur.
 
 ## Ekran Görüntüleri
 
