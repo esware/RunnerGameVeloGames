@@ -22,6 +22,19 @@ Bu proje, Velo Games icin geliştirilmiş bir Runner Game  oyununun GitHub depos
 </kbd>
 
 
+### Animations
+![Screenshot 2024-03-14 200747](https://github.com/esware/RunnerGameVeloGames/assets/48649947/c129fd97-05ba-40a8-89c0-a38d86257b5b)
+![Screenshot 2024-03-14 200801](https://github.com/esware/RunnerGameVeloGames/assets/48649947/5dd7bff7-15df-410f-8abd-a2ac14c5f361)
+
+### Finite State Machine  
+![Screenshot 2024-03-14 200830](https://github.com/esware/RunnerGameVeloGames/assets/48649947/cfb60b31-661f-43f3-b26a-d4cac0c82413)
+![Screenshot 2024-03-14 200823](https://github.com/esware/RunnerGameVeloGames/assets/48649947/7b5d77ac-0a2f-4391-87aa-08883ae3f439)
+
+### Scriptable Objects
+![Screenshot 2024-03-14 200715](https://github.com/esware/RunnerGameVeloGames/assets/48649947/df3596f7-44a7-4d70-9a6b-aef0cbf4679a)
+![Screenshot 2024-03-14 200708](https://github.com/esware/RunnerGameVeloGames/assets/48649947/0e260b74-08c1-4793-999f-286af19c1182)
+
+
 
 
 ## Nasıl Başlayabilirim?
