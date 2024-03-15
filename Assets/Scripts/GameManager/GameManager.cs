@@ -39,7 +39,7 @@ namespace Dev.Scripts.GameManager
         {
             if (_stateStack.Count>0)
             {
-                _stateStack[^1].Tick();
+                _stateStack[_stateStack.Count-1].Tick();
             }
         }
 
@@ -56,8 +56,8 @@ namespace Dev.Scripts.GameManager
                 return;
             }
             
-            _stateStack[^1].Exit(state);
-            state.Enter(_stateStack[^1]);
+            _stateStack[_stateStack.Count-1].Exit(state);
+            state.Enter(_stateStack[_stateStack.Count-1]);
             _stateStack.RemoveAt(_stateStack.Count-1);
             _stateStack.Add(state);
         }
@@ -77,8 +77,8 @@ namespace Dev.Scripts.GameManager
 
             if (_stateStack.Count>0)
             {
-                _stateStack[^1].Exit(state);
-                state.Enter(_stateStack[^1]);
+                _stateStack[_stateStack.Count-1].Exit(state);
+                state.Enter(_stateStack[_stateStack.Count-1]);
             }
             else
             {

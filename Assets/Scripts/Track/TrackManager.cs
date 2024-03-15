@@ -87,8 +87,8 @@ namespace Dev.Scripts.Track
         #endregion
         
         
-        public List<TrackSegment> segments = new();
-        public List<TrackSegment> pastSegments = new();
+        public List<TrackSegment> segments = new List<TrackSegment>();
+        public List<TrackSegment> pastSegments = new List<TrackSegment>();
 
         #endregion
         
@@ -330,7 +330,7 @@ namespace Dev.Scripts.Track
             
             if (segments.Count > 0)
             {
-                segments[^1].GetPointAt(1.0f, out currentExitPoint, out currentExitRotation);
+                segments[segments.Count-1].GetPointAt(1.0f, out currentExitPoint, out currentExitRotation);
             }
             else
             {
@@ -451,7 +451,7 @@ namespace Dev.Scripts.Track
         
         private IEnumerator SpawnCoinAndPowerup(TrackSegment segment)
         {
-            const float increment = 1.5f;
+            const float increment = 2.5f;
             var currentWorldPos = 0.0f;
             var currentLane = Random.Range(0, 3);
             var powerupChance = Mathf.Clamp01(Mathf.Floor(_timeSincePowerup) * 5f * 0.001f);

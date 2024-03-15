@@ -17,7 +17,7 @@ namespace Dev.Scripts.Obstacles
         private const int RightMostLaneIndex = 1;
         private const int TimeForDestroyAfterInteraction = 1;
         
-        private readonly List<Rigidbody> _rigidbodies =new();
+        private readonly List<Rigidbody> _rigidbodies =new List<Rigidbody>();
         
         private void Start()
         {
