@@ -53,10 +53,6 @@ MonoBehaviour:
     m_Address: Block_AllLane
     m_ReadOnly: 0
     m_SerializedLabels: []
-  - m_GUID: 00f14e46b0f65fb4888f1ef95717228d
-    m_Address: Two_Way_Ramp_3
-    m_ReadOnly: 0
-    m_SerializedLabels: []
   - m_GUID: 72ba80235f8f81e46a1f99c729f8d961
     m_Address: Two_Way_Ramp
     m_ReadOnly: 0
@@ -67,6 +63,10 @@ MonoBehaviour:
     m_SerializedLabels: []
   - m_GUID: e9eecb60079f3974c924145ed3b9d72a
     m_Address: One_Way_Ramp
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 32e563149392230499e83b346a397c20
+    m_Address: Two_Way_Ramp_3
     m_ReadOnly: 0
     m_SerializedLabels: []
   m_ReadOnly: 0

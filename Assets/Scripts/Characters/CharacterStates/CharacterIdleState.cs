@@ -35,7 +35,7 @@ namespace Dev.Scripts.Character.CharacterStates
 
         public override void UpdateAbility(BaseState characterState, Animator animator, AnimatorStateInfo stateInfo)
         {
-            
+            _characterMovement.ApplyGravity();
         }
 
         public override void OnExit(BaseState characterState, Animator animator, AnimatorStateInfo stateInfo)

@@ -14,18 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   themeName: Day
   zones:
-  - length: 100
+  - length: 50
     prefabList:
-    - m_AssetGUID: d89e07cedeaee7948b33547f72d77a80
+    - m_AssetGUID: b5f8baeb5fcd49544bbc221786891e26
       m_SubObjectName: 
       m_SubObjectType: 
       m_EditorAssetChanged: 0
-    - m_AssetGUID: c83c470b72666c34a99348965f352a99
-      m_SubObjectName: 
-      m_SubObjectType: 
-      m_EditorAssetChanged: 0
-  - length: 100
-    prefabList:
     - m_AssetGUID: 1dbe12bcb251fe24d85f2cf49398f5ef
       m_SubObjectName: 
       m_SubObjectType: 
@@ -34,9 +28,41 @@ MonoBehaviour:
       m_SubObjectName: 
       m_SubObjectType: 
       m_EditorAssetChanged: 0
+    - m_AssetGUID: 6a664ea63f48e45418a5ed8c2edd399d
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_EditorAssetChanged: 0
   - length: 100
     prefabList:
-    - m_AssetGUID: 6a664ea63f48e45418a5ed8c2edd399d
+    - m_AssetGUID: d89e07cedeaee7948b33547f72d77a80
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_EditorAssetChanged: 0
+    - m_AssetGUID: 988ee9f32d7ab8943bd492231b91cdbc
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_EditorAssetChanged: 0
+    - m_AssetGUID: b5f8baeb5fcd49544bbc221786891e26
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_EditorAssetChanged: 0
+    - m_AssetGUID: 02b146ca1f5246a4fa7cc4acd2b1b314
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_EditorAssetChanged: 0
+  - length: 100
+    prefabList:
+    - m_AssetGUID: d3b2b2cf8c5d6424daab59d7d304047b
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_EditorAssetChanged: 0
+    - m_AssetGUID: 58a28cf065825334bbef55fddd325ed9
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_EditorAssetChanged: 0
+  - length: 50
+    prefabList:
+    - m_AssetGUID: 02b146ca1f5246a4fa7cc4acd2b1b314
       m_SubObjectName: 
       m_SubObjectType: 
       m_EditorAssetChanged: 0

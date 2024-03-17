@@ -27,6 +27,42 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels:
     - characters
+  - m_GUID: d3b2b2cf8c5d6424daab59d7d304047b
+    m_Address: Assets/Bundles/Buildings/Buildings_casual.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 988ee9f32d7ab8943bd492231b91cdbc
+    m_Address: Assets/Bundles/Buildings/City_Buildings_2.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: f030db407d541f845b4ce0bd411eb5a8
+    m_Address: Assets/Bundles/Buildings/City_Buildings_3.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 1d71a7b8e2f9ea147b6ef7d3924e58b4
+    m_Address: Assets/Bundles/Buildings/Egypt_1.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 2c5a23a37d20dbf4591b31f6edd9434e
+    m_Address: Assets/Bundles/Buildings/Egypt_2.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 37e4c7c2d3c037c4c83db10d1da551d8
+    m_Address: Assets/Bundles/Buildings/Egypt_3.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 02b146ca1f5246a4fa7cc4acd2b1b314
+    m_Address: Assets/Bundles/Buildings/Bridge.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 58a28cf065825334bbef55fddd325ed9
+    m_Address: Assets/Bundles/Buildings/Buildings_casual2.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: b5f8baeb5fcd49544bbc221786891e26
+    m_Address: Assets/Bundles/Buildings/Tunnel.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 808f79af1f77c0848bd1fe6c9a2b9a44, type: 2}
   m_SchemaSet:

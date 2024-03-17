@@ -24,7 +24,7 @@ namespace Dev.Scripts.Sounds
 
         private void Awake()
         {
-            if (_instance!=null)
+            if (_instance != null)
             {
                 Destroy(gameObject);
                 return;

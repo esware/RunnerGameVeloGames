@@ -158,7 +158,7 @@ namespace Dev.Scripts.Track
         private IEnumerator InitializeCharacter()
         {
             _totalWorldDistance = 0f;
-            characterController.transform.position = new Vector3(0, .2f, 10);
+            characterController.transform.position = new Vector3(0f ,5f, 10f);
             characterController.gameObject.SetActive(true);
     
             var op = Addressables.InstantiateAsync(PlayerData.Instance.Characters[PlayerData.Instance.UsedCharacter],

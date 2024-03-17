@@ -50,22 +50,22 @@ public class TrackSegment : MonoBehaviour
     public void GetPointAt(float t, out Vector3 pos, out Quaternion rot)
     {
         float clampedT = Mathf.Clamp01(t);
-        float scaledT = (pathParent.childCount - 1) * clampedT;
+        float segmentCount = pathParent.childCount - 1;
+        float scaledT = segmentCount * clampedT;
         int index = Mathf.FloorToInt(scaledT);
-        float segmentT = clampedT - index;
+        float segmentT = clampedT - index / segmentCount;
 
-        Transform orig = pathParent.GetChild(index);
-        if (index == pathParent.childCount - 1)
+        
+        if (index != pathParent.childCount - 1)
         {
-            pos = orig.position;
-            rot = orig.rotation;
-            return;
+            segmentT *= segmentCount;
         }
 
-        Transform target = pathParent.GetChild(index + 1);
-
-        pos = Vector3.Lerp(orig.position, target.position, segmentT);
-        rot = Quaternion.Lerp(orig.rotation, target.rotation, segmentT);
+        Transform start = pathParent.GetChild(index);
+        Transform end = pathParent.GetChild(Mathf.Min(index + 1, pathParent.childCount - 1));
+        
+        pos = Vector3.Lerp(start.position, end.position, segmentT);
+        rot = Quaternion.Lerp(start.rotation, end.rotation, segmentT);
     }
     private void UpdateWorldLength()
     {

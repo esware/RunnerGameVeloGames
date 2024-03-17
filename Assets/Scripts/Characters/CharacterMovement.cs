@@ -133,7 +133,7 @@ namespace Characters
             controller.Move(movementDirection * Time.deltaTime);
             ApplyGravity();
         }
-        private void ApplyGravity()
+        public void ApplyGravity()
         {
             int mask = 1 << 6 | 1 << 9;
             isGrounded = Physics.CheckSphere(groundCheck.position, 0.1f,mask);

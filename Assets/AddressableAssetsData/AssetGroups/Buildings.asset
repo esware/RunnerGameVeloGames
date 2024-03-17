@@ -18,7 +18,7 @@ MonoBehaviour:
   m_GUID: f123543226530ae4eb65040db47e7cae
   m_SerializeEntries:
   - m_GUID: d89e07cedeaee7948b33547f72d77a80
-    m_Address: Buildings_1
+    m_Address: City_Buildings_1
     m_ReadOnly: 0
     m_SerializedLabels: []
   - m_GUID: c83c470b72666c34a99348965f352a99
