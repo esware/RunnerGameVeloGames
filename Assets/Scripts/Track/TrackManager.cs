@@ -10,6 +10,7 @@ using Dev.Scripts.Consumables;
 using Dev.Scripts.Obstacles;
 using Dev.Scripts.Sounds;
 using Dev.Scripts.Themes;
+using Managers;
 using Unity.VisualScripting;
 using Random = UnityEngine.Random;
 using Quaternion = UnityEngine.Quaternion;
@@ -51,7 +52,12 @@ namespace Dev.Scripts.Track
         public bool IsMoving => _isMoving;
         public bool IsLoaded => _isLoaded;
         public int Multiplier => _multiplier;
-        
+        public float TimeSincePowerup
+        {
+            get => _timeSincePowerup;
+            set => _timeSincePowerup = value;
+        }
+
         #endregion
         
         #region Private Variables
@@ -353,7 +359,7 @@ namespace Dev.Scripts.Track
             
             if (_safeSegmentsLeft <= 0)
             {
-                StartCoroutine(SpawnObstacleAndCoin(newSegment));
+                CoroutineHandler.Instance.StartStaticCoroutine(ObstacleManager.Instance.SpawnObstacle(newSegment, this));
             }
             else
                 _safeSegmentsLeft -= 1;
@@ -391,178 +397,7 @@ namespace Dev.Scripts.Track
         }
 
         #endregion
-
-        #region Coin & Obstacle Spawn Methods
-
-        private IEnumerator SpawnObstacleAndCoin(TrackSegment segment)
-        {
-            if (segment.possibleObstacles.Length != 0)
-            {
-                for (int i = 0; i < segment.obstaclePositions.Length; ++i)
-                {
-                    var assetRef = segment.possibleObstacles[Random.Range(0, segment.possibleObstacles.Length)]; 
-                    StartCoroutine(SpawnFromAssetReference(assetRef, segment, i));
-                    yield return null;
-                }
-            }
-
-            yield return new WaitForSeconds(0.5f);
-            yield return StartCoroutine(SpawnCoinAndPowerup(segment));
-        }
-
-        private IEnumerator SpawnFromAssetReference(AssetReference reference, TrackSegment segment, int posIndex)
-        {
-            segment.GetPointAt(segment.obstaclePositions[posIndex], out var pos, out _);
-
-            AsyncOperationHandle op = Addressables.LoadAssetAsync<GameObject>(reference);
-            yield return op; 
-            GameObject obj = op.Result as GameObject;
-            
-            if (obj != null)
-            {
-                Obstacle obstacle = obj.GetComponent<Obstacle>()??obj.GetComponentInParent<Obstacle>();
-               
-                if (IsHittingAnyObstacle(pos))
-                {
-                    Addressables.ReleaseInstance(obj.gameObject);
-                }
-                else
-                {
-                    if (obstacle != null)
-                        yield return StartCoroutine(obstacle.Spawn(segment, segment.obstaclePositions[posIndex])); 
-                }
-            }
-        }
-
-
-        private bool IsHittingAnyObstacle(Vector3 pos)
-        {
-            var startPos = pos + (-1) * laneOffset * Vector3.right;
-            var endPos = pos + 1 * laneOffset * Vector3.right;
-            
-            if (Physics.CheckCapsule(startPos, endPos, (_speed/2f)+1f,1 << 9))
-            {
-                return true;
-            }
-            
-            return false;
-        }
-
         
-        private IEnumerator SpawnCoinAndPowerup(TrackSegment segment)
-        {
-            const float increment = 2.5f;
-            var currentWorldPos = 0.0f;
-            var currentLane = Random.Range(0, 3);
-            var powerupChance = Mathf.Clamp01(Mathf.Floor(_timeSincePowerup) * 5f * 0.001f);
-
-            Vector3 pos;
-            Quaternion rot;
-            GameObject toUse;
-
-            while (currentWorldPos < segment.WorldLength)
-            {
-                segment.GetPointAtInWorldUnit(currentWorldPos, out pos, out rot);
-                pos += Vector3.up * 1.5f;
-                Obstacle obstacle = null;
-                var testedLane = currentLane;
-                var laneValid = true;
-                
-                while(Physics.CheckSphere(pos + (testedLane-1) * laneOffset * Vector3.right, 1f, 1 << 9))
-                {
-                    testedLane = (testedLane + 1) % 3;
-                    //currentWorldPos += increment;
-                    //segment.GetPointAtInWorldUnit(currentWorldPos, out pos, out rot);
-                    //pos += Vector3.up * 1.5f;
-                    if (currentLane == testedLane)
-                    {
-                        laneValid = false;
-                        break;
-                    }
-                }
-                if (Physics.Raycast(pos + ((testedLane-1) * laneOffset * (Vector3.right)),Vector3.forward,out var hitInfo,(_speed/2f),1<<9))
-                {
-                    obstacle = hitInfo.collider.GetComponent<Obstacle>() ?? hitInfo.collider.GetComponentInParent<Obstacle>();
-
-                    if (obstacle.coinSpawnType == ObstacleCoinSpawnType.DontSpawn)
-                    {
-                        laneValid = false;
-                    }
-                }
-                
-                if (Physics.Raycast(pos + ((testedLane-1) * laneOffset * (Vector3.right)),Vector3.back,(_speed/2f)-1f,1<<9))
-                {
-                    laneValid = false;
-                }
-
-                currentLane = testedLane;
-                
-                if (laneValid)
-                {
-                    pos += (currentLane - 1) * laneOffset * (rot * Vector3.right);
-                    
-                    if (obstacle != null)
-                    {
-                        if (obstacle.coinSpawnType==ObstacleCoinSpawnType.SpawnByJumping)
-                        {
-                            float radius = characterController.characterMovement.jumpHeight*1.5f;
-                            float circleCircumference = Mathf.PI * radius;
-                            int numberOfPoints = Mathf.RoundToInt(circleCircumference / (increment));
-                            
-                            var obstaclePosition = obstacle.transform.position;
-                            
-                            for (int i = 0; i < numberOfPoints; i++)
-                            {
-                                float angle = (i+1) * 180f / numberOfPoints;
-
-                                float y = obstaclePosition.y + Mathf.Sin(angle * Mathf.Deg2Rad) * radius;
-                                float z = obstaclePosition.z + Mathf.Cos(angle * Mathf.Deg2Rad) * _speed/2f;
-
-
-                                Vector3 coinPosition = new Vector3(pos.x, y , z);
-
-                                toUse = Coin.CoinPool.Get(coinPosition, rot);
-                                toUse.transform.SetParent(segment.collectibleTransform, true);
-                                
-                                currentWorldPos += increment;
-                            }
-                        }
-                        
-                        continue;
-                    }
-
-                    if (Random.value < powerupChance)
-                    {
-                        int picked = Random.Range(0, consumableDatabase.consumables.Length);
-                        
-                        if (consumableDatabase.consumables[picked].canBeSpawned)
-                        {
-                            _timeSincePowerup = 0.0f;
-                            powerupChance = 0.0f;
-
-                            AsyncOperationHandle op = Addressables.InstantiateAsync(consumableDatabase.consumables[picked].gameObject.name, pos, Quaternion.identity);
-                            yield return op;
-                            if (op.Result == null || !(op.Result is GameObject))
-                            {
-                                Debug.LogWarning(
-                                    $"Unable to load consumable {consumableDatabase.consumables[picked].gameObject.name}.");
-                                yield break;
-                            }
-                            toUse = op.Result as GameObject;
-                            if (toUse != null) toUse.transform.SetParent(segment.transform, true);
-                        }
-                    }
-                    else
-                    {
-                        toUse = Coin.CoinPool.Get(pos, rot);
-                        toUse.transform.SetParent(segment.collectibleTransform, true);
-                    }
-                }
-                currentWorldPos += increment;
-            }
-        }
-
-        #endregion
         
     }
 }
